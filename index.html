@@ -3,19 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HTMLブロックエディタ (全画面固定修正版)</title>
+  <title>HTMLブロックエディタ (iPad完全対応版)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
     
-    /* 画面全体がはみ出したりスクロールしないよう固定 */
+    /* iPadの画面高さ（100dvh）にぴったり合わせる */
     html, body {
       width: 100%;
-      height: 100%;
+      height: 100dvh;
       overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
     }
 
@@ -25,7 +22,7 @@
       touch-action: manipulation;
     }
 
-    /* 上部タブエリア (固定高さを確保) */
+    /* 上部タブエリア */
     #tab-bar {
       display: flex;
       background: #333;
@@ -34,33 +31,34 @@
       padding: 8px;
       -webkit-overflow-scrolling: touch;
       flex-shrink: 0;
+      height: 50px;
+      align-items: center;
     }
-    .tab-btn { background: #555; color: white; border: none; padding: 10px 18px; margin-right: 6px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+    .tab-btn { background: #555; color: white; border: none; padding: 8px 16px; margin-right: 6px; border-radius: 6px; font-size: 14px; cursor: pointer; flex-shrink: 0; }
     .tab-btn.active { background: #007bff; font-weight: bold; }
 
-    /* メインエリア (画面の残りの高さを全域使用し、独立して内部スクロールさせる) */
+    /* メインエリア */
     #main-container {
       display: flex;
       flex: 1;
-      min-height: 0; /* flexアイテムが親を突き抜けないようにする重要プロパティ */
+      min-height: 0;
       width: 100%;
       overflow: hidden;
-      position: relative;
     }
 
     /* ① 左：ブロックパレット */
-    #palette { width: 250px; background: #fff; border-right: 2px solid #ccc; padding: 12px; overflow-y: auto; flex-shrink: 0; }
+    #palette { width: 220px; background: #fff; border-right: 2px solid #ccc; padding: 12px; overflow-y: auto; flex-shrink: 0; -webkit-overflow-scrolling: touch; }
     .palette-title { font-size: 13px; color: #666; margin-bottom: 10px; font-weight: bold; }
 
     /* ② 中央：編集キャンバス */
-    #workspace { flex: 1; padding: 20px; overflow-y: auto; background: #e9ecef; border-right: 2px solid #ccc; position: relative; height: 100%; }
+    #workspace { flex: 1; padding: 20px; overflow-y: auto; background: #e9ecef; border-right: 2px solid #ccc; position: relative; height: 100%; -webkit-overflow-scrolling: touch; }
     .workspace-hint { color: #888; border: 2px dashed #bbb; padding: 40px; text-align: center; border-radius: 8px; }
 
     /* ③ 右：サイドパネル */
-    #right-panel { width: 360px; display: flex; flex-direction: column; background: #fff; padding: 12px; gap: 12px; flex-shrink: 0; overflow-y: auto; }
+    #right-panel { width: 340px; display: flex; flex-direction: column; background: #fff; padding: 12px; gap: 12px; flex-shrink: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
-    /* 右上：HTMLプレビュー */
-    #preview-window { flex: 1; min-height: 250px; background: #fff; border: 2px solid #007bff; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+    /* プレビュー */
+    #preview-window { flex: 1; min-height: 220px; background: #fff; border: 2px solid #007bff; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
     .preview-header { background: #007bff; color: white; padding: 6px 12px; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
     .preview-controls { display: flex; gap: 4px; align-items: center; }
     .preview-tab-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 2px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
@@ -71,7 +69,7 @@
     #preview-body.mobile-mode { width: 375px; height: 100%; border-left: 1px solid #ccc; border-right: 1px solid #ccc; }
     #preview-code { flex: 1; width: 100%; height: 100%; padding: 8px; font-family: monospace; font-size: 11px; white-space: pre-wrap; word-break: break-all; overflow-y: auto; display: none; background: #282c34; color: #abb2bf; }
 
-    /* 右下：ボタン群 */
+    /* 操作ボタン */
     #action-buttons { display: flex; flex-direction: column; gap: 6px; }
     .btn-row { display: flex; gap: 6px; align-items: center; }
     .action-btn { flex: 1; background: #28a745; color: white; border: none; padding: 10px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: center; }
@@ -109,7 +107,8 @@
 </head>
 <body>
 
-  <input type="file" id="file-input-asset" accept="image/*,video/*,audio/*">
+  <!-- iPadで全てのファイルを選択できるように accept="*/*" に指定 -->
+  <input type="file" id="file-input-asset" accept="*/*">
   <input type="file" id="file-input-json" accept=".json">
 
   <!-- ① 上部タブ -->
@@ -151,7 +150,7 @@
           </div>
         </div>
         <div class="preview-container">
-          <iframe id="preview-body" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+          <iframe id="preview-body"></iframe>
           <pre id="preview-code"></pre>
         </div>
       </div>
@@ -269,7 +268,7 @@
       if (tabKey === 'data') blocks = customAssets;
 
       if (blocks.length === 0 && tabKey === 'data') {
-        palette.innerHTML = '<div style="color:#888; font-size:12px; padding:10px;">インポートしたアセットがここに表示されます</div>';
+        palette.innerHTML = '<div style="color:#888; font-size:12px; padding:10px;">インポートしたファイルがここに表示されます</div>';
         return;
       }
 
@@ -469,7 +468,7 @@
 
         const eventSlot = child.querySelector(':scope > .event-slot');
         if (eventSlot && elemId) {
-          const evtBlock = eventSlot.querySelector(':scope > .block.event-block');
+          const evtBlock = eventSlot.querySelector(':scope > .event-block');
           if (evtBlock) {
             const evtType = evtBlock.dataset.type;
             if (evtType === 'evt-show-input') {
@@ -511,7 +510,8 @@
           html += `<img src="${src}"${idAttr}${styleAttr}>\n`;
         } else if (type === 'video') {
           const src = child.querySelector('.val-src').value;
-          html += `<video src="${src}" controls${idAttr}${styleAttr}></video>\n`;
+          /* iPad Safariの自動再生制限や表示崩れを防ぐため playsinline コントロールを追加 */
+          html += `<video src="${src}" controls playsinline${idAttr}${styleAttr}></video>\n`;
         } else if (type === 'audio') {
           const src = child.querySelector('.val-src').value;
           html += `<audio src="${src}" controls${idAttr}${styleAttr}></audio>\n`;
@@ -569,6 +569,7 @@
   <style>
     body { font-family: sans-serif; padding: 10px; }
     input, textarea { font-size: 14px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+    video, img { max-width: 100%; height: auto; }
   </style>
 </head>
 <body>
@@ -646,6 +647,7 @@ ${runtimeScript}
   <style>
     body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
     input, textarea { font-size: 14px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+    video, img { max-width: 100%; height: auto; }
   </style>
 </head>
 <body>
@@ -657,36 +659,43 @@ ${runtimeScript}
       downloadFile('index.html', fullHTML, 'text/html');
     }
 
+    /* iPadの再生制限を回避するため createObjectURL を使用 */
     document.getElementById('file-input-asset').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const dataUrl = evt.target.result;
-        let fileType = 'img';
-        let label = `画像 (${file.name})`;
+      const mediaUrl = URL.createObjectURL(file);
+      let fileType = 'img';
+      let label = `画像 (${file.name})`;
 
-        if (file.type.startsWith('video/')) {
-          fileType = 'video';
-          label = `動画 (${file.name})`;
-        } else if (file.type.startsWith('audio/')) {
+      if (file.type.startsWith('video/')) {
+        fileType = 'video';
+        label = `動画 (${file.name})`;
+      } else if (file.type.startsWith('audio/')) {
+        fileType = 'audio';
+        label = `音声 (${file.name})`;
+      } else {
+        // 未知の拡張子でも拡張子やファイル名で判定を試みる
+        const nameLower = file.name.toLowerCase();
+        if (nameLower.endsWith('.mp3') || nameLower.endsWith('.m4a') || nameLower.endsWith('.wav') || nameLower.endsWith('.aac')) {
           fileType = 'audio';
           label = `音声 (${file.name})`;
+        } else if (nameLower.endsWith('.mp4') || nameLower.endsWith('.mov') || nameLower.endsWith('.webm')) {
+          fileType = 'video';
+          label = `動画 (${file.name})`;
         }
+      }
 
-        const assetBlock = {
-          type: fileType,
-          label: label,
-          html: `${label.split(' ')[0]} [URL: <input type="text" class="val-src" value="${dataUrl}" oninput="updatePreview()">]`,
-          isContainer: false
-        };
-
-        customAssets.push(assetBlock);
-        switchTab(null, 'data');
-        alert(`ファイル "${file.name}" をデータタブに追加しました！`);
+      const assetBlock = {
+        type: fileType,
+        label: label,
+        html: `${label.split(' ')[0]} [URL: <input type="text" class="val-src" value="${mediaUrl}" oninput="updatePreview()">]`,
+        isContainer: false
       };
-      reader.readAsDataURL(file);
+
+      customAssets.push(assetBlock);
+      switchTab(null, 'data');
+      alert(`ファイル "${file.name}" を読み込みました！データタブから配置できます。`);
       this.value = '';
     });
 
