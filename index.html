@@ -17,7 +17,6 @@
 
   #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
 
-  /* ---------- タブバー ---------- */
   #tabbar{
     flex:0 0 auto;display:flex;gap:6px;padding:8px 10px;
     background:#fff;border-bottom:1px solid #dfe4ea;
@@ -33,10 +32,8 @@
   .tab:hover{background:#eef7f5;border-color:#8fd8c8;}
   .tab.active{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
 
-  /* ---------- メイン3カラム ---------- */
   #main{flex:1 1 auto;display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:0;}
 
-  /* パレット */
   #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;}
   #palette-head{
     flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;
@@ -67,7 +64,6 @@
   .data-empty{font-size:11.5px;color:#a8b3bd;padding:10px 4px;line-height:1.6;}
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
 
-  /* ワークスペース */
   #workspace{
     min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
     padding:14px;background:#eef1f5;display:flex;flex-direction:column;
@@ -77,7 +73,6 @@
     background:#fff;border-radius:12px;border:2px solid #e3e9ef;
   }
 
-  /* ブロック */
   .ws-block{
     background:#f8fbfd;border:1px solid #dbe2ea;border-left:3px solid #2ec4a6;
     border-radius:10px;padding:8px;box-shadow:0 1px 2px rgba(20,30,40,.04);
@@ -143,7 +138,6 @@
   .slot.drag-over{border-color:#2ec4a6;background:#eafaf6;}
   #drop-indicator{height:4px;border-radius:2px;background:#2ec4a6;flex:0 0 auto;margin:1px 0;}
 
-  /* ドラッグクローン */
   .drag-clone{
     position:fixed;z-index:9999;pointer-events:none;
     display:flex;align-items:center;gap:6px;
@@ -153,7 +147,6 @@
   }
   body.dragging{cursor:grabbing;}
 
-  /* 右パネル */
   #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;}
   .panel-head{
     flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
@@ -200,7 +193,6 @@
   .act.danger{color:#c0392b;border-color:#f0d5d1;}
   .act.danger:hover{background:#ffecea;}
 
-  /* モーダル */
   #modal-overlay{
     position:fixed;inset:0;background:rgba(20,30,40,.45);z-index:500;
     display:flex;align-items:center;justify-content:center;padding:16px;
@@ -226,6 +218,7 @@
   .slot-info span{font-size:11px;color:#8b97a3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .slot-item .act{flex:0 0 auto;padding:6px 10px;}
   .modal-actions{display:flex;justify-content:flex-end;gap:6px;}
+  .modal-msg{font-size:13px;line-height:1.75;color:#3b4652;white-space:pre-wrap;margin:0 0 16px;}
 
   #toast{
     position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);
@@ -381,8 +374,25 @@ const BLOCKS = {
 
   'br': { cat:'text', label:'改行', icon:'↵', tag:'br', voidTag:true, slots:[], fields:[] },
 
+  'hr': { cat:'text', label:'区切り線', icon:'─', tag:'hr', voidTag:true, slots:['css'], fields:[] },
+
   'strong': { cat:'text', label:'強調テキスト', icon:'B', tag:'strong', slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'強調'}]},
+
+  'em': { cat:'text', label:'斜体', icon:'I', tag:'em', slots:['css','var'],
+    fields:[{k:'text', label:'テキスト', type:'text', def:'斜体テキスト'}]},
+
+  'mark': { cat:'text', label:'ハイライト', icon:'🖍', tag:'mark', slots:['css','var'],
+    fields:[{k:'text', label:'テキスト', type:'text', def:'マーカー'}]},
+
+  'code': { cat:'text', label:'インラインコード', icon:'⌨', tag:'code', slots:['css','var'],
+    fields:[{k:'text', label:'コード', type:'text', def:'code'}]},
+
+  'pre': { cat:'text', label:'整形済みテキスト', icon:'📄', tag:'pre', slots:['css'],
+    fields:[{k:'text', label:'テキスト', type:'textarea', def:'複数行の\nテキストを\nそのまま表示'}]},
+
+  'blockquote': { cat:'text', label:'引用', icon:'❝', tag:'blockquote', slots:['css','var'],
+    fields:[{k:'text', label:'引用文', type:'textarea', def:'引用文をここに書きます。'}]},
 
   'span': { cat:'text', label:'スパン', icon:'S', tag:'span', slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'テキスト'}]},
@@ -400,7 +410,7 @@ const BLOCKS = {
       {k:'text', label:'ラベル', type:'text', def:'ボタン'}
     ]},
 
-  /* ===== 4. 枠・レイアウト（C型ブロック） ===== */
+  /* ===== 4. 枠・レイアウト ===== */
   'div': { cat:'containers', label:'グループ (div)', icon:'📦', tag:'div', container:true, slots:['container','css'],
     fields:[{k:'id', label:'ID', type:'text', ph:'group1'}]},
 
@@ -413,6 +423,12 @@ const BLOCKS = {
   'section': { cat:'containers', label:'セクション (section)', icon:'🗂', tag:'section', container:true, slots:['container','css'],
     fields:[{k:'id', label:'ID', type:'text', ph:'sec1'}]},
 
+  'nav': { cat:'containers', label:'ナビ (nav)', icon:'🧭', tag:'nav', container:true, slots:['container','css'], fields:[] },
+
+  'article': { cat:'containers', label:'記事 (article)', icon:'📰', tag:'article', container:true, slots:['container','css'], fields:[] },
+
+  'aside': { cat:'containers', label:'サイド (aside)', icon:'📑', tag:'aside', container:true, slots:['container','css'], fields:[] },
+
   /* ===== 5. リスト ===== */
   'ul': { cat:'lists', label:'箇条書き (ul)', icon:'•', tag:'ul', container:true, slots:['container','css'], fields:[] },
 
@@ -421,9 +437,20 @@ const BLOCKS = {
   'li': { cat:'lists', label:'リスト項目 (li)', icon:'–', tag:'li', slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'項目'}]},
 
+  'dl': { cat:'lists', label:'定義リスト (dl)', icon:'📖', tag:'dl', container:true, slots:['container','css'], fields:[] },
+
+  'dt': { cat:'lists', label:'用語 (dt)', icon:'📗', tag:'dt', slots:['css','var'],
+    fields:[{k:'text', label:'用語', type:'text', def:'用語'}]},
+
+  'dd': { cat:'lists', label:'説明 (dd)', icon:'📘', tag:'dd', slots:['css','var'],
+    fields:[{k:'text', label:'説明', type:'text', def:'説明文'}]},
+
   /* ===== 6. フォーム ===== */
   'form': { cat:'forms', label:'フォーム (form)', icon:'🧾', tag:'form', container:true, slots:['container','css'],
     fields:[{k:'id', label:'ID', type:'text', ph:'form1'}]},
+
+  'label': { cat:'forms', label:'ラベル', icon:'🏷', tag:'label', container:true, slots:['container','css'],
+    fields:[{k:'for', label:'for属性', type:'text', ph:'input1'}]},
 
   'input-text': { cat:'forms', label:'入力ボックス', icon:'⌨️', tag:'input', voidTag:true, slots:['css'],
     fields:[
@@ -444,6 +471,39 @@ const BLOCKS = {
       {k:'label', label:'ラベル', type:'text', def:'同意する'}
     ]},
 
+  'radio': { cat:'forms', label:'ラジオボタン', icon:'🔘', tag:'input', voidTag:true, slots:['css'],
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'radio1'},
+      {k:'name', label:'グループ名', type:'text', def:'radioGroup'},
+      {k:'label', label:'ラベル', type:'text', def:'選択肢'}
+    ]},
+
+  'select': { cat:'forms', label:'セレクト', icon:'🔽', tag:'select', slots:['css'],
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'select1'},
+      {k:'options', label:'選択肢(改行区切り)', type:'textarea', def:'選択肢1\n選択肢2\n選択肢3'}
+    ]},
+
+  'email': { cat:'forms', label:'メール入力', icon:'✉️', tag:'input', voidTag:true, slots:['css'],
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'email1'},
+      {k:'ph', label:'プレースホルダー', type:'text', def:'example@example.com'}
+    ]},
+
+  'number': { cat:'forms', label:'数値入力', icon:'🔢', tag:'input', voidTag:true, slots:['css'],
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'num1'},
+      {k:'ph', label:'プレースホルダー', type:'text', def:'0'}
+    ]},
+
+  'range': { cat:'forms', label:'スライダー', icon:'🎚', tag:'input', voidTag:true, slots:['css'],
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'range1'},
+      {k:'min', label:'最小', type:'number', def:'0'},
+      {k:'max', label:'最大', type:'number', def:'100'},
+      {k:'value', label:'初期値', type:'number', def:'50'}
+    ]},
+
   'submit': { cat:'forms', label:'送信ボタン', icon:'📨', tag:'button', slots:['css','var','event'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'submit1'},
@@ -453,7 +513,9 @@ const BLOCKS = {
   /* ===== 7. CSS ===== */
   'css-width':    { cat:'css', label:'幅 width',        icon:'↔', cssProp:'width',            fields:[{k:'value', type:'text', def:'100%'}] },
   'css-height':   { cat:'css', label:'高さ height',     icon:'↕', cssProp:'height',           fields:[{k:'value', type:'text', def:'auto'}] },
+  'css-maxwidth': { cat:'css', label:'最大幅 max-width',icon:'↔', cssProp:'max-width',        fields:[{k:'value', type:'text', def:'100%'}] },
   'css-fontsize': { cat:'css', label:'文字サイズ',       icon:'A', cssProp:'font-size',        fields:[{k:'value', type:'text', def:'16px'}] },
+  'css-fontweight':{cat:'css', label:'文字の太さ',       icon:'B', cssProp:'font-weight',      fields:[{k:'value', type:'select', options:['normal','bold','100','300','500','700','900'], def:'normal'}] },
   'css-margin':   { cat:'css', label:'外余白 margin',   icon:'⬜', cssProp:'margin',           fields:[{k:'value', type:'text', def:'0'}] },
   'css-padding':  { cat:'css', label:'内余白 padding',  icon:'🔲', cssProp:'padding',          fields:[{k:'value', type:'text', def:'8px'}] },
   'css-radius':   { cat:'css', label:'角丸 radius',     icon:'⭕', cssProp:'border-radius',    fields:[{k:'value', type:'text', def:'8px'}] },
@@ -461,6 +523,13 @@ const BLOCKS = {
   'css-color':    { cat:'css', label:'文字色',          icon:'🅰', cssProp:'color',            fields:[{k:'value', type:'color', def:'#111111'}] },
   'css-bg':       { cat:'css', label:'背景色',          icon:'🎨', cssProp:'background-color', fields:[{k:'value', type:'color', def:'#ffffff'}] },
   'css-align':    { cat:'css', label:'文字揃え',        icon:'≡', cssProp:'text-align',       fields:[{k:'value', type:'select', options:['left','center','right'], def:'left'}] },
+  'css-display':  { cat:'css', label:'表示 display',    icon:'📺', cssProp:'display',          fields:[{k:'value', type:'select', options:['block','inline','inline-block','flex','grid','none'], def:'block'}] },
+  'css-flexdir':  { cat:'css', label:'主軸 flex-direction',icon:'↔', cssProp:'flex-direction', fields:[{k:'value', type:'select', options:['row','column','row-reverse','column-reverse'], def:'row'}] },
+  'css-justify':  { cat:'css', label:'横配置 justify-content',icon:'⇔', cssProp:'justify-content', fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','space-between','space-around'], def:'flex-start'}] },
+  'css-alignitems':{cat:'css', label:'縦配置 align-items', icon:'⇕', cssProp:'align-items',    fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','stretch'], def:'stretch'}] },
+  'css-gap':      { cat:'css', label:'間隔 gap',        icon:'⏸', cssProp:'gap',              fields:[{k:'value', type:'text', def:'8px'}] },
+  'css-opacity':  { cat:'css', label:'透明度 opacity',  icon:'💧', cssProp:'opacity',          fields:[{k:'value', type:'text', def:'1'}] },
+  'css-boxshadow':{ cat:'css', label:'影 box-shadow',   icon:'🌑', cssProp:'box-shadow',       fields:[{k:'value', type:'text', def:'0 2px 6px rgba(0,0,0,0.15)'}] },
 
   /* ===== 8. 変数・イベント ===== */
   'var-static': { cat:'variables', label:'静的変数', icon:'🔢', slotKind:'var',
@@ -482,7 +551,13 @@ const BLOCKS = {
     fields:[
       {k:'text', label:'表示する文字', type:'text', def:'クリックしました！'},
       {k:'toId', label:'表示先ID',     type:'text', def:'out1'}
-    ]}
+    ]},
+
+  'evt-alert': { cat:'variables', label:'タップ時：アラート', icon:'⚠️', slotKind:'event',
+    fields:[{k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}]},
+
+  'evt-toggle-hidden': { cat:'variables', label:'タップ時：表示/非表示', icon:'👁', slotKind:'event',
+    fields:[{k:'toId', label:'対象ID', type:'text', def:'target1'}]}
 };
 
 const SLOT_LABEL = { container:'中身', css:'CSS', var:'変数', event:'イベント' };
@@ -520,14 +595,14 @@ function tagLabel(def){
    ========================================================= */
 let currentCat = 'media';
 let currentProjectName = '';
-const MEDIA = [];   // {id,name,type,kind,url,blob}
+const MEDIA = [];
 let lastGeneratedHTML = '';
 
 const LS_AUTOSAVE = 'html_block_editor_autosave';
 const LS_SLOT = i => 'html_block_editor_slot_' + i;
 
 /* =========================================================
-   ブロック生成
+   フィールド生成
    ========================================================= */
 function makeField(f, val){
   if(f.type === 'hidden'){
@@ -578,6 +653,9 @@ function makeField(f, val){
   return wrap;
 }
 
+/* =========================================================
+   ブロック生成
+   ========================================================= */
 function createBlock(type, values){
   const def = BLOCKS[type];
   const el = document.createElement('div');
@@ -609,7 +687,6 @@ function createBlock(type, values){
     return el;
   }
 
-  /* 通常ブロック */
   const head = document.createElement('div');
   head.className = 'blk-head';
   head.innerHTML =
@@ -732,7 +809,6 @@ function loadProjectData(data){
   if(!data) return;
   currentProjectName = data.name || '';
 
-  // メディア一覧を復元（URLは未解決状態）
   MEDIA.length = 0;
   (data.media || []).forEach(m => {
     MEDIA.push({
@@ -754,7 +830,6 @@ function loadProjectData(data){
   afterChange();
 }
 
-/* メディア名から URL を再解決 */
 function resolveMediaBlocks(){
   $$('.ws-block').forEach(el => {
     const t = el.dataset.type;
@@ -810,13 +885,14 @@ function collectEvents(el, v, events, warnings){
     warnings.push('イベントを設定した要素に ID がありません（出力をスキップ）');
     return;
   }
+  const oid = JSON.stringify(owner);
   kids.forEach(k => {
     const kv = getValues(k);
     const t = k.dataset.type;
     if(t === 'evt-show-input'){
       if(!kv.toId) return;
       events.push(
-        'document.getElementById(' + JSON.stringify(owner) + ')?.addEventListener("click", function(){' +
+        'document.getElementById(' + oid + ')?.addEventListener("click", function(){' +
         ' var s = document.getElementById(' + JSON.stringify(kv.fromId || '') + ');' +
         ' var t = document.getElementById(' + JSON.stringify(kv.toId) + ');' +
         ' if(s && t){ t.textContent = s.value; } });'
@@ -824,9 +900,21 @@ function collectEvents(el, v, events, warnings){
     } else if(t === 'evt-show-text'){
       if(!kv.toId) return;
       events.push(
-        'document.getElementById(' + JSON.stringify(owner) + ')?.addEventListener("click", function(){' +
+        'document.getElementById(' + oid + ')?.addEventListener("click", function(){' +
         ' var t = document.getElementById(' + JSON.stringify(kv.toId) + ');' +
         ' if(t){ t.textContent = ' + JSON.stringify(kv.text || '') + '; } });'
+      );
+    } else if(t === 'evt-alert'){
+      events.push(
+        'document.getElementById(' + oid + ')?.addEventListener("click", function(){' +
+        ' alert(' + JSON.stringify(kv.text || '') + '); });'
+      );
+    } else if(t === 'evt-toggle-hidden'){
+      if(!kv.toId) return;
+      events.push(
+        'document.getElementById(' + oid + ')?.addEventListener("click", function(){' +
+        ' var t = document.getElementById(' + JSON.stringify(kv.toId) + ');' +
+        ' if(t){ t.style.display = (t.style.display === "none") ? "" : "none"; } });'
       );
     }
   });
@@ -863,6 +951,7 @@ function genNode(el, depth, events, warnings, mediaMap){
       return '';
     }
     if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+    if(type === 'label' && v.for) attrs.push('for="' + escapeHtml(v.for) + '"');
     pushStyle();
     return pad + '<' + def.tag + attrStr(attrs) + '>\n' + inner + pad + '</' + def.tag + '>\n';
   }
@@ -872,6 +961,10 @@ function genNode(el, depth, events, warnings, mediaMap){
 
     case 'br':
       return pad + '<br>\n';
+
+    case 'hr':
+      pushStyle();
+      return pad + '<hr' + attrStr(attrs) + '>\n';
 
     case 'img': {
       const s = resolveSrc(v.src);
@@ -923,7 +1016,14 @@ function genNode(el, depth, events, warnings, mediaMap){
     case 'p':
     case 'span':
     case 'strong':
-    case 'li': {
+    case 'em':
+    case 'mark':
+    case 'code':
+    case 'li':
+    case 'dt':
+    case 'dd':
+    case 'blockquote':
+    case 'pre': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       pushStyle();
       return pad + '<' + def.tag + attrStr(attrs) + '>' + contentOf(el, v) + '</' + def.tag + '>\n';
@@ -958,6 +1058,32 @@ function genNode(el, depth, events, warnings, mediaMap){
       return pad + '<input' + attrStr(attrs) + '>\n';
     }
 
+    case 'email': {
+      attrs.push('type="email"');
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
+      pushStyle();
+      return pad + '<input' + attrStr(attrs) + '>\n';
+    }
+
+    case 'number': {
+      attrs.push('type="number"');
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
+      pushStyle();
+      return pad + '<input' + attrStr(attrs) + '>\n';
+    }
+
+    case 'range': {
+      attrs.push('type="range"');
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      if(v.min !== '' && v.min != null) attrs.push('min="' + escapeHtml(v.min) + '"');
+      if(v.max !== '' && v.max != null) attrs.push('max="' + escapeHtml(v.max) + '"');
+      if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
+      pushStyle();
+      return pad + '<input' + attrStr(attrs) + '>\n';
+    }
+
     case 'textarea': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
@@ -971,6 +1097,26 @@ function genNode(el, depth, events, warnings, mediaMap){
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       pushStyle();
       return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
+    }
+
+    case 'radio': {
+      attrs.push('type="radio"');
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      if(v.name) attrs.push('name="' + escapeHtml(v.name) + '"');
+      pushStyle();
+      return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
+    }
+
+    case 'select': {
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      pushStyle();
+      const opts = String(v.options || '').split('\n')
+        .map(function(o){ return o.trim(); }).filter(Boolean);
+      let inner = '';
+      opts.forEach(function(o){
+        inner += '\n' + pad + '  <option>' + escapeHtml(o) + '</option>';
+      });
+      return pad + '<select' + attrStr(attrs) + '>' + inner + '\n' + pad + '</select>\n';
     }
   }
 
@@ -1055,7 +1201,7 @@ function renderPalette(cat){
   currentCat = cat;
   const head = $('#palette-head');
   const list = $('#palette-list');
-  list.innerHTML = '';
+  list.innerHTML = '';   /* ← 必ず先にクリア */
 
   const c = CATEGORIES.filter(x => x.id === cat)[0];
   head.textContent = c ? c.name : '';
@@ -1118,7 +1264,8 @@ function renderDataTab(list){
       e.stopPropagation();
       const idx = MEDIA.indexOf(m);
       if(idx >= 0) MEDIA.splice(idx, 1);
-      renderDataTab($('#palette-list'));
+      /* ← ここが修正ポイント：リスト全体をクリアして再描画 */
+      renderPalette('data');
       toast('削除しました：' + m.name);
     });
 
@@ -1154,6 +1301,7 @@ function beginDrag(e, payload, srcEl){
     target: null,
     lastSlot: null,
     lastRef: null,
+    lastBlock: null,
     clone: null
   };
 }
@@ -1191,7 +1339,6 @@ function findTarget(x, y){
   const el = document.elementFromPoint(x, y);
   if(!el) return null;
 
-  /* データを既存のメディアブロックへドロップ */
   if(drag.payload.kind === 'data'){
     const blk = el.closest('.ws-block');
     if(blk && el.closest('.blk-head, .blk-fields')){
@@ -1213,7 +1360,6 @@ function findTarget(x, y){
   else if(slotName === 'event' && need === 'event') ok = true;
   if(!ok) return null;
 
-  /* 階層制限 */
   if(slotName === 'container'){
     const owner = slot.closest('.ws-block');
     const d = owner ? depthOf(owner) + 1 : 0;
@@ -1231,7 +1377,7 @@ function clearHighlight(){
 
 function highlight(t){
   if(!t){
-    if(drag.lastSlot || drag.lastRef){ clearHighlight(); drag.lastSlot = null; drag.lastRef = null; }
+    if(drag.lastSlot || drag.lastRef || drag.lastBlock){ clearHighlight(); drag.lastSlot = null; drag.lastRef = null; drag.lastBlock = null; }
     return;
   }
   if(t.block){
@@ -1270,7 +1416,6 @@ function finishDrag(){
 
   if(!t) return;
 
-  /* 既存メディアブロックへの適用 */
   if(t.block){
     const m = MEDIA.filter(x => x.id === drag.payload.mediaId)[0];
     if(!m) return;
@@ -1281,7 +1426,6 @@ function finishDrag(){
     return;
   }
 
-  /* 新規ブロック生成 */
   let newEl = null;
   if(drag.payload.kind === 'data'){
     const m = MEDIA.filter(x => x.id === drag.payload.mediaId)[0];
@@ -1356,7 +1500,7 @@ $('#workspace').addEventListener('change', function(e){
 });
 
 /* =========================================================
-   変更後の共通処理
+   変更後
    ========================================================= */
 let saveTimer = null;
 function scheduleSave(){
@@ -1364,7 +1508,7 @@ function scheduleSave(){
   saveTimer = setTimeout(function(){
     try{
       localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData()));
-    }catch(err){ /* 容量オーバー等は無視 */ }
+    }catch(err){}
   }, 600);
 }
 
@@ -1397,7 +1541,6 @@ function mimeFromName(name){
 }
 
 function addMedia(file){
-  /* 同名の未読込エントリがあれば復元する */
   const existing = MEDIA.filter(m => m.name === file.name && !m.url)[0];
   const url = URL.createObjectURL(file);
   const kind = kindFromType(file.type, file.name);
@@ -1437,7 +1580,7 @@ function addMediaByUrl(){
 }
 
 /* =========================================================
-   ZIP 書き出し（無圧縮 STORE）
+   ZIP
    ========================================================= */
 const CRC_TABLE = (function(){
   const t = new Uint32Array(256);
@@ -1526,9 +1669,6 @@ function buildZip(entries){
   return new Blob(parts.concat(central, [eocd]), { type:'application/zip' });
 }
 
-/* =========================================================
-   ZIP 読み込み
-   ========================================================= */
 async function inflateRaw(bytes){
   if(typeof DecompressionStream === 'undefined'){
     throw new Error('この環境では圧縮ZIPを解凍できません');
@@ -1626,7 +1766,6 @@ async function exportHTML(){
     return;
   }
 
-  /* メディアがある場合は zip にまとめてパスを書き換える */
   const mediaMap = {};
   usedMedia.forEach(function(m){ mediaMap[m.name] = 'assets/' + m.name; });
 
@@ -1699,7 +1838,6 @@ async function importProjectZip(file){
     });
   });
 
-  /* project.json 側の media 一覧と突き合わせ */
   const restored = MEDIA.slice();
   MEDIA.length = 0;
   (data.media || []).forEach(function(m){
@@ -1749,7 +1887,7 @@ async function handleFiles(files){
 }
 
 /* =========================================================
-   モーダル
+   モーダル（共通）
    ========================================================= */
 function openModal(html){
   $('#modal').innerHTML = html;
@@ -1759,13 +1897,33 @@ function closeModal(){
   $('#modal-overlay').classList.add('hidden');
   $('#modal').innerHTML = '';
 }
+
+/* 汎用のカスタム確認ダイアログ */
+function showConfirm(message, onOk){
+  openModal(
+    '<h3>確認</h3>' +
+    '<p class="modal-msg">' + escapeHtml(message) + '</p>' +
+    '<div class="modal-actions">' +
+    '<button class="act" type="button" data-close>キャンセル</button>' +
+    '<button class="act danger" type="button" id="confirm-ok">OK</button>' +
+    '</div>'
+  );
+  const okBtn = $('#confirm-ok');
+  okBtn.addEventListener('click', function(){
+    closeModal();
+    onOk();
+  });
+}
+
 $('#modal-overlay').addEventListener('click', function(e){
-  if(e.target === $('#modal-overlay')) closeModal();
+  if(e.target === $('#modal-overlay')){ closeModal(); return; }
   const btn = e.target.closest('[data-close]');
   if(btn) closeModal();
 });
 
-/* セーブ */
+/* =========================================================
+   セーブ / ロード
+   ========================================================= */
 function openSaveModal(){
   let rows = '';
   for(let i = 1; i <= 5; i++){
@@ -1787,50 +1945,6 @@ function openSaveModal(){
     '<div class="modal-actions"><button class="act" type="button" data-close>閉じる</button></div>'
   );
 }
-
-$('#modal').addEventListener('click', function(e){
-  const btn = e.target.closest('[data-save-slot]');
-  if(btn){
-    const slot = btn.dataset.saveSlot;
-    const nameEl = $('#save-name');
-    const name = (nameEl && nameEl.value.trim()) || ('プロジェクト ' + slot);
-    const exist = localStorage.getItem(LS_SLOT(slot));
-    if(exist && !confirm('スロット ' + slot + ' に上書きしますか？')) return;
-    currentProjectName = name;
-    try{
-      localStorage.setItem(LS_SLOT(slot), JSON.stringify({
-        name: name, date: new Date().toISOString(), data: projectData()
-      }));
-      toast('スロット ' + slot + ' にセーブしました');
-      closeModal();
-    }catch(err){
-      toast('セーブに失敗しました（容量不足の可能性）');
-    }
-    return;
-  }
-
-  const loadBtn = e.target.closest('[data-load-slot]');
-  if(loadBtn){
-    const slot = loadBtn.dataset.loadSlot;
-    try{
-      const info = JSON.parse(localStorage.getItem(LS_SLOT(slot)) || 'null');
-      if(!info) return;
-      loadProjectData(info.data);
-      toast('「' + info.name + '」を読み込みました');
-      closeModal();
-    }catch(err){ toast('読み込みに失敗しました'); }
-    return;
-  }
-
-  const delBtn = e.target.closest('[data-del-slot]');
-  if(delBtn){
-    const slot = delBtn.dataset.delSlot;
-    if(!confirm('スロット ' + slot + ' を削除しますか？')) return;
-    localStorage.removeItem(LS_SLOT(slot));
-    openSaveModalLoad();
-    return;
-  }
-});
 
 function openSaveModalLoad(){
   let rows = '';
@@ -1856,6 +1970,59 @@ function openSaveModalLoad(){
   );
 }
 
+$('#modal').addEventListener('click', function(e){
+  const saveBtn = e.target.closest('[data-save-slot]');
+  if(saveBtn){
+    const slot = saveBtn.dataset.saveSlot;
+    const nameEl = $('#save-name');
+    const name = (nameEl && nameEl.value.trim()) || ('プロジェクト ' + slot);
+    const exist = localStorage.getItem(LS_SLOT(slot));
+
+    const doSave = function(){
+      currentProjectName = name;
+      try{
+        localStorage.setItem(LS_SLOT(slot), JSON.stringify({
+          name: name, date: new Date().toISOString(), data: projectData()
+        }));
+        toast('スロット ' + slot + ' にセーブしました');
+        closeModal();
+      }catch(err){
+        toast('セーブに失敗しました（容量不足の可能性）');
+      }
+    };
+
+    if(exist){
+      showConfirm('スロット ' + slot + ' に上書きしますか？', doSave);
+    } else {
+      doSave();
+    }
+    return;
+  }
+
+  const loadBtn = e.target.closest('[data-load-slot]');
+  if(loadBtn){
+    const slot = loadBtn.dataset.loadSlot;
+    try{
+      const info = JSON.parse(localStorage.getItem(LS_SLOT(slot)) || 'null');
+      if(!info) return;
+      loadProjectData(info.data);
+      toast('「' + info.name + '」を読み込みました');
+      closeModal();
+    }catch(err){ toast('読み込みに失敗しました'); }
+    return;
+  }
+
+  const delBtn = e.target.closest('[data-del-slot]');
+  if(delBtn){
+    const slot = delBtn.dataset.delSlot;
+    showConfirm('スロット ' + slot + ' を削除しますか？', function(){
+      localStorage.removeItem(LS_SLOT(slot));
+      openSaveModalLoad();
+    });
+    return;
+  }
+});
+
 /* =========================================================
    ボタン類
    ========================================================= */
@@ -1875,21 +2042,25 @@ $('#file-input').addEventListener('change', function(e){
 $('#btn-save').addEventListener('click', openSaveModal);
 $('#btn-load').addEventListener('click', openSaveModalLoad);
 
+/* セーブリセット — カスタム確認ダイアログ */
 $('#btn-save-reset').addEventListener('click', function(){
-  if(!confirm('警告：全てのセーブデータ（スロット1〜5）を削除します。よろしいですか？')) return;
-  for(let i = 1; i <= 5; i++) localStorage.removeItem(LS_SLOT(i));
-  toast('セーブデータを全て削除しました');
+  showConfirm('警告：全てのセーブデータ（スロット1〜5）を削除します。\nよろしいですか？', function(){
+    for(let i = 1; i <= 5; i++) localStorage.removeItem(LS_SLOT(i));
+    toast('セーブデータを全て削除しました');
+  });
 });
 
+/* プロジェクトリセット — カスタム確認ダイアログ */
 $('#btn-reset').addEventListener('click', function(){
-  if(!confirm('警告：作成中のプロジェクトを白紙に戻します。よろしいですか？\n（この操作は取り消せません）')) return;
-  $('#root-slot').innerHTML = '';
-  currentProjectName = '';
-  afterChange();
-  toast('プロジェクトをリセットしました');
+  showConfirm('警告：作成中のプロジェクトを白紙に戻します。\n（この操作は取り消せません）', function(){
+    $('#root-slot').innerHTML = '';
+    currentProjectName = '';
+    afterChange();
+    toast('プロジェクトをリセットしました');
+  });
 });
 
-/* プレビュー表示切替 */
+/* プレビュー切替 */
 $('#view-seg').addEventListener('click', function(e){
   const b = e.target.closest('button');
   if(!b) return;
@@ -1910,7 +2081,7 @@ $('#vp-seg').addEventListener('click', function(e){
 });
 
 /* =========================================================
-   タブ生成
+   タブ
    ========================================================= */
 function buildTabs(){
   const bar = $('#tabbar');
@@ -1937,7 +2108,6 @@ function init(){
   buildTabs();
   renderPalette('media');
 
-  /* 自動保存の復元 */
   let restored = false;
   try{
     const raw = localStorage.getItem(LS_AUTOSAVE);
