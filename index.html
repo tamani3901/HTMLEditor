@@ -26,7 +26,8 @@
   }
   .tab:hover{background:#eef7f5;border-color:#8fd8c8;}
   .tab.active{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
-  #main{flex:1 1 auto;display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
+  .tab.preset-tab.active{background:#ff9800;border-color:#ff9800;}
+  #main{flex:1 1 auto;display:grid;grid-template-columns:230px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
   #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   #palette-head{
     flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;
@@ -44,15 +45,28 @@
     font-size:12.5px;transition:.12s;flex:0 0 auto;touch-action:pan-y;
   }
   .pal-item:hover{border-color:#8fd8c8;background:#f2fbf9;}
+  .pal-item.preset-item{background:#fffbf2;border-color:#ffe0b2;}
+  .pal-item.preset-item:hover{background:#fff5e0;border-color:#ffb74d;}
   .drag-handle{
     flex:0 0 auto;width:22px;text-align:center;color:#c0cad3;
     font-size:14px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;
   }
   .drag-handle:active{cursor:grabbing;color:#2ec4a6;}
-  .pal-item:hover .drag-handle{color:#8fd8c8;}
+  .pal-item.preset-item .drag-handle:active{color:#ff9800;}
   .pi-icon{font-size:15px;width:20px;text-align:center;flex:0 0 auto;}
   .pi-body{flex:1 1 auto;min-width:0;}
   .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  /* プリセット見出し */
+  .preset-help{
+    font-size:11px;color:#8b6914;background:#fff8e1;border:1px solid #ffe0b2;
+    border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;
+  }
+  .preset-group-head{
+    font-size:11px;font-weight:700;color:#e65100;background:#fff3e0;
+    padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;
+  }
+
   .data-del{
     flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;
     width:22px;height:22px;line-height:1;font-size:12px;cursor:pointer;
@@ -63,6 +77,7 @@
   .data-add .act{flex:1 1 auto;font-size:11.5px;padding:7px 4px;}
   .data-empty{font-size:11.5px;color:#a8b3bd;padding:10px 4px;line-height:1.6;}
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
+
   #workspace{
     min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
     padding:14px;background:#eef1f5;display:flex;flex-direction:column;
@@ -87,6 +102,7 @@
   .mini-fields{flex:1 1 auto;display:flex;gap:5px;align-items:center;min-width:0;flex-wrap:wrap;}
   .mini-fields .fld-row{flex:1 1 auto;min-width:0;}
   .mini-fields .fld-label{display:none;}
+  .mini-fields .fld-hint{display:none;}
   .mini-del{
     flex:0 0 auto;border:none;background:transparent;color:#b6c0c9;
     font-size:13px;cursor:pointer;padding:2px 5px;border-radius:5px;
@@ -107,8 +123,14 @@
   .blk-btn:hover{background:#e0f5f0;color:#1d9e83;}
   .blk-btn[data-act="del"]:hover{background:#ffe9e6;color:#d0442c;}
   .blk-fields{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;}
-  .fld-row{display:flex;align-items:center;gap:6px;}
+  .fld-row{
+    display:flex;align-items:center;gap:4px;padding:1px;border-radius:6px;
+    transition:background .12s, box-shadow .12s;
+  }
   .fld-label{flex:0 0 auto;font-size:11px;color:#7e8b98;min-width:64px;}
+  .fld-hint{
+    flex:0 0 auto;font-size:11px;opacity:.35;cursor:help;padding:0 1px;
+  }
   .fld{
     flex:1 1 auto;min-width:0;width:100%;padding:5px 7px;font-size:12px;
     border:1px solid #dbe2ea;border-radius:6px;background:#fff;color:#232a31;
@@ -116,6 +138,24 @@
   .fld:focus{outline:none;border-color:#2ec4a6;box-shadow:0 0 0 2px rgba(46,196,166,.15);}
   input[type="color"].fld{padding:1px;height:26px;cursor:pointer;}
   textarea.fld{resize:vertical;min-height:34px;}
+
+  /* プリセットドラッグ中のハイライト */
+  body.preset-drag .fld-hint{opacity:1;}
+  .fld-row.preset-target{
+    background:#fff8e1;
+    box-shadow:inset 0 0 0 2px #ffb74d;
+    animation:pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{background:#fff8e1;}
+    50%{background:#ffe9c4;}
+  }
+  .fld-row.preset-hover{
+    background:#ffe0b2;
+    box-shadow:inset 0 0 0 2px #ff9800;
+    animation:none;
+  }
+
   .blk-slots{display:flex;flex-direction:column;gap:4px;}
   .slot-row{display:flex;gap:5px;align-items:flex-start;}
   .slot-tag{
@@ -136,7 +176,9 @@
     border-radius:9px;box-shadow:0 6px 18px rgba(20,30,40,.28);
     transform:translate(-50%,-50%);opacity:.94;
   }
+  .drag-clone.preset-clone{background:#ff9800;}
   body.dragging{cursor:grabbing;}
+
   #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   .panel-head{
     flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
@@ -207,11 +249,11 @@
   }
   #toast.show{opacity:.95;transform:translateX(-50%) translateY(0);}
   @media (max-width:1100px){
-    #main{grid-template-columns:180px minmax(0,1fr) 290px;}
+    #main{grid-template-columns:190px minmax(0,1fr) 290px;}
     .fld-label{min-width:52px;}
   }
   @media (max-width:840px){
-    #main{grid-template-columns:150px minmax(0,1fr) 240px;}
+    #main{grid-template-columns:160px minmax(0,1fr) 240px;}
     .tab{padding:6px 10px;font-size:11.5px;}
   }
 </style>
@@ -273,13 +315,14 @@ function escapeHtml(s){
 let toastTimer = null;
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 
 /* =========================================================
    カテゴリ
    ========================================================= */
 const CATEGORIES = [
+  {id:'presets',     label:'🎁 かんたん入力',    name:'かんたん入力（プリセット）'},
   {id:'media',       label:'🖼 メディア',        name:'メディア・画像'},
   {id:'text',        label:'📝 テキスト',        name:'テキスト・見出し'},
   {id:'interactive', label:'🔗 リンク・ボタン',  name:'リンク・ボタン'},
@@ -315,37 +358,134 @@ const FONT_OPTIONS = [
 
 const TRIGGER_OPTIONS = [
   {v:'click',  l:'クリック時'},
-  {v:'input',  l:'入力のたび (input)'},
-  {v:'change', l:'変更時 (change)'},
+  {v:'input',  l:'入力のたび'},
+  {v:'change', l:'変更時'},
   {v:'load',   l:'ページ読込時'}
 ];
+
+/* =========================================================
+   ★ プリセット定義（かんたん入力）
+   ========================================================= */
+const PRESET_GROUPS = {
+  accept:   '📁 ファイルの種類（ファイル入力欄へ）',
+  url:      '🔗 URLサンプル（画像・動画のURL欄へ）',
+  color:    '🎨 色（色の欄へ）',
+  size:     '📏 長さ・サイズ（幅/高さ/余白へ）',
+  fontsize: '🔤 文字サイズ',
+  radius:   '⭕ 角の丸み',
+  weight:   '💪 文字の太さ',
+  align:    '≡ 文字揃え',
+  display:  '📺 表示モード',
+  border:   '▭ 枠線',
+  shadow:   '🌑 影'
+};
+
+const PRESETS = {
+  /* ファイルの種類 */
+  'pre-accept-img':   { group:'accept', label:'画像', icon:'🖼', value:'image/*' },
+  'pre-accept-video': { group:'accept', label:'動画', icon:'🎬', value:'video/*' },
+  'pre-accept-audio': { group:'accept', label:'音声', icon:'🔊', value:'audio/*' },
+  'pre-accept-pdf':   { group:'accept', label:'PDF', icon:'📄', value:'application/pdf' },
+  'pre-accept-all':   { group:'accept', label:'すべてのファイル', icon:'📦', value:'*/*' },
+
+  /* URLサンプル */
+  'pre-url-img1': { group:'url', label:'サンプル画像', icon:'🖼', value:'https://picsum.photos/400/300' },
+  'pre-url-img2': { group:'url', label:'プレースホルダー', icon:'🖼', value:'https://placehold.co/400x300' },
+  'pre-url-photo':{ group:'url', label:'フリー写真', icon:'📷', value:'https://picsum.photos/seed/1/600/400' },
+  'pre-url-yt':   { group:'url', label:'YouTube動画', icon:'▶️', value:'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+  'pre-url-map':  { group:'url', label:'Googleマップ', icon:'🗺', value:'https://maps.google.com/maps?q=Tokyo&output=embed' },
+  'pre-url-site': { group:'url', label:'サンプルサイト', icon:'🌐', value:'https://example.com' },
+
+  /* 色 */
+  'pre-color-black':  { group:'color', label:'黒', icon:'⬛', value:'#000000' },
+  'pre-color-white':  { group:'color', label:'白', icon:'⬜', value:'#ffffff' },
+  'pre-color-gray':   { group:'color', label:'グレー', icon:'🔘', value:'#888888' },
+  'pre-color-red':    { group:'color', label:'赤', icon:'🟥', value:'#e74c3c' },
+  'pre-color-blue':   { group:'color', label:'青', icon:'🟦', value:'#3498db' },
+  'pre-color-green':  { group:'color', label:'緑', icon:'🟩', value:'#2ec4a6' },
+  'pre-color-yellow': { group:'color', label:'黄', icon:'🟨', value:'#f1c40f' },
+  'pre-color-purple': { group:'color', label:'紫', icon:'🟪', value:'#9b59b6' },
+  'pre-color-orange': { group:'color', label:'オレンジ', icon:'🟧', value:'#e67e22' },
+  'pre-color-pink':   { group:'color', label:'ピンク', icon:'🌸', value:'#ff69b4' },
+
+  /* サイズ */
+  'pre-size-0':    { group:'size', label:'なし (0)', icon:'⊘', value:'0' },
+  'pre-size-xs':   { group:'size', label:'極小 (4px)', icon:'🤏', value:'4px' },
+  'pre-size-s':    { group:'size', label:'小 (8px)', icon:'🤏', value:'8px' },
+  'pre-size-m':    { group:'size', label:'中 (16px)', icon:'✋', value:'16px' },
+  'pre-size-l':    { group:'size', label:'大 (32px)', icon:'🖐', value:'32px' },
+  'pre-size-xl':   { group:'size', label:'特大 (64px)', icon:'🙌', value:'64px' },
+  'pre-size-auto': { group:'size', label:'自動 (auto)', icon:'✨', value:'auto' },
+  'pre-size-full': { group:'size', label:'画面いっぱい (100%)', icon:'🖥', value:'100%' },
+  'pre-size-half': { group:'size', label:'半分 (50%)', icon:'◐', value:'50%' },
+
+  /* 文字サイズ */
+  'pre-font-xs':  { group:'fontsize', label:'小 (12px)', icon:'ᵃ', value:'12px' },
+  'pre-font-s':   { group:'fontsize', label:'標準 (16px)', icon:'A', value:'16px' },
+  'pre-font-m':   { group:'fontsize', label:'やや大 (20px)', icon:'A', value:'20px' },
+  'pre-font-l':   { group:'fontsize', label:'大 (24px)', icon:'A', value:'24px' },
+  'pre-font-xl':  { group:'fontsize', label:'特大 (32px)', icon:'A', value:'32px' },
+  'pre-font-xxl': { group:'fontsize', label:'超特大 (48px)', icon:'A', value:'48px' },
+
+  /* 角丸 */
+  'pre-radius-0':     { group:'radius', label:'角ばる (0)', icon:'▢', value:'0' },
+  'pre-radius-s':     { group:'radius', label:'少し (4px)', icon:'▢', value:'4px' },
+  'pre-radius-m':     { group:'radius', label:'中 (8px)', icon:'⬜', value:'8px' },
+  'pre-radius-l':     { group:'radius', label:'大 (16px)', icon:'⬜', value:'16px' },
+  'pre-radius-round': { group:'radius', label:'丸ボタン', icon:'⚪', value:'999px' },
+
+  /* 文字の太さ */
+  'pre-weight-normal': { group:'weight', label:'普通', icon:'A', value:'normal' },
+  'pre-weight-bold':   { group:'weight', label:'太字', icon:'B', value:'bold' },
+  'pre-weight-light':  { group:'weight', label:'細字', icon:'a', value:'300' },
+
+  /* 文字揃え */
+  'pre-align-l': { group:'align', label:'左揃え', icon:'⬅', value:'left' },
+  'pre-align-c': { group:'align', label:'中央揃え', icon:'↔', value:'center' },
+  'pre-align-r': { group:'align', label:'右揃え', icon:'➡', value:'right' },
+
+  /* 表示モード */
+  'pre-display-block': { group:'display', label:'ブロック', icon:'▭', value:'block' },
+  'pre-display-flex':  { group:'display', label:'フレックス', icon:'🔀', value:'flex' },
+  'pre-display-none':  { group:'display', label:'非表示', icon:'🚫', value:'none' },
+
+  /* 枠線 */
+  'pre-border-none':  { group:'border', label:'枠線なし', icon:'⊘', value:'none' },
+  'pre-border-thin':  { group:'border', label:'細い枠線', icon:'▭', value:'1px solid #cccccc' },
+  'pre-border-bold':  { group:'border', label:'太い枠線', icon:'▬', value:'3px solid #333333' },
+  'pre-border-round': { group:'border', label:'点線', icon:'┄', value:'2px dashed #999999' },
+
+  /* 影 */
+  'pre-shadow-none':   { group:'shadow', label:'影なし', icon:'⊘', value:'none' },
+  'pre-shadow-soft':   { group:'shadow', label:'柔らかい影', icon:'🌫', value:'0 2px 6px rgba(0,0,0,0.15)' },
+  'pre-shadow-strong': { group:'shadow', label:'濃い影', icon:'🌑', value:'0 4px 12px rgba(0,0,0,0.35)' }
+};
 
 /* =========================================================
    ブロック定義
    ========================================================= */
 const BLOCKS = {
-
   /* ===== メディア ===== */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css'],
     fields:[
-      {k:'src', label:'URL', type:'url', ph:'https://…'},
+      {k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},
       {k:'alt', label:'代替テキスト', type:'text'},
       {k:'media', type:'hidden'}
     ]},
   'video': { cat:'media', label:'動画', icon:'🎬', tag:'video', slots:['css'],
-    fields:[{k:'src', label:'URL', type:'url'}, {k:'media', type:'hidden'}]},
+    fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'}, {k:'media', type:'hidden'}]},
   'audio': { cat:'media', label:'音声', icon:'🔊', tag:'audio', slots:['css'],
-    fields:[{k:'src', label:'URL', type:'url'}, {k:'media', type:'hidden'}]},
+    fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'}, {k:'media', type:'hidden'}]},
   'iframe': { cat:'media', label:'埋め込み', icon:'🌐', tag:'iframe', slots:['css'],
     fields:[
-      {k:'src', label:'URL', type:'url'},
-      {k:'w', label:'幅', type:'text', def:'560'},
-      {k:'h', label:'高さ', type:'text', def:'315'}
+      {k:'src', label:'URL', type:'url', presetGroup:'url'},
+      {k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},
+      {k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}
     ]},
   'canvas': { cat:'media', label:'キャンバス', icon:'🖌', tag:'canvas', slots:['css'],
     fields:[
-      {k:'w', label:'幅', type:'number', def:'300'},
-      {k:'h', label:'高さ', type:'number', def:'150'}
+      {k:'w', label:'幅', type:'number', def:'300', presetGroup:'size'},
+      {k:'h', label:'高さ', type:'number', def:'150', presetGroup:'size'}
     ]},
   'figure': { cat:'media', label:'図 (figure)', icon:'🖼', tag:'figure', container:true, slots:['container','css'], fields:[] },
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
@@ -363,8 +503,6 @@ const BLOCKS = {
       {k:'min', label:'最小', type:'number', def:'0'},
       {k:'max', label:'最大', type:'number', def:'100'}
     ]},
-  'picture': { cat:'media', label:'レスポンシブ画像', icon:'🖼', tag:'picture', container:true, slots:['container','css'],
-    fields:[{k:'srcset', label:'srcset', type:'text', ph:'image@2x.png 2x'}]},
 
   /* ===== テキスト ===== */
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var'],
@@ -379,7 +517,7 @@ const BLOCKS = {
       {k:'text', label:'テキスト', type:'textarea', def:'ここに文章を入力します。'}
     ]},
   'br': { cat:'text', label:'改行', icon:'↵', tag:'br', voidTag:true, slots:[], fields:[] },
-  'wbr': { cat:'text', label:'改行可能点 (wbr)', icon:'⤶', tag:'wbr', voidTag:true, slots:[], fields:[] },
+  'wbr': { cat:'text', label:'改行可能点', icon:'⤶', tag:'wbr', voidTag:true, slots:[], fields:[] },
   'hr': { cat:'text', label:'区切り線', icon:'─', tag:'hr', voidTag:true, slots:['css'], fields:[] },
   'b': { cat:'text', label:'太字 (b)', icon:'B', tag:'b', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'太字'}]},
@@ -395,7 +533,7 @@ const BLOCKS = {
     fields:[{k:'text', label:'テキスト', type:'text', def:'取消線'}]},
   'mark': { cat:'text', label:'ハイライト', icon:'🖍', tag:'mark', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'マーカー'}]},
-  'small': { cat:'text', label:'小さい文字 (small)', icon:'ᵃ', tag:'small', textTag:true, slots:['css','var'],
+  'small': { cat:'text', label:'小さい文字', icon:'ᵃ', tag:'small', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'小さめの文字'}]},
   'sub': { cat:'text', label:'下付き (sub)', icon:'ₓ', tag:'sub', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'2'}]},
@@ -452,19 +590,9 @@ const BLOCKS = {
   /* ===== インタラクティブ ===== */
   'a': { cat:'interactive', label:'リンク (a)', icon:'🔗', tag:'a', textTag:true, slots:['css','var'],
     fields:[
-      {k:'href', label:'URL', type:'url', def:'#'},
+      {k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},
       {k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},
       {k:'text', label:'表示文字', type:'text', def:'リンク'}
-    ]},
-  'a-mail': { cat:'interactive', label:'メールリンク', icon:'✉️', tag:'a', textTag:true, slots:['css','var'],
-    fields:[
-      {k:'href', label:'メール', type:'text', def:'mailto:info@example.com'},
-      {k:'text', label:'表示文字', type:'text', def:'お問い合わせ'}
-    ]},
-  'a-tel': { cat:'interactive', label:'電話リンク', icon:'📞', tag:'a', textTag:true, slots:['css','var'],
-    fields:[
-      {k:'href', label:'電話番号', type:'text', def:'tel:0312345678'},
-      {k:'text', label:'表示文字', type:'text', def:'03-1234-5678'}
     ]},
   'button': { cat:'interactive', label:'ボタン', icon:'🔘', tag:'button', slots:['css','var','event'],
     fields:[
@@ -512,10 +640,10 @@ const BLOCKS = {
     fields:[{k:'text', label:'説明', type:'text', def:'説明文'}]},
   'menu': { cat:'lists', label:'メニュー (menu)', icon:'📋', tag:'menu', container:true, slots:['container','css'], fields:[] },
 
-  /* ===== 表（テーブル） ===== */
+  /* ===== 表 ===== */
   'table': { cat:'tables', label:'表 (table)', icon:'📊', tag:'table', container:true, slots:['container','css'],
     fields:[{k:'id', label:'ID', type:'text'}]},
-  'caption': { cat:'tables', label:'表のタイトル (caption)', icon:'🏷', tag:'caption', textTag:true, slots:['css','var'],
+  'caption': { cat:'tables', label:'表のタイトル', icon:'🏷', tag:'caption', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'表のタイトル'}]},
   'thead': { cat:'tables', label:'ヘッダ行 (thead)', icon:'🔝', tag:'thead', container:true, slots:['container','css'], fields:[] },
   'tbody': { cat:'tables', label:'本体 (tbody)', icon:'📄', tag:'tbody', container:true, slots:['container','css'], fields:[] },
@@ -537,7 +665,7 @@ const BLOCKS = {
     fields:[{k:'id', label:'ID', type:'text', def:'form1'}]},
   'label': { cat:'forms', label:'ラベル (label)', icon:'🏷', tag:'label', container:true, slots:['container','css'],
     fields:[{k:'for', label:'for属性', type:'text'}]},
-  'input-text': { cat:'forms', label:'1行入力 (text)', icon:'⌨️', tag:'input', voidTag:true, slots:['css'],
+  'input-text': { cat:'forms', label:'1行入力', icon:'⌨️', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'input1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'入力してください'}
@@ -547,55 +675,55 @@ const BLOCKS = {
       {k:'id', label:'ID', type:'text', def:'pw1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'パスワード'}
     ]},
-  'input-email': { cat:'forms', label:'メール (email)', icon:'✉️', tag:'input', voidTag:true, slots:['css'],
+  'input-email': { cat:'forms', label:'メール', icon:'✉️', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'email1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'example@example.com'}
     ]},
-  'input-url': { cat:'forms', label:'URL入力 (url)', icon:'🌐', tag:'input', voidTag:true, slots:['css'],
+  'input-url': { cat:'forms', label:'URL入力', icon:'🌐', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'url1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'https://…'}
     ]},
-  'input-tel': { cat:'forms', label:'電話番号 (tel)', icon:'📞', tag:'input', voidTag:true, slots:['css'],
+  'input-tel': { cat:'forms', label:'電話番号', icon:'📞', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'tel1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'090-0000-0000'}
     ]},
-  'input-number': { cat:'forms', label:'数値 (number)', icon:'🔢', tag:'input', voidTag:true, slots:['css'],
+  'input-number': { cat:'forms', label:'数値', icon:'🔢', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'num1'},
       {k:'min', label:'最小', type:'number'},
       {k:'max', label:'最大', type:'number'},
       {k:'step', label:'増分', type:'number', def:'1'}
     ]},
-  'input-date': { cat:'forms', label:'日付 (date)', icon:'📅', tag:'input', voidTag:true, slots:['css'],
+  'input-date': { cat:'forms', label:'日付', icon:'📅', tag:'input', voidTag:true, slots:['css'],
     fields:[{k:'id', label:'ID', type:'text', def:'date1'}]},
-  'input-time': { cat:'forms', label:'時刻 (time)', icon:'⏰', tag:'input', voidTag:true, slots:['css'],
+  'input-time': { cat:'forms', label:'時刻', icon:'⏰', tag:'input', voidTag:true, slots:['css'],
     fields:[{k:'id', label:'ID', type:'text', def:'time1'}]},
-  'input-color': { cat:'forms', label:'色選択 (color)', icon:'🎨', tag:'input', voidTag:true, slots:['css'],
+  'input-color': { cat:'forms', label:'色選択', icon:'🎨', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'color1'},
-      {k:'value', label:'初期色', type:'color', def:'#2ec4a6'}
+      {k:'value', label:'初期色', type:'color', def:'#2ec4a6', presetGroup:'color'}
     ]},
-  'input-range': { cat:'forms', label:'スライダー (range)', icon:'🎚', tag:'input', voidTag:true, slots:['css'],
+  'input-range': { cat:'forms', label:'スライダー', icon:'🎚', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'range1'},
       {k:'min', label:'最小', type:'number', def:'0'},
       {k:'max', label:'最大', type:'number', def:'100'},
       {k:'value', label:'初期値', type:'number', def:'50'}
     ]},
-  'input-file': { cat:'forms', label:'ファイル (file)', icon:'📁', tag:'input', voidTag:true, slots:['css'],
+  'input-file': { cat:'forms', label:'ファイル', icon:'📁', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'file1'},
-      {k:'accept', label:'accept', type:'text', ph:'image/*'}
+      {k:'accept', label:'ファイルの種類', type:'text', ph:'（🎁をドロップ）', presetGroup:'accept'}
     ]},
-  'input-search': { cat:'forms', label:'検索 (search)', icon:'🔍', tag:'input', voidTag:true, slots:['css'],
+  'input-search': { cat:'forms', label:'検索', icon:'🔍', tag:'input', voidTag:true, slots:['css'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'search1'},
       {k:'ph', label:'プレースホルダー', type:'text', def:'検索キーワード'}
     ]},
-  'input-hidden': { cat:'forms', label:'隠しフィールド (hidden)', icon:'👻', tag:'input', voidTag:true, slots:[],
+  'input-hidden': { cat:'forms', label:'隠しフィールド', icon:'👻', tag:'input', voidTag:true, slots:[],
     fields:[
       {k:'id', label:'ID', type:'text', def:'hidden1'},
       {k:'value', label:'値', type:'text', def:'値'}
@@ -623,15 +751,6 @@ const BLOCKS = {
       {k:'id', label:'ID', type:'text', def:'select1'},
       {k:'options', label:'選択肢(改行区切り)', type:'textarea', def:'選択肢1\n選択肢2\n選択肢3'}
     ]},
-  'option': { cat:'forms', label:'選択項目 (option)', icon:'▫', tag:'option', textTag:true, slots:[],
-    fields:[
-      {k:'value', label:'値', type:'text', def:'val1'},
-      {k:'text', label:'表示文字', type:'text', def:'項目'}
-    ]},
-  'optgroup': { cat:'forms', label:'選択グループ', icon:'📂', tag:'optgroup', container:true, slots:['container'],
-    fields:[{k:'label', label:'グループ名', type:'text', def:'グループ1'}]},
-  'datalist': { cat:'forms', label:'入力候補 (datalist)', icon:'📋', tag:'datalist', container:true, slots:['container'],
-    fields:[{k:'id', label:'ID', type:'text', def:'list1'}]},
   'output': { cat:'forms', label:'出力欄 (output)', icon:'📤', tag:'output', textTag:true, slots:['css','var'],
     fields:[
       {k:'id', label:'ID', type:'text', def:'out1'},
@@ -649,38 +768,37 @@ const BLOCKS = {
     ]},
 
   /* ===== CSS ===== */
-  'css-width':    { cat:'css', label:'幅 width',        icon:'↔', cssProp:'width',            fields:[{k:'value', type:'text', def:'100%'}] },
-  'css-height':   { cat:'css', label:'高さ height',     icon:'↕', cssProp:'height',           fields:[{k:'value', type:'text', def:'auto'}] },
-  'css-maxwidth': { cat:'css', label:'最大幅 max-width',icon:'↔', cssProp:'max-width',        fields:[{k:'value', type:'text', def:'100%'}] },
-  'css-minheight':{ cat:'css', label:'最小高 min-height',icon:'↕', cssProp:'min-height',      fields:[{k:'value', type:'text', def:'0'}] },
-  'css-margin':   { cat:'css', label:'外余白 margin',   icon:'⬜', cssProp:'margin',           fields:[{k:'value', type:'text', def:'0'}] },
-  'css-padding':  { cat:'css', label:'内余白 padding',  icon:'🔲', cssProp:'padding',          fields:[{k:'value', type:'text', def:'8px'}] },
-  'css-radius':   { cat:'css', label:'角丸 radius',     icon:'⭕', cssProp:'border-radius',    fields:[{k:'value', type:'text', def:'8px'}] },
-  'css-border':   { cat:'css', label:'枠線 border',     icon:'▭', cssProp:'border',           fields:[{k:'value', type:'text', def:'1px solid #cccccc'}] },
-  'css-color':    { cat:'css', label:'文字色',          icon:'🅰', cssProp:'color',            fields:[{k:'value', type:'color', def:'#111111'}] },
-  'css-bg':       { cat:'css', label:'背景色',          icon:'🎨', cssProp:'background-color', fields:[{k:'value', type:'color', def:'#ffffff'}] },
-  'css-display':  { cat:'css', label:'表示 display',    icon:'📺', cssProp:'display',          fields:[{k:'value', type:'select', options:['block','inline','inline-block','flex','grid','none'], def:'block'}] },
+  'css-width':    { cat:'css', label:'幅 width',        icon:'↔', cssProp:'width',  presetGroup:'size',     fields:[{k:'value', type:'text', def:'100%'}] },
+  'css-height':   { cat:'css', label:'高さ height',     icon:'↕', cssProp:'height', presetGroup:'size',     fields:[{k:'value', type:'text', def:'auto'}] },
+  'css-maxwidth': { cat:'css', label:'最大幅 max-width',icon:'↔', cssProp:'max-width', presetGroup:'size',  fields:[{k:'value', type:'text', def:'100%'}] },
+  'css-minheight':{ cat:'css', label:'最小高 min-height',icon:'↕', cssProp:'min-height', presetGroup:'size',fields:[{k:'value', type:'text', def:'0'}] },
+  'css-margin':   { cat:'css', label:'外余白 margin',   icon:'⬜', cssProp:'margin',  presetGroup:'size',    fields:[{k:'value', type:'text', def:'0'}] },
+  'css-padding':  { cat:'css', label:'内余白 padding',  icon:'🔲', cssProp:'padding', presetGroup:'size',    fields:[{k:'value', type:'text', def:'8px'}] },
+  'css-radius':   { cat:'css', label:'角丸 radius',     icon:'⭕', cssProp:'border-radius', presetGroup:'radius', fields:[{k:'value', type:'text', def:'8px'}] },
+  'css-border':   { cat:'css', label:'枠線 border',     icon:'▭', cssProp:'border',  presetGroup:'border',   fields:[{k:'value', type:'text', def:'1px solid #cccccc'}] },
+  'css-color':    { cat:'css', label:'文字色',          icon:'🅰', cssProp:'color',   presetGroup:'color',    fields:[{k:'value', type:'color', def:'#111111'}] },
+  'css-bg':       { cat:'css', label:'背景色',          icon:'🎨', cssProp:'background-color', presetGroup:'color', fields:[{k:'value', type:'color', def:'#ffffff'}] },
+  'css-display':  { cat:'css', label:'表示 display',    icon:'📺', cssProp:'display', presetGroup:'display',  fields:[{k:'value', type:'select', options:['block','inline','inline-block','flex','grid','none'], def:'block'}] },
   'css-flexdir':  { cat:'css', label:'主軸 flex-direction',icon:'↔', cssProp:'flex-direction', fields:[{k:'value', type:'select', options:['row','column','row-reverse','column-reverse'], def:'row'}] },
   'css-justify':  { cat:'css', label:'横配置 justify-content',icon:'⇔', cssProp:'justify-content', fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','space-between','space-around'], def:'flex-start'}] },
-  'css-alignitems':{cat:'css', label:'縦配置 align-items', icon:'⇕', cssProp:'align-items',    fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','stretch'], def:'stretch'}] },
-  'css-gap':      { cat:'css', label:'間隔 gap',        icon:'⏸', cssProp:'gap',              fields:[{k:'value', type:'text', def:'8px'}] },
-  'css-opacity':  { cat:'css', label:'透明度 opacity',  icon:'💧', cssProp:'opacity',          fields:[{k:'value', type:'text', def:'1'}] },
-  'css-boxshadow':{ cat:'css', label:'影 box-shadow',   icon:'🌑', cssProp:'box-shadow',       fields:[{k:'value', type:'text', def:'0 2px 6px rgba(0,0,0,0.15)'}] },
-  'css-overflow': { cat:'css', label:'はみ出し overflow',icon:'📦', cssProp:'overflow',         fields:[{k:'value', type:'select', options:['visible','hidden','auto','scroll'], def:'visible'}] },
-  'css-position': { cat:'css', label:'配置 position',   icon:'📍', cssProp:'position',         fields:[{k:'value', type:'select', options:['static','relative','absolute','fixed','sticky'], def:'static'}] },
-  'css-zindex':   { cat:'css', label:'重なり z-index',  icon:'🔝', cssProp:'z-index',          fields:[{k:'value', type:'text', def:'1'}] },
-  /* フォント系 */
+  'css-alignitems':{cat:'css', label:'縦配置 align-items', icon:'⇕', cssProp:'align-items',  fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','stretch'], def:'stretch'}] },
+  'css-gap':      { cat:'css', label:'間隔 gap',        icon:'⏸', cssProp:'gap', presetGroup:'size',   fields:[{k:'value', type:'text', def:'8px'}] },
+  'css-opacity':  { cat:'css', label:'透明度 opacity',  icon:'💧', cssProp:'opacity',       fields:[{k:'value', type:'text', def:'1'}] },
+  'css-boxshadow':{ cat:'css', label:'影 box-shadow',   icon:'🌑', cssProp:'box-shadow', presetGroup:'shadow', fields:[{k:'value', type:'text', def:'0 2px 6px rgba(0,0,0,0.15)'}] },
+  'css-overflow': { cat:'css', label:'はみ出し overflow',icon:'📦', cssProp:'overflow',      fields:[{k:'value', type:'select', options:['visible','hidden','auto','scroll'], def:'visible'}] },
+  'css-position': { cat:'css', label:'配置 position',   icon:'📍', cssProp:'position',      fields:[{k:'value', type:'select', options:['static','relative','absolute','fixed','sticky'], def:'static'}] },
+  'css-zindex':   { cat:'css', label:'重なり z-index',  icon:'🔝', cssProp:'z-index',       fields:[{k:'value', type:'text', def:'1'}] },
   'css-fontfamily':{cat:'css', label:'フォント', icon:'🔤', cssProp:'font-family',
     fields:[{k:'value', label:'書体', type:'select', options:FONT_OPTIONS, def:''}]},
-  'css-fontsize': { cat:'css', label:'文字サイズ',       icon:'A', cssProp:'font-size',        fields:[{k:'value', type:'text', def:'16px'}] },
-  'css-fontweight':{cat:'css', label:'文字の太さ',       icon:'B', cssProp:'font-weight',      fields:[{k:'value', type:'select', options:['normal','bold','100','300','500','700','900'], def:'normal'}] },
-  'css-fontstyle':{cat:'css', label:'文字スタイル',      icon:'I', cssProp:'font-style',       fields:[{k:'value', type:'select', options:['normal','italic','oblique'], def:'normal'}] },
-  'css-lineheight':{cat:'css', label:'行の高さ',         icon:'☰', cssProp:'line-height',      fields:[{k:'value', type:'text', def:'1.6'}] },
-  'css-letterspacing':{cat:'css', label:'文字間隔',      icon:'↔', cssProp:'letter-spacing',   fields:[{k:'value', type:'text', def:'0'}] },
-  'css-textalign':{ cat:'css', label:'文字揃え',        icon:'≡', cssProp:'text-align',       fields:[{k:'value', type:'select', options:['left','center','right','justify'], def:'left'}] },
-  'css-textdecoration':{cat:'css', label:'文字装飾',     icon:'U', cssProp:'text-decoration',  fields:[{k:'value', type:'select', options:['none','underline','line-through','overline'], def:'none'}] },
-  'css-textshadow':{cat:'css', label:'文字の影',        icon:'🌫', cssProp:'text-shadow',       fields:[{k:'value', type:'text', def:'1px 1px 2px rgba(0,0,0,0.3)'}] },
-  'css-cursor':   { cat:'css', label:'カーソル',        icon:'🖱', cssProp:'cursor',            fields:[{k:'value', type:'select', options:['default','pointer','text','move','not-allowed','help'], def:'pointer'}] },
+  'css-fontsize': { cat:'css', label:'文字サイズ',       icon:'A', cssProp:'font-size', presetGroup:'fontsize', fields:[{k:'value', type:'text', def:'16px'}] },
+  'css-fontweight':{cat:'css', label:'文字の太さ',       icon:'B', cssProp:'font-weight', presetGroup:'weight', fields:[{k:'value', type:'select', options:['normal','bold','100','300','500','700','900'], def:'normal'}] },
+  'css-fontstyle':{cat:'css', label:'文字スタイル',      icon:'I', cssProp:'font-style',   fields:[{k:'value', type:'select', options:['normal','italic','oblique'], def:'normal'}] },
+  'css-lineheight':{cat:'css', label:'行の高さ',         icon:'☰', cssProp:'line-height',  fields:[{k:'value', type:'text', def:'1.6'}] },
+  'css-letterspacing':{cat:'css', label:'文字間隔',      icon:'↔', cssProp:'letter-spacing', fields:[{k:'value', type:'text', def:'0'}] },
+  'css-textalign':{ cat:'css', label:'文字揃え',        icon:'≡', cssProp:'text-align', presetGroup:'align', fields:[{k:'value', type:'select', options:['left','center','right','justify'], def:'left'}] },
+  'css-textdecoration':{cat:'css', label:'文字装飾',     icon:'U', cssProp:'text-decoration', fields:[{k:'value', type:'select', options:['none','underline','line-through','overline'], def:'none'}] },
+  'css-textshadow':{cat:'css', label:'文字の影',        icon:'🌫', cssProp:'text-shadow',  fields:[{k:'value', type:'text', def:'1px 1px 2px rgba(0,0,0,0.3)'}] },
+  'css-cursor':   { cat:'css', label:'カーソル',        icon:'🖱', cssProp:'cursor',        fields:[{k:'value', type:'select', options:['default','pointer','text','move','not-allowed','help'], def:'pointer'}] },
 
   /* ===== 変数・イベント ===== */
   'var-static': { cat:'variables', label:'静的テキスト', icon:'🔢', slotKind:'var',
@@ -691,7 +809,6 @@ const BLOCKS = {
   'var-input': { cat:'variables', label:'入力欄の値を挿入', icon:'🔗', slotKind:'var',
     fields:[{k:'targetId', label:'参照ID', type:'text', def:'input1'}]},
 
-  /* ---- 表示系イベント ---- */
   'evt-live-value': { cat:'variables', label:'📺 値をリアルタイム表示', icon:'📺', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
@@ -728,8 +845,6 @@ const BLOCKS = {
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'対象ID', type:'text', def:'target1'}
     ]},
-
-  /* ---- 操作系イベント ---- */
   'evt-counter': { cat:'variables', label:'🔢 カウンター (+/-)', icon:'🔢', slotKind:'event',
     fields:[
       {k:'toId', label:'表示先ID', type:'text', def:'out1'},
@@ -754,19 +869,19 @@ const BLOCKS = {
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'対象ID', type:'text', def:'title1'},
-      {k:'color', label:'色', type:'color', def:'#ff3366'}
+      {k:'color', label:'色', type:'color', def:'#ff3366', presetGroup:'color'}
     ]},
   'evt-change-bg': { cat:'variables', label:'🖌 背景色を変更', icon:'🖌', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'対象ID', type:'text', def:'box1'},
-      {k:'color', label:'色', type:'color', def:'#ffe082'}
+      {k:'color', label:'色', type:'color', def:'#ffe082', presetGroup:'color'}
     ]},
   'evt-change-img': { cat:'variables', label:'🖼 画像を切替', icon:'🖼', slotKind:'event',
     fields:[
       {k:'toId', label:'画像ID', type:'text', def:'img1'},
-      {k:'srcA', label:'画像URL A', type:'url'},
-      {k:'srcB', label:'画像URL B', type:'url'}
+      {k:'srcA', label:'画像URL A', type:'url', presetGroup:'url'},
+      {k:'srcB', label:'画像URL B', type:'url', presetGroup:'url'}
     ]},
   'evt-toggle-class': { cat:'variables', label:'🏷 クラスを切替', icon:'🏷', slotKind:'event',
     fields:[
@@ -775,12 +890,10 @@ const BLOCKS = {
       {k:'className', label:'クラス名', type:'text', def:'active'}
     ]},
   'evt-scroll-to': { cat:'variables', label:'⬇ 要素へスクロール', icon:'⬇', slotKind:'event',
-    fields:[
-      {k:'toId', label:'対象ID', type:'text', def:'section2'}
-    ]},
+    fields:[{k:'toId', label:'対象ID', type:'text', def:'section2'}]},
   'evt-open-url': { cat:'variables', label:'🔗 URLを開く', icon:'🔗', slotKind:'event',
     fields:[
-      {k:'url', label:'URL', type:'url', def:'https://example.com'},
+      {k:'url', label:'URL', type:'url', def:'https://example.com', presetGroup:'url'},
       {k:'newTab', label:'新しいタブ', type:'select', options:[{v:'1',l:'する'},{v:'',l:'しない'}], def:'1'}
     ]},
   'evt-open-dialog': { cat:'variables', label:'💬 ダイアログを開く', icon:'💬', slotKind:'event',
@@ -836,10 +949,7 @@ function tagLabel(def){
   return '<' + def.tag + '>';
 }
 
-/* =========================================================
-   状態
-   ========================================================= */
-let currentCat = 'media';
+let currentCat = 'presets';
 let currentProjectName = '';
 let PROJECT_SETTINGS = { baseFont:'', baseFontSize:'' };
 const MEDIA = [];
@@ -849,7 +959,7 @@ const LS_SLOT = i => 'html_block_editor_slot_' + i;
 /* =========================================================
    フィールド生成
    ========================================================= */
-function makeField(f, val){
+function makeField(f, val, presetGroup){
   if(f.type === 'hidden'){
     const i = document.createElement('input');
     i.type = 'hidden'; i.className = 'fld'; i.dataset.key = f.k;
@@ -858,11 +968,22 @@ function makeField(f, val){
   }
   const wrap = document.createElement('label');
   wrap.className = 'fld-row';
+  const pg = presetGroup || f.presetGroup;
+  if(pg) wrap.dataset.presetGroup = pg;
+
   if(f.label){
     const s = document.createElement('span');
     s.className = 'fld-label'; s.textContent = f.label;
     wrap.appendChild(s);
   }
+  if(pg){
+    const hint = document.createElement('span');
+    hint.className = 'fld-hint';
+    hint.textContent = '🎁';
+    hint.title = 'ここに「かんたん入力」をドロップできます';
+    wrap.appendChild(hint);
+  }
+
   let inp;
   if(f.type === 'select'){
     inp = document.createElement('select');
@@ -907,7 +1028,7 @@ function createBlock(type, values){
     el.appendChild(head);
     const fields = document.createElement('div');
     fields.className = 'mini-fields blk-fields';
-    (def.fields || []).forEach(f => fields.appendChild(makeField(f, vals[f.k])));
+    (def.fields || []).forEach(f => fields.appendChild(makeField(f, vals[f.k], def.presetGroup)));
     el.appendChild(fields);
     const del = document.createElement('button');
     del.className = 'mini-del'; del.dataset.act = 'del'; del.type = 'button';
@@ -1009,7 +1130,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 2,
+    version: 3,
     name: currentProjectName,
     settings: {
       baseFont: PROJECT_SETTINGS.baseFont || '',
@@ -1054,7 +1175,7 @@ function resolveMediaBlocks(){
 }
 
 /* =========================================================
-   HTML 生成
+   CSS 収集 / コンテンツ
    ========================================================= */
 function cssStyleOf(el){
   const slot = getSlot(el, 'css'); if(!slot) return '';
@@ -1088,44 +1209,31 @@ function defaultTrigger(t){
   switch(t){
     case 'evt-live-value': return 'input';
     case 'evt-show-checked': return 'change';
-    case 'evt-show-input': return 'click';
-    case 'evt-show-text': return 'click';
-    case 'evt-show-date': return 'click';
-    case 'evt-toggle-hidden': return 'click';
-    case 'evt-alert': return 'click';
     default: return 'click';
   }
 }
-
 function eventBody(t, kv, ownerId){
   const fromId = kv.fromId || ownerId || '';
   const toId = kv.toId || '';
   const fid = JSON.stringify(fromId);
   const tid = JSON.stringify(toId);
-
   switch(t){
     case 'evt-live-value':
     case 'evt-show-input':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.value;`;
-
     case 'evt-show-checked': {
       const tt = JSON.stringify(kv.trueText || 'ON');
       const ft = JSON.stringify(kv.falseText || 'OFF');
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.checked?${tt}:${ft};`;
     }
-
     case 'evt-show-text':
       return `var t=document.getElementById(${tid});if(t)t.textContent=${JSON.stringify(kv.text||'')};`;
-
     case 'evt-show-date':
       return `var t=document.getElementById(${tid});if(t)t.textContent=new Date().toLocaleString('ja-JP');`;
-
     case 'evt-toggle-hidden':
       return `var t=document.getElementById(${tid});if(t)t.style.display=(t.style.display==='none')?'':'none';`;
-
     case 'evt-alert':
       return `alert(${JSON.stringify(kv.text||'')});`;
-
     case 'evt-counter': {
       const step = parseInt(kv.step, 10) || 1;
       const init = parseInt(kv.init, 10) || 0;
@@ -1133,50 +1241,37 @@ function eventBody(t, kv, ownerId){
       const max = kv.max !== '' ? parseInt(kv.max, 10) : 999999;
       return `var t=document.getElementById(${tid});if(t){var v=parseInt(t.dataset.count,10);if(isNaN(v))v=${init};v+=${step};if(v<${min})v=${min};if(v>${max})v=${max};t.dataset.count=v;t.textContent=v;}`;
     }
-
     case 'evt-copy-value':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
-
     case 'evt-toggle-text': {
       const ta = JSON.stringify(kv.textA || 'A');
       const tb = JSON.stringify(kv.textB || 'B');
       return `var t=document.getElementById(${tid});if(t){var a=t.dataset.toggle!=='1';t.textContent=a?${tb}:${ta};t.dataset.toggle=a?'1':'0';}`;
     }
-
     case 'evt-change-color':
       return `var t=document.getElementById(${tid});if(t)t.style.color=${JSON.stringify(kv.color||'#000000')};`;
-
     case 'evt-change-bg':
       return `var t=document.getElementById(${tid});if(t)t.style.background=${JSON.stringify(kv.color||'#ffff00')};`;
-
     case 'evt-change-img': {
       const sa = JSON.stringify(kv.srcA||''), sb = JSON.stringify(kv.srcB||'');
       return `var t=document.getElementById(${tid});if(t){t.src=(t.dataset.toggle==='1')?${sa}:${sb};t.dataset.toggle=(t.dataset.toggle==='1')?'0':'1';}`;
     }
-
     case 'evt-toggle-class':
       return `var t=document.getElementById(${tid});if(t)t.classList.toggle(${JSON.stringify(kv.className||'active')});`;
-
     case 'evt-scroll-to':
       return `var t=document.getElementById(${tid});if(t)t.scrollIntoView({behavior:'smooth'});`;
-
     case 'evt-open-url':
       return `window.open(${JSON.stringify(kv.url||'')},${JSON.stringify(kv.newTab?'_blank':'_self')});`;
-
     case 'evt-open-dialog':
       return `var t=document.getElementById(${tid});if(t&&t.showModal)t.showModal();`;
-
     case 'evt-close-dialog':
       return `var t=document.getElementById(${tid});if(t&&t.close)t.close();`;
-
     case 'evt-reset-form':
       return `var f=document.getElementById(${JSON.stringify(kv.formId||'')});if(f)f.reset();`;
-
     case 'evt-random': {
       const opts = String(kv.options||'').split('\n').map(s=>s.trim()).filter(Boolean);
       return `var opts=${JSON.stringify(opts)};var t=document.getElementById(${tid});if(t&&opts.length)t.textContent=opts[Math.floor(Math.random()*opts.length)];`;
     }
-
     case 'evt-sum-values': {
       const ids = String(kv.fromIds||'').split(',').map(s=>s.trim()).filter(Boolean);
       return `var ids=${JSON.stringify(ids)};var sum=0;ids.forEach(function(id){var e=document.getElementById(id);if(e)sum+=parseFloat(e.value||0)||0;});var t=document.getElementById(${tid});if(t)t.textContent=sum;`;
@@ -1184,46 +1279,30 @@ function eventBody(t, kv, ownerId){
   }
   return '';
 }
-
 function collectEvents(el, v, events, loadEvents, warnings){
   const slot = getSlot(el, 'event');
   if(!slot) return;
   const kids = childBlocks(slot);
   if(!kids.length) return;
   const owner = v.id || '';
-
   kids.forEach(k => {
     const kv = getValues(k);
     const t = k.dataset.type;
-
-    // prevent-submit は特別扱い
     if(t === 'evt-prevent-submit'){
       if(!owner){ warnings.push('イベント対象に ID がありません'); return; }
       events.push(`document.getElementById(${JSON.stringify(owner)})?.addEventListener("submit",function(e){e.preventDefault();});`);
       return;
     }
-
     const trigger = kv.trigger || defaultTrigger(t);
     const body = eventBody(t, kv, owner);
     if(!body) return;
-
-    if(trigger === 'load'){
-      loadEvents.push(body);
-      return;
-    }
-
-    if(!owner){
-      warnings.push('イベントを設定した要素に ID がありません（スキップ）');
-      return;
-    }
+    if(trigger === 'load'){ loadEvents.push(body); return; }
+    if(!owner){ warnings.push('イベント対象に ID がありません'); return; }
     const listener = (trigger === 'input') ? 'input' : (trigger === 'change') ? 'change' : 'click';
     events.push(`document.getElementById(${JSON.stringify(owner)})?.addEventListener("${listener}",function(){${body}});`);
   });
 }
 
-/* =========================================================
-   HTML 生成
-   ========================================================= */
 function attrStr(a){ return a.length ? ' ' + a.join(' ') : ''; }
 
 function genNode(el, depth, events, loadEvents, warnings, mediaMap){
@@ -1236,17 +1315,14 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
   const pushStyle = () => { if(style) attrs.push('style="' + escapeHtml(style) + '"'); };
   const resolveSrc = src => (mediaMap && v.media && mediaMap[v.media]) ? mediaMap[v.media] : (src || '');
 
-  // ===== コンテナ =====
   if(def.container){
     let inner = '';
     const slot = getSlot(el, 'container');
     if(slot){
       childBlocks(slot).forEach(c => { inner += genNode(c, depth + 1, events, loadEvents, warnings, mediaMap); });
     }
-    if(type === 'datalist' || type === 'optgroup' || type === 'picture'){
-      // 空でも出力（内部に option など）
-    } else if(!inner.trim()){
-      warnings.push(def.label + ' の中身が空のため出力をスキップ');
+    if(type !== 'datalist' && type !== 'optgroup' && type !== 'picture' && !inner.trim()){
+      warnings.push(def.label + ' の中身が空のためスキップ');
       return '';
     }
     if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1254,38 +1330,31 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
     if(type === 'details' && v.open === 'open') attrs.push('open');
     if(type === 'optgroup' && v.label) attrs.push('label="' + escapeHtml(v.label) + '"');
     if(type === 'ol' && v.start && v.start !== '1') attrs.push('start="' + escapeHtml(v.start) + '"');
-    if(type === 'picture' && v.srcset) attrs.push('data-srcset="' + escapeHtml(v.srcset) + '"');
     pushStyle();
     collectEvents(el, v, events, loadEvents, warnings);
     return pad + '<' + def.tag + attrStr(attrs) + '>\n' + inner + pad + '</' + def.tag + '>\n';
   }
 
-  // ===== 汎用テキストタグ =====
   if(def.textTag){
     if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
     if(v.href) attrs.push('href="' + escapeHtml(v.href) + '"');
     if(v.target) attrs.push('target="' + escapeHtml(v.target) + '"');
     if(v.title) attrs.push('title="' + escapeHtml(v.title) + '"');
     if(v.datetime) attrs.push('datetime="' + escapeHtml(v.datetime) + '"');
-    if(v.value != null && v.value !== '' && (type === 'data-tag' || type === 'option' || type === 'li')) {
+    if(v.value != null && v.value !== '' && (type === 'data-tag' || type === 'li')) {
       attrs.push('value="' + escapeHtml(v.value) + '"');
     }
     if(type === 'a' && v.target === '_blank') attrs.push('rel="noopener"');
-    if(type === 'th' && v.colspan) attrs.push('colspan="' + escapeHtml(v.colspan) + '"');
-    if(type === 'td' && v.colspan) attrs.push('colspan="' + escapeHtml(v.colspan) + '"');
+    if((type === 'th' || type === 'td') && v.colspan) attrs.push('colspan="' + escapeHtml(v.colspan) + '"');
     pushStyle();
     collectEvents(el, v, events, loadEvents, warnings);
     return pad + '<' + def.tag + attrStr(attrs) + '>' + contentOf(el, v) + '</' + def.tag + '>\n';
   }
 
-  // ===== 個別 =====
   switch(type){
     case 'br': return pad + '<br>\n';
     case 'wbr': return pad + '<wbr>\n';
-
-    case 'hr':
-      pushStyle();
-      return pad + '<hr' + attrStr(attrs) + '>\n';
+    case 'hr': pushStyle(); return pad + '<hr' + attrStr(attrs) + '>\n';
 
     case 'img': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1367,43 +1436,21 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       return pad + '<button' + attrStr(attrs) + '>' + contentOf(el, v) + '</button>\n';
     }
 
-    // --- 単純な input 系 ---
     case 'input-text':
-      attrs.push('type="text"');
-      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
-      return pad + '<input' + attrStr(attrs) + '>\n';
-
     case 'input-password':
-      attrs.push('type="password"');
-      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
-      pushStyle();
-      return pad + '<input' + attrStr(attrs) + '>\n';
-
     case 'input-email':
-      attrs.push('type="email"');
+    case 'input-url':
+    case 'input-tel':
+    case 'input-search': {
+      const typeMap = { 'input-text':'text', 'input-password':'password', 'input-email':'email',
+        'input-url':'url', 'input-tel':'tel', 'input-search':'search' };
+      attrs.push('type="' + typeMap[type] + '"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
       pushStyle();
       collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
-
-    case 'input-url':
-      attrs.push('type="url"');
-      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
-      pushStyle();
-      return pad + '<input' + attrStr(attrs) + '>\n';
-
-    case 'input-tel':
-      attrs.push('type="tel"');
-      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
-      pushStyle();
-      return pad + '<input' + attrStr(attrs) + '>\n';
+    }
 
     case 'input-number':
       attrs.push('type="number"');
@@ -1453,14 +1500,6 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       pushStyle();
       return pad + '<input' + attrStr(attrs) + '>\n';
 
-    case 'input-search':
-      attrs.push('type="search"');
-      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
-      return pad + '<input' + attrStr(attrs) + '>\n';
-
     case 'input-hidden':
       attrs.push('type="hidden"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1475,7 +1514,6 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<textarea' + attrStr(attrs) + '></textarea>\n';
     }
-
     case 'checkbox': {
       attrs.push('type="checkbox"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1483,7 +1521,6 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
     }
-
     case 'radio': {
       attrs.push('type="radio"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1493,7 +1530,6 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
     }
-
     case 'select': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       pushStyle();
@@ -1523,44 +1559,30 @@ function runtimeScript(events, loadEvents){
   lines.push('if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", __initBlockEvents); } else { __initBlockEvents(); }');
   return lines.join('\n');
 }
-
 function bodyStyleAttr(){
   const p = [];
   if(PROJECT_SETTINGS.baseFont) p.push('font-family: ' + PROJECT_SETTINGS.baseFont + ';');
   if(PROJECT_SETTINGS.baseFontSize) p.push('font-size: ' + PROJECT_SETTINGS.baseFontSize + ';');
   return p.length ? ' style="' + escapeHtml(p.join(' ')) + '"' : '';
 }
-
 function generateHTML(opts){
   opts = opts || {};
-  const events = [];
-  const loadEvents = [];
-  const warnings = [];
+  const events = []; const loadEvents = []; const warnings = [];
   const mediaMap = opts.mediaMap || null;
-
   let body = '';
   childBlocks($('#root-slot')).forEach(c => {
     body += genNode(c, 1, events, loadEvents, warnings, mediaMap);
   });
-
   const title = currentProjectName || 'My Page';
   const script = runtimeScript(events, loadEvents).replace(/<\//g, '<\\/');
-
   const html = [
-    '<!DOCTYPE html>',
-    '<html lang="ja">',
-    '<head>',
+    '<!DOCTYPE html>','<html lang="ja">','<head>',
     '<meta charset="UTF-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-    '<title>' + escapeHtml(title) + '</title>',
-    '</head>',
+    '<title>' + escapeHtml(title) + '</title>','</head>',
     '<body' + bodyStyleAttr() + '>',
     body.replace(/\n$/, ''),
-    '<script>',
-    script,
-    '<\/script>',
-    '</body>',
-    '</html>'
+    '<script>', script, '<\/script>','</body>','</html>'
   ].join('\n');
   return { html: html, warnings: warnings };
 }
@@ -1586,11 +1608,11 @@ function renderPalette(cat){
   const head = $('#palette-head');
   const list = $('#palette-list');
   list.innerHTML = '';
-
   const c = CATEGORIES.filter(x => x.id === cat)[0];
   head.textContent = c ? c.name : '';
 
   if(cat === 'data'){ renderDataTab(list); return; }
+  if(cat === 'presets'){ renderPresetsTab(list); return; }
 
   Object.keys(BLOCKS).forEach(type => {
     const d = BLOCKS[type];
@@ -1603,6 +1625,39 @@ function renderPalette(cat){
       '<span class="pi-body"><span class="pi-label">' + escapeHtml(d.label) + '</span></span>';
     setupPaletteDrag(item, { kind:'block', type:type, label:d.label, icon:d.icon });
     list.appendChild(item);
+  });
+}
+
+/* ★ プリセットタブ */
+function renderPresetsTab(list){
+  const help = document.createElement('div');
+  help.className = 'preset-help';
+  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、点線が付いた入力欄（🎁マーク）や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。';
+  list.appendChild(help);
+
+  const groups = {};
+  Object.keys(PRESETS).forEach(type => {
+    const p = PRESETS[type];
+    if(!groups[p.group]) groups[p.group] = [];
+    groups[p.group].push(Object.assign({ type: type }, p));
+  });
+
+  Object.keys(PRESET_GROUPS).forEach(groupName => {
+    if(!groups[groupName]) return;
+    const sh = document.createElement('div');
+    sh.className = 'preset-group-head';
+    sh.textContent = PRESET_GROUPS[groupName];
+    list.appendChild(sh);
+    groups[groupName].forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'pal-item preset-item';
+      item.innerHTML =
+        '<span class="drag-handle" title="ドラッグ">⠿</span>' +
+        '<span class="pi-icon">' + p.icon + '</span>' +
+        '<span class="pi-body"><span class="pi-label">' + escapeHtml(p.label) + '</span></span>';
+      setupPaletteDrag(item, { kind:'preset', group:p.group, value:p.value, label:p.label, icon:p.icon });
+      list.appendChild(item);
+    });
   });
 }
 
@@ -1632,7 +1687,6 @@ function renderDataTab(list){
   bUrl.addEventListener('click', addMediaByUrl);
   addRow.appendChild(bFile); addRow.appendChild(bUrl);
   list.appendChild(addRow);
-
   if(!MEDIA.length){
     const e = document.createElement('div');
     e.className = 'data-empty';
@@ -1640,7 +1694,6 @@ function renderDataTab(list){
     list.appendChild(e);
     return;
   }
-
   MEDIA.forEach(m => {
     const item = document.createElement('div');
     item.className = 'pal-item data-item' + (m.url ? '' : ' missing');
@@ -1651,7 +1704,6 @@ function renderDataTab(list){
       '<span class="pi-body"><span class="pi-label">' + escapeHtml(m.name) + '</span></span>' +
       (m.url ? '' : '<span class="badge-miss">未読込</span>') +
       '<button class="data-del" type="button" title="削除">✕</button>';
-
     const delBtn = item.querySelector('.data-del');
     delBtn.addEventListener('pointerdown', e => e.stopPropagation());
     delBtn.addEventListener('click', e => {
@@ -1661,13 +1713,12 @@ function renderDataTab(list){
       renderPalette('data');
       toast('削除しました：' + m.name);
     });
-
     const payload = { kind:'data', mediaId:m.id, name:m.name, icon:icon,
       blockType:m.kind, url:m.url, label:m.name };
     const handle = item.querySelector('.drag-handle');
     handle.addEventListener('pointerdown', e => {
       if(e.button && e.button !== 0) return;
-      if(!m.url){ toast('未読み込みデータです。同じファイルをインポートしてください。'); return; }
+      if(!m.url){ toast('未読み込みデータです。'); return; }
       e.preventDefault(); e.stopPropagation();
       beginDrag(e, payload, item);
     });
@@ -1679,7 +1730,6 @@ function renderDataTab(list){
       e.preventDefault();
       beginDrag(e, payload, item);
     });
-
     list.appendChild(item);
   });
 }
@@ -1694,18 +1744,30 @@ function beginDrag(e, payload, srcEl){
   if(drag) return;
   drag = { payload, srcEl,
     x0:e.clientX, y0:e.clientY, id:e.pointerId, active:false,
-    target:null, lastSlot:null, lastRef:null, lastBlock:null, clone:null };
+    target:null, lastSlot:null, lastRef:null, lastBlock:null, lastField:null, clone:null };
 }
 function activateDrag(){
   drag.active = true;
   const c = document.createElement('div');
-  c.className = 'drag-clone';
+  c.className = 'drag-clone' + (drag.payload.kind === 'preset' ? ' preset-clone' : '');
   c.innerHTML = '<span>' + (drag.payload.icon || '📦') + '</span><span>' + escapeHtml(drag.payload.label || '') + '</span>';
   document.body.appendChild(c);
   drag.clone = c;
   document.body.classList.add('dragging');
+  if(drag.payload.kind === 'preset'){
+    document.body.classList.add('preset-drag');
+    $$('.fld-row[data-preset-group="' + drag.payload.group + '"]').forEach(el => {
+      el.classList.add('preset-target');
+    });
+  }
 }
-function depthOf(el){ let d = 0, p = el.parentElement;
+function clearPresetHighlights(){
+  document.body.classList.remove('preset-drag');
+  $$('.preset-target, .preset-hover').forEach(el => el.classList.remove('preset-target', 'preset-hover'));
+}
+
+function depthOf(el){
+  let d = 0, p = el.parentElement;
   while(p){ if(p.classList && p.classList.contains('ws-block')) d++; p = p.parentElement; }
   return d;
 }
@@ -1720,6 +1782,14 @@ function calcRef(slot, y){
 function findTarget(x, y){
   const el = document.elementFromPoint(x, y);
   if(!el) return null;
+
+  /* プリセット：入力欄が対象 */
+  if(drag.payload.kind === 'preset'){
+    const row = el.closest('.fld-row[data-preset-group]');
+    if(row && row.dataset.presetGroup === drag.payload.group) return { field: row };
+    return null;
+  }
+
   if(drag.payload.kind === 'data'){
     const blk = el.closest('.ws-block');
     if(blk && el.closest('.blk-head, .blk-fields')){
@@ -1746,26 +1816,37 @@ function findTarget(x, y){
 }
 function clearHighlight(){
   $$('.drag-over').forEach(e => e.classList.remove('drag-over'));
+  $$('.preset-hover').forEach(e => e.classList.remove('preset-hover'));
   if(indicator.parentNode) indicator.parentNode.removeChild(indicator);
   indicator.classList.add('hidden');
 }
 function highlight(t){
   if(!t){
-    if(drag.lastSlot || drag.lastRef || drag.lastBlock){
-      clearHighlight(); drag.lastSlot = null; drag.lastRef = null; drag.lastBlock = null;
+    if(drag.lastSlot || drag.lastRef || drag.lastBlock || drag.lastField){
+      clearHighlight(); drag.lastSlot = null; drag.lastRef = null; drag.lastBlock = null; drag.lastField = null;
     }
+    return;
+  }
+  if(t.field){
+    if(drag.lastField === t.field) return;
+    clearHighlight();
+    drag.lastBlock = null; drag.lastSlot = null; drag.lastRef = null;
+    drag.lastField = t.field;
+    t.field.classList.add('preset-hover');
     return;
   }
   if(t.block){
     if(drag.lastBlock === t.block) return;
     clearHighlight();
-    drag.lastBlock = t.block; drag.lastSlot = null; drag.lastRef = null;
+    drag.lastField = null; drag.lastSlot = null; drag.lastRef = null;
+    drag.lastBlock = t.block;
     t.block.classList.add('drag-over');
     return;
   }
   if(drag.lastSlot === t.slot && drag.lastRef === t.ref) return;
   clearHighlight();
-  drag.lastBlock = null; drag.lastSlot = t.slot; drag.lastRef = t.ref;
+  drag.lastBlock = null; drag.lastField = null;
+  drag.lastSlot = t.slot; drag.lastRef = t.ref;
   t.slot.classList.add('drag-over');
   indicator.classList.remove('hidden');
   if(t.ref) t.slot.insertBefore(indicator, t.ref);
@@ -1780,9 +1861,24 @@ function updateDrag(x, y){
 function finishDrag(){
   const t = drag.target;
   clearHighlight();
+  clearPresetHighlights();
   if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
   document.body.classList.remove('dragging');
   if(!t) return;
+
+  /* ★ プリセット適用 */
+  if(drag.payload.kind === 'preset'){
+    if(!t.field) return;
+    const inp = t.field.querySelector('.fld');
+    if(!inp) return;
+    inp.value = drag.payload.value;
+    inp.dispatchEvent(new Event('input', { bubbles:true }));
+    inp.dispatchEvent(new Event('change', { bubbles:true }));
+    afterChange();
+    toast('「' + drag.payload.label + '」を設定しました');
+    return;
+  }
+
   if(t.block){
     const m = MEDIA.filter(x => x.id === drag.payload.mediaId)[0];
     if(!m) return;
@@ -1823,6 +1919,7 @@ document.addEventListener('pointercancel', function(){
   if(!drag) return;
   if(drag.active){
     clearHighlight();
+    clearPresetHighlights();
     if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
     document.body.classList.remove('dragging');
   }
@@ -1865,7 +1962,7 @@ function scheduleSave(){
 function afterChange(){ schedulePreview(); scheduleSave(); }
 
 /* =========================================================
-   メディア管理
+   メディア
    ========================================================= */
 function kindFromType(type, name){
   if(type && /^image\//.test(type)) return 'img';
@@ -1972,7 +2069,7 @@ function buildZip(entries){
   return new Blob(parts.concat(central, [eocd]), { type:'application/zip' });
 }
 async function inflateRaw(bytes){
-  if(typeof DecompressionStream === 'undefined') throw new Error('この環境では解凍できません');
+  if(typeof DecompressionStream === 'undefined') throw new Error('解凍非対応');
   const ds = new DecompressionStream('deflate-raw');
   const stream = new Blob([bytes]).stream().pipeThrough(ds);
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -2005,13 +2102,12 @@ async function readZip(arrayBuffer){
     let data;
     if(method === 0) data = raw.slice();
     else if(method === 8) data = await inflateRaw(raw);
-    else throw new Error('未対応の圧縮');
+    else throw new Error('未対応圧縮');
     out.push({ name, data });
     off += 46 + nlen + elen + clen;
   }
   return out;
 }
-
 function download(filename, blob){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2032,9 +2128,6 @@ function collectUsedMediaNames(){
   return Object.keys(names);
 }
 
-/* =========================================================
-   エクスポート / インポート
-   ========================================================= */
 async function exportHTML(){
   const res = generateHTML();
   if(!res.html) return;
@@ -2124,7 +2217,7 @@ async function handleFiles(files){
       if(lower.endsWith('.json')) await importProjectJSON(await f.text());
       else if(lower.endsWith('.zip')) await importProjectZip(f);
       else if(/^(image|video|audio)\//.test(f.type) || /\.(png|jpe?g|gif|webp|svg|mp4|mov|webm|mp3|wav|m4a|ogg|heic)$/i.test(f.name)) addMedia(f);
-      else toast('未対応のファイル形式：' + f.name);
+      else toast('未対応のファイル：' + f.name);
     }catch(err){ console.error(err); toast('読み込みエラー：' + err.message); }
   }
 }
@@ -2147,9 +2240,6 @@ $('#modal-overlay').addEventListener('click', function(e){
   if(btn) closeModal();
 });
 
-/* =========================================================
-   設定モーダル
-   ========================================================= */
 function openSettingsModal(){
   const fontOpts = FONT_OPTIONS.map(function(o){
     const sel = (PROJECT_SETTINGS.baseFont === o.v) ? ' selected' : '';
@@ -2175,9 +2265,6 @@ function openSettingsModal(){
   });
 }
 
-/* =========================================================
-   セーブ / ロード
-   ========================================================= */
 function openSaveModal(){
   let rows = '';
   for(let i = 1; i <= 5; i++){
@@ -2254,7 +2341,7 @@ $('#modal').addEventListener('click', function(e){
 });
 
 /* =========================================================
-   ボタン類
+   ボタン
    ========================================================= */
 $('#btn-export').addEventListener('click', exportHTML);
 $('#btn-json').addEventListener('click', exportJSON);
@@ -2306,6 +2393,7 @@ function buildTabs(){
   CATEGORIES.forEach(function(c, idx){
     const b = document.createElement('button');
     b.className = 'tab' + (idx === 0 ? ' active' : '');
+    if(c.id === 'presets') b.classList.add('preset-tab');
     b.type = 'button';
     b.dataset.cat = c.id;
     b.textContent = c.label;
@@ -2319,7 +2407,7 @@ function buildTabs(){
 }
 function init(){
   buildTabs();
-  renderPalette('media');
+  renderPalette('presets');
   let restored = false;
   try{
     const raw = localStorage.getItem(LS_AUTOSAVE);
