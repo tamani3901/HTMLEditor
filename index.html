@@ -3,26 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HTMLブロックエディタ (スクロール修正版)</title>
+  <title>HTMLブロックエディタ (全画面固定修正版)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-    html, body { height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; background: #f0f2f5; }
+    
+    /* 画面全体がはみ出したりスクロールしないよう固定 */
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      font-family: sans-serif;
+      background: #f0f2f5;
+    }
 
-    body { display: flex; flex-direction: column; touch-action: manipulation; }
+    body {
+      display: flex;
+      flex-direction: column;
+      touch-action: manipulation;
+    }
 
-    /* 上部タブエリア */
-    #tab-bar { display: flex; background: #333; overflow-x: auto; white-space: nowrap; padding: 8px; -webkit-overflow-scrolling: touch; flex-shrink: 0; }
+    /* 上部タブエリア (固定高さを確保) */
+    #tab-bar {
+      display: flex;
+      background: #333;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 8px;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+    }
     .tab-btn { background: #555; color: white; border: none; padding: 10px 18px; margin-right: 6px; border-radius: 6px; font-size: 14px; cursor: pointer; }
     .tab-btn.active { background: #007bff; font-weight: bold; }
 
-    /* メインエリア */
-    #main-container { display: flex; flex: 1; height: calc(100vh - 50px); overflow: hidden; position: relative; }
+    /* メインエリア (画面の残りの高さを全域使用し、独立して内部スクロールさせる) */
+    #main-container {
+      display: flex;
+      flex: 1;
+      min-height: 0; /* flexアイテムが親を突き抜けないようにする重要プロパティ */
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
 
     /* ① 左：ブロックパレット */
     #palette { width: 250px; background: #fff; border-right: 2px solid #ccc; padding: 12px; overflow-y: auto; flex-shrink: 0; }
     .palette-title { font-size: 13px; color: #666; margin-bottom: 10px; font-weight: bold; }
 
-    /* ② 中央：編集キャンバス (独立して縦スクロール可能) */
+    /* ② 中央：編集キャンバス */
     #workspace { flex: 1; padding: 20px; overflow-y: auto; background: #e9ecef; border-right: 2px solid #ccc; position: relative; height: 100%; }
     .workspace-hint { color: #888; border: 2px dashed #bbb; padding: 40px; text-align: center; border-radius: 8px; }
 
@@ -61,7 +91,6 @@
     .block.container-block { background: #ff9800; flex-direction: column; align-items: flex-start; }
     .container-slot { width: 100%; min-height: 45px; background: rgba(255,255,255,0.3); border: 2px dashed rgba(255,255,255,0.8); margin-top: 8px; border-radius: 6px; padding: 8px; box-sizing: border-box; }
 
-    /* CSS・変数・イベント挿入スロット */
     .css-slot { background: rgba(0,0,0,0.25); border: 1px dashed #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; min-width: 45px; min-height: 24px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; }
     .var-slot { background: rgba(233, 30, 99, 0.35); border: 1px dashed #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; min-width: 45px; min-height: 24px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; }
     .event-slot { background: rgba(76, 175, 80, 0.4); border: 1px dashed #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; min-width: 45px; min-height: 24px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; }
@@ -73,7 +102,6 @@
     .drag-clone { position: fixed; pointer-events: none; opacity: 0.85; z-index: 1000; transform: translate(-50%, -50%); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
     .drag-over { border-color: #00ffcc !important; background: rgba(0, 255, 204, 0.3) !important; }
     
-    /* ドロップ位置指示ライン */
     #drop-indicator { height: 4px; background: #00ffcc; border-radius: 2px; margin: 4px 0; display: none; pointer-events: none; width: 100%; }
 
     #file-input-asset, #file-input-json { display: none; }
@@ -266,7 +294,6 @@
       });
     }
 
-    /* ドラッグ＆ドロップ計算処理 */
     const moveDrag = (clientX, clientY) => {
       if (!dragCloneEl) return;
       dragCloneEl.style.left = `${clientX}px`;
@@ -347,20 +374,13 @@
       
       let innerHTML = `<span>${data.html}</span>`;
       
-      // CSS・VAR・EVENT スロットの付与
       if (!data.isCss && !data.isVar && !data.isEvent) {
         innerHTML += ` <span class="css-slot">CSS</span>`;
-        if (data.hasVarSlot) {
-          innerHTML += ` <span class="var-slot">VAR</span>`;
-        }
-        if (data.hasEventSlot) {
-          innerHTML += ` <span class="event-slot">EVENT</span>`;
-        }
+        if (data.hasVarSlot) innerHTML += ` <span class="var-slot">VAR</span>`;
+        if (data.hasEventSlot) innerHTML += ` <span class="event-slot">EVENT</span>`;
       }
 
-      if (data.isContainer) {
-        innerHTML += `<div class="container-slot"></div>`;
-      }
+      if (data.isContainer) innerHTML += `<div class="container-slot"></div>`;
 
       innerHTML += `
         <div class="block-tools">
@@ -837,7 +857,6 @@ ${runtimeScript}
       URL.revokeObjectURL(url);
     }
 
-    // 初期化
     switchTab(null, 'media');
     if (localStorage.getItem('html_block_editor_autosave')) {
       const data = JSON.parse(localStorage.getItem('html_block_editor_autosave'));
