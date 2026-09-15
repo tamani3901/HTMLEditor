@@ -32,24 +32,37 @@
   .tab:hover{background:#eef7f5;border-color:#8fd8c8;}
   .tab.active{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
 
-  #main{flex:1 1 auto;display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:0;}
+  #main{flex:1 1 auto;display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
 
-  #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;}
+  #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   #palette-head{
     flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;
     letter-spacing:.04em;border-bottom:1px solid #eef1f5;background:#fbfcfe;
   }
   #palette-list{
-    flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    flex:1 1 auto;min-height:0;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
     padding:8px;display:flex;flex-direction:column;gap:6px;
+    overscroll-behavior:contain;
   }
+  #palette-list::-webkit-scrollbar{width:6px;}
+  #palette-list::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
+
   .pal-item{
-    display:flex;align-items:center;gap:8px;padding:8px 9px;
+    display:flex;align-items:center;gap:6px;padding:7px 9px 7px 4px;
     border:1px solid #dfe4ea;border-radius:9px;background:#fbfdff;
-    cursor:grab;font-size:12.5px;touch-action:none;transition:.12s;
+    font-size:12.5px;transition:.12s;
+    flex:0 0 auto;
+    touch-action:pan-y;
   }
   .pal-item:hover{border-color:#8fd8c8;background:#f2fbf9;}
-  .pal-item:active{cursor:grabbing;}
+  .drag-handle{
+    flex:0 0 auto;width:22px;text-align:center;color:#c0cad3;
+    font-size:14px;cursor:grab;touch-action:none;
+    user-select:none;line-height:1;padding:2px 0;
+  }
+  .drag-handle:active{cursor:grabbing;color:#2ec4a6;}
+  .pal-item:hover .drag-handle{color:#8fd8c8;}
   .pi-icon{font-size:15px;width:20px;text-align:center;flex:0 0 auto;}
   .pi-body{flex:1 1 auto;min-width:0;}
   .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -59,7 +72,7 @@
   }
   .data-del:hover{background:#ffe9e6;color:#d0442c;}
   .data-item.missing{opacity:.55;}
-  .data-add{display:flex;gap:6px;margin-bottom:4px;}
+  .data-add{display:flex;gap:6px;margin-bottom:4px;flex:0 0 auto;}
   .data-add .act{flex:1 1 auto;font-size:11.5px;padding:7px 4px;}
   .data-empty{font-size:11.5px;color:#a8b3bd;padding:10px 4px;line-height:1.6;}
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
@@ -147,7 +160,7 @@
   }
   body.dragging{cursor:grabbing;}
 
-  #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;}
+  #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   .panel-head{
     flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
     gap:6px;padding:8px 10px;border-bottom:1px solid #eef1f5;
@@ -205,8 +218,9 @@
   #modal h3{margin:0 0 12px;font-size:15px;}
   .modal-field{display:block;margin-bottom:12px;}
   .modal-field span{display:block;font-size:11.5px;color:#7e8b98;margin-bottom:4px;}
-  .modal-field input{
+  .modal-field input,.modal-field select{
     width:100%;padding:9px 10px;border:1px solid #dbe2ea;border-radius:8px;font-size:13px;
+    background:#fff;font-family:inherit;
   }
   .slot-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
   .slot-item{
@@ -271,8 +285,9 @@
         <button class="act" id="btn-save">💾 セーブ</button>
         <button class="act" id="btn-load">📂 セーブ読み込み</button>
         <button class="act" id="btn-json">⬇ JSON書き出し</button>
+        <button class="act" id="btn-settings">⚙ 設定</button>
         <button class="act danger" id="btn-save-reset">🗑 セーブリセット</button>
-        <button class="act danger" id="btn-reset" style="grid-column:1/-1;">♻ プロジェクトをリセット</button>
+        <button class="act danger" id="btn-reset">♻ プロジェクトリセット</button>
       </div>
     </aside>
   </div>
@@ -287,9 +302,6 @@
 (function(){
 'use strict';
 
-/* =========================================================
-   ユーティリティ
-   ========================================================= */
 const $  = (s, r) => (r||document).querySelector(s);
 const $$ = (s, r) => Array.prototype.slice.call((r||document).querySelectorAll(s));
 
@@ -318,9 +330,31 @@ const CATEGORIES = [
   {id:'containers',  label:'📦 枠・レイアウト',  name:'枠・レイアウト'},
   {id:'lists',       label:'📋 リスト',          name:'リスト・箇条書き'},
   {id:'forms',       label:'🧾 フォーム',        name:'フォーム・入力'},
-  {id:'css',         label:'🎨 CSS',             name:'CSS・サイズ'},
+  {id:'css',         label:'🎨 CSS',             name:'CSS・フォント・サイズ'},
   {id:'variables',   label:'🔢 変数・イベント',  name:'変数・イベント'},
   {id:'data',        label:'📁 データ',          name:'インポートデータ'}
+];
+
+/* フォント選択肢（再利用） */
+const FONT_OPTIONS = [
+  {v:'', l:'（指定なし）'},
+  {v:"system-ui, -apple-system, 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif", l:'システム標準'},
+  {v:"sans-serif", l:'ゴシック (sans-serif)'},
+  {v:"serif", l:'明朝 (serif)'},
+  {v:"monospace", l:'等幅 (monospace)'},
+  {v:"'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif", l:'ヒラギノ角ゴ / 游ゴシック'},
+  {v:"'Hiragino Mincho ProN', 'Yu Mincho', 'MS PMincho', serif", l:'ヒラギノ明朝 / 游明朝'},
+  {v:"'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif", l:'丸ゴシック'},
+  {v:"'Noto Sans JP', 'Yu Gothic', sans-serif", l:'Noto Sans JP'},
+  {v:"'Noto Serif JP', 'Yu Mincho', serif", l:'Noto Serif JP'},
+  {v:"'M PLUS Rounded 1c', sans-serif", l:'M PLUS 丸ゴシック'},
+  {v:"'Zen Maru Gothic', 'Yu Gothic', sans-serif", l:'Zen Maru Gothic'},
+  {v:"'Kaisei Decol', serif", l:'Kaisei Decol'},
+  {v:"'Yomogi', cursive", l:'Yomogi (手書き)'},
+  {v:"'RocknRoll One', sans-serif", l:'RocknRoll One'},
+  {v:"Georgia, 'Times New Roman', serif", l:'Georgia'},
+  {v:"Arial, Helvetica, sans-serif", l:'Arial'},
+  {v:"'Courier New', Courier, monospace", l:'Courier New'}
 ];
 
 const BLOCKS = {
@@ -514,15 +548,12 @@ const BLOCKS = {
   'css-width':    { cat:'css', label:'幅 width',        icon:'↔', cssProp:'width',            fields:[{k:'value', type:'text', def:'100%'}] },
   'css-height':   { cat:'css', label:'高さ height',     icon:'↕', cssProp:'height',           fields:[{k:'value', type:'text', def:'auto'}] },
   'css-maxwidth': { cat:'css', label:'最大幅 max-width',icon:'↔', cssProp:'max-width',        fields:[{k:'value', type:'text', def:'100%'}] },
-  'css-fontsize': { cat:'css', label:'文字サイズ',       icon:'A', cssProp:'font-size',        fields:[{k:'value', type:'text', def:'16px'}] },
-  'css-fontweight':{cat:'css', label:'文字の太さ',       icon:'B', cssProp:'font-weight',      fields:[{k:'value', type:'select', options:['normal','bold','100','300','500','700','900'], def:'normal'}] },
   'css-margin':   { cat:'css', label:'外余白 margin',   icon:'⬜', cssProp:'margin',           fields:[{k:'value', type:'text', def:'0'}] },
   'css-padding':  { cat:'css', label:'内余白 padding',  icon:'🔲', cssProp:'padding',          fields:[{k:'value', type:'text', def:'8px'}] },
   'css-radius':   { cat:'css', label:'角丸 radius',     icon:'⭕', cssProp:'border-radius',    fields:[{k:'value', type:'text', def:'8px'}] },
   'css-border':   { cat:'css', label:'枠線 border',     icon:'▭', cssProp:'border',           fields:[{k:'value', type:'text', def:'1px solid #cccccc'}] },
   'css-color':    { cat:'css', label:'文字色',          icon:'🅰', cssProp:'color',            fields:[{k:'value', type:'color', def:'#111111'}] },
   'css-bg':       { cat:'css', label:'背景色',          icon:'🎨', cssProp:'background-color', fields:[{k:'value', type:'color', def:'#ffffff'}] },
-  'css-align':    { cat:'css', label:'文字揃え',        icon:'≡', cssProp:'text-align',       fields:[{k:'value', type:'select', options:['left','center','right'], def:'left'}] },
   'css-display':  { cat:'css', label:'表示 display',    icon:'📺', cssProp:'display',          fields:[{k:'value', type:'select', options:['block','inline','inline-block','flex','grid','none'], def:'block'}] },
   'css-flexdir':  { cat:'css', label:'主軸 flex-direction',icon:'↔', cssProp:'flex-direction', fields:[{k:'value', type:'select', options:['row','column','row-reverse','column-reverse'], def:'row'}] },
   'css-justify':  { cat:'css', label:'横配置 justify-content',icon:'⇔', cssProp:'justify-content', fields:[{k:'value', type:'select', options:['flex-start','center','flex-end','space-between','space-around'], def:'flex-start'}] },
@@ -530,6 +561,18 @@ const BLOCKS = {
   'css-gap':      { cat:'css', label:'間隔 gap',        icon:'⏸', cssProp:'gap',              fields:[{k:'value', type:'text', def:'8px'}] },
   'css-opacity':  { cat:'css', label:'透明度 opacity',  icon:'💧', cssProp:'opacity',          fields:[{k:'value', type:'text', def:'1'}] },
   'css-boxshadow':{ cat:'css', label:'影 box-shadow',   icon:'🌑', cssProp:'box-shadow',       fields:[{k:'value', type:'text', def:'0 2px 6px rgba(0,0,0,0.15)'}] },
+
+  /* --- フォント系 --- */
+  'css-fontfamily':{cat:'css', label:'フォント', icon:'🔤', cssProp:'font-family',
+    fields:[{k:'value', label:'書体', type:'select', options:FONT_OPTIONS, def:''}]},
+  'css-fontsize': { cat:'css', label:'文字サイズ',       icon:'A', cssProp:'font-size',        fields:[{k:'value', type:'text', def:'16px'}] },
+  'css-fontweight':{cat:'css', label:'文字の太さ',       icon:'B', cssProp:'font-weight',      fields:[{k:'value', type:'select', options:['normal','bold','100','300','500','700','900'], def:'normal'}] },
+  'css-fontstyle':{cat:'css', label:'文字スタイル',      icon:'I', cssProp:'font-style',       fields:[{k:'value', type:'select', options:['normal','italic','oblique'], def:'normal'}] },
+  'css-lineheight':{cat:'css', label:'行の高さ',         icon:'☰', cssProp:'line-height',      fields:[{k:'value', type:'text', def:'1.6'}] },
+  'css-letterspacing':{cat:'css', label:'文字間隔',      icon:'↔', cssProp:'letter-spacing',   fields:[{k:'value', type:'text', def:'0'}] },
+  'css-textalign':{ cat:'css', label:'文字揃え',        icon:'≡', cssProp:'text-align',       fields:[{k:'value', type:'select', options:['left','center','right','justify'], def:'left'}] },
+  'css-textdecoration':{cat:'css', label:'文字装飾',     icon:'U', cssProp:'text-decoration',  fields:[{k:'value', type:'select', options:['none','underline','line-through','overline'], def:'none'}] },
+  'css-textshadow':{cat:'css', label:'文字の影',        icon:'🌫', cssProp:'text-shadow',       fields:[{k:'value', type:'text', def:'1px 1px 2px rgba(0,0,0,0.3)'}] },
 
   /* ===== 8. 変数・イベント ===== */
   'var-static': { cat:'variables', label:'静的変数', icon:'🔢', slotKind:'var',
@@ -595,8 +638,8 @@ function tagLabel(def){
    ========================================================= */
 let currentCat = 'media';
 let currentProjectName = '';
+let PROJECT_SETTINGS = { baseFont:'', baseFontSize:'' };
 const MEDIA = [];
-let lastGeneratedHTML = '';
 
 const LS_AUTOSAVE = 'html_block_editor_autosave';
 const LS_SLOT = i => 'html_block_editor_slot_' + i;
@@ -628,7 +671,13 @@ function makeField(f, val){
     inp = document.createElement('select');
     (f.options || []).forEach(o => {
       const op = document.createElement('option');
-      op.value = o; op.textContent = o;
+      if(o && typeof o === 'object'){
+        op.value = o.v;
+        op.textContent = o.l;
+      } else {
+        op.value = o;
+        op.textContent = o;
+      }
       inp.appendChild(op);
     });
   } else if(f.type === 'textarea'){
@@ -799,6 +848,10 @@ function projectData(){
   return {
     version: 1,
     name: currentProjectName,
+    settings: {
+      baseFont: PROJECT_SETTINGS.baseFont || '',
+      baseFontSize: PROJECT_SETTINGS.baseFontSize || ''
+    },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
     media: MEDIA.map(m => ({name:m.name, type:m.type, kind:m.kind}))
@@ -808,6 +861,10 @@ function projectData(){
 function loadProjectData(data){
   if(!data) return;
   currentProjectName = data.name || '';
+  PROJECT_SETTINGS = {
+    baseFont: (data.settings && data.settings.baseFont) || '',
+    baseFontSize: (data.settings && data.settings.baseFontSize) || ''
+  };
 
   MEDIA.length = 0;
   (data.media || []).forEach(m => {
@@ -939,7 +996,6 @@ function genNode(el, depth, events, warnings, mediaMap){
     return src || '';
   };
 
-  /* --- コンテナ系 --- */
   if(def.container){
     let inner = '';
     const slot = getSlot(el, 'container');
@@ -956,11 +1012,9 @@ function genNode(el, depth, events, warnings, mediaMap){
     return pad + '<' + def.tag + attrStr(attrs) + '>\n' + inner + pad + '</' + def.tag + '>\n';
   }
 
-  /* --- 個別 --- */
   switch(type){
 
-    case 'br':
-      return pad + '<br>\n';
+    case 'br': return pad + '<br>\n';
 
     case 'hr':
       pushStyle();
@@ -1013,17 +1067,8 @@ function genNode(el, depth, events, warnings, mediaMap){
       return pad + '<h' + lv + attrStr(attrs) + '>' + contentOf(el, v) + '</h' + lv + '>\n';
     }
 
-    case 'p':
-    case 'span':
-    case 'strong':
-    case 'em':
-    case 'mark':
-    case 'code':
-    case 'li':
-    case 'dt':
-    case 'dd':
-    case 'blockquote':
-    case 'pre': {
+    case 'p': case 'span': case 'strong': case 'em': case 'mark':
+    case 'code': case 'li': case 'dt': case 'dd': case 'blockquote': case 'pre': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       pushStyle();
       return pad + '<' + def.tag + attrStr(attrs) + '>' + contentOf(el, v) + '</' + def.tag + '>\n';
@@ -1139,6 +1184,14 @@ function runtimeScript(events){
   return lines.join('\n');
 }
 
+function bodyStyleAttr(){
+  const parts = [];
+  if(PROJECT_SETTINGS.baseFont)     parts.push('font-family: ' + PROJECT_SETTINGS.baseFont + ';');
+  if(PROJECT_SETTINGS.baseFontSize) parts.push('font-size: '   + PROJECT_SETTINGS.baseFontSize + ';');
+  if(!parts.length) return '';
+  return ' style="' + escapeHtml(parts.join(' ')) + '"';
+}
+
 function generateHTML(opts){
   opts = opts || {};
   const events = [];
@@ -1161,7 +1214,7 @@ function generateHTML(opts){
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
     '<title>' + escapeHtml(title) + '</title>',
     '</head>',
-    '<body>',
+    '<body' + bodyStyleAttr() + '>',
     body.replace(/\n$/, ''),
     '<script>',
     script,
@@ -1184,14 +1237,11 @@ function schedulePreview(){
 
 function updatePreview(){
   const res = generateHTML();
-  lastGeneratedHTML = res.html;
-
   const codeEl = $('#preview-code');
   codeEl.textContent = res.html + (res.warnings.length ? '\n\n<!-- 警告 -->\n<!--\n' + res.warnings.join('\n') + '\n-->' : '');
 
   if($('#preview-frame-wrap').classList.contains('hidden')) return;
-  const frame = $('#preview-body');
-  frame.srcdoc = res.html;
+  $('#preview-body').srcdoc = res.html;
 }
 
 /* =========================================================
@@ -1201,7 +1251,7 @@ function renderPalette(cat){
   currentCat = cat;
   const head = $('#palette-head');
   const list = $('#palette-list');
-  list.innerHTML = '';   /* ← 必ず先にクリア */
+  list.innerHTML = '';
 
   const c = CATEGORIES.filter(x => x.id === cat)[0];
   head.textContent = c ? c.name : '';
@@ -1214,16 +1264,35 @@ function renderPalette(cat){
 
     const item = document.createElement('div');
     item.className = 'pal-item';
-    item.innerHTML = '<span class="pi-icon">' + (d.icon || '▫') + '</span>' +
-                     '<span class="pi-body"><span class="pi-label">' + escapeHtml(d.label) + '</span></span>';
+    item.innerHTML =
+      '<span class="drag-handle" title="ドラッグ">⠿</span>' +
+      '<span class="pi-icon">' + (d.icon || '▫') + '</span>' +
+      '<span class="pi-body"><span class="pi-label">' + escapeHtml(d.label) + '</span></span>';
 
-    item.addEventListener('pointerdown', e => {
-      if(e.button && e.button !== 0) return;
-      e.preventDefault();
-      beginDrag(e, { kind:'block', type:type, label:d.label, icon:d.icon }, item);
-    });
+    setupPaletteDrag(item, { kind:'block', type:type, label:d.label, icon:d.icon });
 
     list.appendChild(item);
+  });
+}
+
+/* パレット項目に D&D を仕込む */
+function setupPaletteDrag(item, payload){
+  const handle = item.querySelector('.drag-handle');
+
+  /* ドラッグハンドル：全デバイスで即時ドラッグ開始 */
+  handle.addEventListener('pointerdown', e => {
+    if(e.button && e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    beginDrag(e, payload, item);
+  });
+
+  /* 項目本体：マウスのみ即時ドラッグ */
+  item.addEventListener('pointerdown', e => {
+    if(e.button && e.button !== 0) return;
+    if(e.pointerType === 'touch') return;   /* タッチはハンドル専用 → スクロール優先 */
+    e.preventDefault();
+    beginDrag(e, payload, item);
   });
 }
 
@@ -1243,7 +1312,7 @@ function renderDataTab(list){
   if(!MEDIA.length){
     const e = document.createElement('div');
     e.className = 'data-empty';
-    e.textContent = 'インポートした画像・動画・音声がここに表示されます。ブロックにドロップすると埋め込めます。';
+    e.textContent = 'インポートした画像・動画・音声がここに表示されます。⠿ をドラッグするとブロックに埋め込めます。';
     list.appendChild(e);
     return;
   }
@@ -1253,6 +1322,7 @@ function renderDataTab(list){
     item.className = 'pal-item data-item' + (m.url ? '' : ' missing');
     const icon = m.kind === 'img' ? '🖼' : (m.kind === 'video' ? '🎬' : '🔊');
     item.innerHTML =
+      '<span class="drag-handle" title="ドラッグ">⠿</span>' +
       '<span class="pi-icon">' + icon + '</span>' +
       '<span class="pi-body"><span class="pi-label">' + escapeHtml(m.name) + '</span></span>' +
       (m.url ? '' : '<span class="badge-miss">未読込</span>') +
@@ -1264,20 +1334,29 @@ function renderDataTab(list){
       e.stopPropagation();
       const idx = MEDIA.indexOf(m);
       if(idx >= 0) MEDIA.splice(idx, 1);
-      /* ← ここが修正ポイント：リスト全体をクリアして再描画 */
-      renderPalette('data');
+      renderPalette('data');   /* ← 全体をクリアして再描画 */
       toast('削除しました：' + m.name);
     });
 
-    item.addEventListener('pointerdown', e => {
+    const payload = {
+      kind:'data', mediaId:m.id, name:m.name, icon:icon,
+      blockType:m.kind, url:m.url, label:m.name
+    };
+    const handle = item.querySelector('.drag-handle');
+    handle.addEventListener('pointerdown', e => {
       if(e.button && e.button !== 0) return;
-      if(e.target.closest('.data-del')) return;
       if(!m.url){ toast('このデータは未読み込みです。同じファイルをインポートしてください。'); return; }
       e.preventDefault();
-      beginDrag(e, {
-        kind:'data', mediaId:m.id, name:m.name, icon:icon,
-        blockType:m.kind, url:m.url, label:m.name
-      }, item);
+      e.stopPropagation();
+      beginDrag(e, payload, item);
+    });
+    item.addEventListener('pointerdown', e => {
+      if(e.button && e.button !== 0) return;
+      if(e.target.closest('.drag-handle') || e.target.closest('.data-del')) return;
+      if(e.pointerType === 'touch') return;
+      if(!m.url){ toast('このデータは未読み込みです。'); return; }
+      e.preventDefault();
+      beginDrag(e, payload, item);
     });
 
     list.appendChild(item);
@@ -1291,17 +1370,15 @@ let drag = null;
 const indicator = document.getElementById('drop-indicator');
 
 function beginDrag(e, payload, srcEl){
+  if(drag) return;
   drag = {
     payload: payload,
     srcEl: srcEl,
-    x0: e.clientX,
-    y0: e.clientY,
+    x0: e.clientX, y0: e.clientY,
     id: e.pointerId,
     active: false,
     target: null,
-    lastSlot: null,
-    lastRef: null,
-    lastBlock: null,
+    lastSlot: null, lastRef: null, lastBlock: null,
     clone: null
   };
 }
@@ -1377,7 +1454,9 @@ function clearHighlight(){
 
 function highlight(t){
   if(!t){
-    if(drag.lastSlot || drag.lastRef || drag.lastBlock){ clearHighlight(); drag.lastSlot = null; drag.lastRef = null; drag.lastBlock = null; }
+    if(drag.lastSlot || drag.lastRef || drag.lastBlock){
+      clearHighlight(); drag.lastSlot = null; drag.lastRef = null; drag.lastBlock = null;
+    }
     return;
   }
   if(t.block){
@@ -1506,12 +1585,9 @@ let saveTimer = null;
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
-    try{
-      localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData()));
-    }catch(err){}
+    try{ localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData())); }catch(err){}
   }, 600);
 }
-
 function afterChange(){
   schedulePreview();
   scheduleSave();
@@ -1545,18 +1621,13 @@ function addMedia(file){
   const url = URL.createObjectURL(file);
   const kind = kindFromType(file.type, file.name);
   if(existing){
-    existing.url = url;
-    existing.blob = file;
-    existing.type = file.type || existing.type;
-    existing.kind = kind;
+    existing.url = url; existing.blob = file;
+    existing.type = file.type || existing.type; existing.kind = kind;
   } else {
     MEDIA.push({
       id: 'm' + Math.random().toString(36).slice(2, 9),
-      name: file.name,
-      type: file.type || mimeFromName(file.name),
-      kind: kind,
-      url: url,
-      blob: file
+      name: file.name, type: file.type || mimeFromName(file.name),
+      kind: kind, url: url, blob: file
     });
   }
   renderPalette('data');
@@ -1612,38 +1683,28 @@ function buildZip(entries){
     const local = new Uint8Array(30 + nameBytes.length);
     const lv = new DataView(local.buffer);
     lv.setUint32(0, 0x04034b50, true);
-    lv.setUint16(4, 20, true);
-    lv.setUint16(6, 0, true);
-    lv.setUint16(8, 0, true);
-    lv.setUint16(10, 0, true);
-    lv.setUint16(12, 0, true);
+    lv.setUint16(4, 20, true); lv.setUint16(6, 0, true);
+    lv.setUint16(8, 0, true); lv.setUint16(10, 0, true); lv.setUint16(12, 0, true);
     lv.setUint32(14, crc, true);
     lv.setUint32(18, data.length, true);
     lv.setUint32(22, data.length, true);
     lv.setUint16(26, nameBytes.length, true);
     lv.setUint16(28, 0, true);
     local.set(nameBytes, 30);
-
-    parts.push(local);
-    parts.push(data);
+    parts.push(local); parts.push(data);
 
     const cd = new Uint8Array(46 + nameBytes.length);
     const cv = new DataView(cd.buffer);
     cv.setUint32(0, 0x02014b50, true);
-    cv.setUint16(4, 20, true);
-    cv.setUint16(6, 20, true);
-    cv.setUint16(8, 0, true);
-    cv.setUint16(10, 0, true);
-    cv.setUint16(12, 0, true);
+    cv.setUint16(4, 20, true); cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0, true); cv.setUint16(10, 0, true); cv.setUint16(12, 0, true);
     cv.setUint16(14, 0, true);
     cv.setUint32(16, crc, true);
     cv.setUint32(20, data.length, true);
     cv.setUint32(24, data.length, true);
     cv.setUint16(28, nameBytes.length, true);
-    cv.setUint16(30, 0, true);
-    cv.setUint16(32, 0, true);
-    cv.setUint16(34, 0, true);
-    cv.setUint16(36, 0, true);
+    cv.setUint16(30, 0, true); cv.setUint16(32, 0, true);
+    cv.setUint16(34, 0, true); cv.setUint16(36, 0, true);
     cv.setUint32(38, 0, true);
     cv.setUint32(42, offset, true);
     cd.set(nameBytes, 46);
@@ -1658,8 +1719,7 @@ function buildZip(entries){
   const eocd = new Uint8Array(22);
   const ev = new DataView(eocd.buffer);
   ev.setUint32(0, 0x06054b50, true);
-  ev.setUint16(4, 0, true);
-  ev.setUint16(6, 0, true);
+  ev.setUint16(4, 0, true); ev.setUint16(6, 0, true);
   ev.setUint16(8, central.length, true);
   ev.setUint16(10, central.length, true);
   ev.setUint32(12, cdSize, true);
@@ -1726,11 +1786,8 @@ async function readZip(arrayBuffer){
 function download(filename, blob){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
   setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
 }
 
@@ -1830,11 +1887,9 @@ async function importProjectZip(file){
     const blob = new Blob([e.data], { type: mimeFromName(name) });
     MEDIA.push({
       id: 'm' + Math.random().toString(36).slice(2, 9),
-      name: name,
-      type: blob.type,
+      name: name, type: blob.type,
       kind: kindFromType(blob.type, name),
-      url: URL.createObjectURL(blob),
-      blob: blob
+      url: URL.createObjectURL(blob), blob: blob
     });
   });
 
@@ -1852,6 +1907,11 @@ async function importProjectZip(file){
   });
 
   currentProjectName = data.name || '';
+  PROJECT_SETTINGS = {
+    baseFont: (data.settings && data.settings.baseFont) || '',
+    baseFontSize: (data.settings && data.settings.baseFontSize) || ''
+  };
+
   const root = $('#root-slot');
   root.innerHTML = '';
   (data.blocks || []).forEach(function(b){
@@ -1898,7 +1958,6 @@ function closeModal(){
   $('#modal').innerHTML = '';
 }
 
-/* 汎用のカスタム確認ダイアログ */
 function showConfirm(message, onOk){
   openModal(
     '<h3>確認</h3>' +
@@ -1908,11 +1967,7 @@ function showConfirm(message, onOk){
     '<button class="act danger" type="button" id="confirm-ok">OK</button>' +
     '</div>'
   );
-  const okBtn = $('#confirm-ok');
-  okBtn.addEventListener('click', function(){
-    closeModal();
-    onOk();
-  });
+  $('#confirm-ok').addEventListener('click', function(){ closeModal(); onOk(); });
 }
 
 $('#modal-overlay').addEventListener('click', function(e){
@@ -1920,6 +1975,39 @@ $('#modal-overlay').addEventListener('click', function(e){
   const btn = e.target.closest('[data-close]');
   if(btn) closeModal();
 });
+
+/* =========================================================
+   設定モーダル（プロジェクト全体のフォント）
+   ========================================================= */
+function openSettingsModal(){
+  const fontOpts = FONT_OPTIONS.map(function(o){
+    const sel = (PROJECT_SETTINGS.baseFont === o.v) ? ' selected' : '';
+    return '<option value="' + escapeHtml(o.v) + '"' + sel + '>' + escapeHtml(o.l) + '</option>';
+  }).join('');
+
+  openModal(
+    '<h3>⚙ プロジェクト設定</h3>' +
+    '<label class="modal-field"><span>プロジェクト名</span>' +
+    '<input id="set-name" type="text" value="' + escapeHtml(currentProjectName || '') + '" placeholder="My Page"></label>' +
+    '<label class="modal-field"><span>基本フォント（全体に適用）</span>' +
+    '<select id="set-font">' + fontOpts + '</select></label>' +
+    '<label class="modal-field"><span>基本文字サイズ（全体に適用）</span>' +
+    '<input id="set-size" type="text" value="' + escapeHtml(PROJECT_SETTINGS.baseFontSize || '') + '" placeholder="例: 16px / 1rem"></label>' +
+    '<div class="modal-actions">' +
+    '<button class="act" type="button" data-close>キャンセル</button>' +
+    '<button class="act primary" type="button" id="set-ok">適用</button>' +
+    '</div>'
+  );
+
+  $('#set-ok').addEventListener('click', function(){
+    currentProjectName = $('#set-name').value.trim();
+    PROJECT_SETTINGS.baseFont = $('#set-font').value;
+    PROJECT_SETTINGS.baseFontSize = $('#set-size').value.trim();
+    afterChange();
+    closeModal();
+    toast('設定を適用しました');
+  });
+}
 
 /* =========================================================
    セーブ / ロード
@@ -1990,12 +2078,8 @@ $('#modal').addEventListener('click', function(e){
         toast('セーブに失敗しました（容量不足の可能性）');
       }
     };
-
-    if(exist){
-      showConfirm('スロット ' + slot + ' に上書きしますか？', doSave);
-    } else {
-      doSave();
-    }
+    if(exist) showConfirm('スロット ' + slot + ' に上書きしますか？', doSave);
+    else doSave();
     return;
   }
 
@@ -2028,10 +2112,10 @@ $('#modal').addEventListener('click', function(e){
    ========================================================= */
 $('#btn-export').addEventListener('click', exportHTML);
 $('#btn-json').addEventListener('click', exportJSON);
-
-$('#btn-import').addEventListener('click', function(){
-  $('#file-input').click();
-});
+$('#btn-import').addEventListener('click', function(){ $('#file-input').click(); });
+$('#btn-save').addEventListener('click', openSaveModal);
+$('#btn-load').addEventListener('click', openSaveModalLoad);
+$('#btn-settings').addEventListener('click', openSettingsModal);
 
 $('#file-input').addEventListener('change', function(e){
   const files = Array.prototype.slice.call(e.target.files || []);
@@ -2039,10 +2123,6 @@ $('#file-input').addEventListener('change', function(e){
   e.target.value = '';
 });
 
-$('#btn-save').addEventListener('click', openSaveModal);
-$('#btn-load').addEventListener('click', openSaveModalLoad);
-
-/* セーブリセット — カスタム確認ダイアログ */
 $('#btn-save-reset').addEventListener('click', function(){
   showConfirm('警告：全てのセーブデータ（スロット1〜5）を削除します。\nよろしいですか？', function(){
     for(let i = 1; i <= 5; i++) localStorage.removeItem(LS_SLOT(i));
@@ -2050,17 +2130,16 @@ $('#btn-save-reset').addEventListener('click', function(){
   });
 });
 
-/* プロジェクトリセット — カスタム確認ダイアログ */
 $('#btn-reset').addEventListener('click', function(){
   showConfirm('警告：作成中のプロジェクトを白紙に戻します。\n（この操作は取り消せません）', function(){
     $('#root-slot').innerHTML = '';
     currentProjectName = '';
+    PROJECT_SETTINGS = { baseFont:'', baseFontSize:'' };
     afterChange();
     toast('プロジェクトをリセットしました');
   });
 });
 
-/* プレビュー切替 */
 $('#view-seg').addEventListener('click', function(e){
   const b = e.target.closest('button');
   if(!b) return;
@@ -2121,7 +2200,6 @@ function init(){
   }catch(e){}
 
   updatePreview();
-
   if(restored) toast('前回の状態を復元しました');
 }
 
