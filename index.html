@@ -10,20 +10,13 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;background:#eef1f5;color:#232a31;font-size:14px;user-select:none;-webkit-user-select:none;overflow:hidden;}
   input,select,textarea{user-select:text;-webkit-user-select:text;font-family:inherit;}
   #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
-
-  /* ---- 履歴バー ---- */
   #topbar{flex:0 0 auto;display:flex;gap:8px;padding:6px 10px;background:#f4f6f9;border-bottom:1px solid #dfe4ea;align-items:center;}
-  .hist-btn{
-    display:flex;align-items:center;gap:6px;padding:6px 14px;
-    border:1px solid #dfe4ea;background:#fff;border-radius:8px;
-    font-size:12.5px;color:#3b4652;cursor:pointer;transition:.12s;font-family:inherit;
-  }
+  .hist-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid #dfe4ea;background:#fff;border-radius:8px;font-size:12.5px;color:#3b4652;cursor:pointer;transition:.12s;font-family:inherit;}
   .hist-btn:hover:not(:disabled){background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
   .hist-btn:active:not(:disabled){transform:scale(0.97);}
   .hist-btn:disabled{opacity:.4;cursor:not-allowed;}
   .hist-btn .hi{font-size:15px;line-height:1;font-weight:700;}
   .hist-info{margin-left:auto;font-size:11px;color:#8b97a3;}
-
   #tabbar{flex:0 0 auto;display:flex;gap:6px;padding:8px 10px;background:#fff;border-bottom:1px solid #dfe4ea;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   #tabbar::-webkit-scrollbar{height:5px;}
   #tabbar::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
@@ -64,20 +57,13 @@
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
   #workspace{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;background:#eef1f5;display:flex;flex-direction:column;}
   #root-slot{flex:1 1 auto;min-height:100%;padding:14px;background:#fff;border-radius:12px;border:2px solid #e3e9ef;}
-
   .ws-block{background:#f8fbfd;border:1px solid #dbe2ea;border-left:3px solid #2ec4a6;border-radius:10px;padding:8px;box-shadow:0 1px 2px rgba(20,30,40,.04);transition:box-shadow .12s, outline .12s;}
   .ws-block[data-cat="design"]{border-left-color:#7e57c2;background:#faf8ff;}
   .ws-block.drag-over{outline:2px solid #2ec4a6;outline-offset:1px;}
   .ws-block.mini{display:flex;align-items:center;gap:6px;padding:5px 7px;border-left-color:#9aa7b3;background:#f4f7fa;border-radius:8px;}
-
-  /* 移動用ハンドル */
-  .move-handle{
-    flex:0 0 auto;width:18px;text-align:center;color:#c0cad3;font-size:13px;
-    cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;border-radius:4px;
-  }
+  .move-handle{flex:0 0 auto;width:18px;text-align:center;color:#c0cad3;font-size:13px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;border-radius:4px;}
   .move-handle:hover{color:#2ec4a6;background:#e8f8f4;}
   .move-handle:active{cursor:grabbing;color:#1d9e83;}
-
   .mini-head{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:11.5px;color:#4a5663;}
   .mini-icon{font-size:13px;}
   .mini-name{font-weight:600;}
@@ -162,12 +148,8 @@
 <body>
 <div id="app">
   <header id="topbar">
-    <button class="hist-btn" id="btn-undo" disabled title="1つ前の状態に戻る">
-      <span class="hi">↶</span><span>戻る</span>
-    </button>
-    <button class="hist-btn" id="btn-redo" disabled title="戻した操作をやり直す">
-      <span class="hi">↷</span><span>やり直す</span>
-    </button>
+    <button class="hist-btn" id="btn-undo" disabled title="1つ前の状態に戻る"><span class="hi">↶</span><span>戻る</span></button>
+    <button class="hist-btn" id="btn-redo" disabled title="戻した操作をやり直す"><span class="hi">↷</span><span>やり直す</span></button>
     <span class="hist-info" id="hist-info"></span>
   </header>
   <header id="tabbar"></header>
@@ -207,9 +189,6 @@ function escapeHtml(s){return String(s == null ? '' : s).replace(/[&<>"']/g, c =
 let toastTimer = null;
 function toast(msg){const t = $('#toast');t.textContent = msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);}
 
-/* =========================================================
-   カテゴリ
-   ========================================================= */
 const CATEGORIES = [
   {id:'presets',     label:'🎁 かんたん入力',    name:'かんたん入力（プリセット）'},
   {id:'design',      label:'🎨 デザイン',        name:'デザインブロック（装飾済み）'},
@@ -393,12 +372,13 @@ const BLOCKS = {
     hint:'お絵かきエリア。ボタンに「お絵かきモードON」を設定すると描けるようになります。',
     fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
   'figure': { cat:'media', label:'図 (figure)', icon:'🖼', tag:'figure', container:true, slots:['container','css'],
-    hint:'中に画像と figcaption を入れます。', fields:[] },
+    hint:'中に画像と figcaption を入れます。', fields:[{k:'id', label:'ID', type:'text'}] },
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
-    fields:[{k:'text', label:'テキスト', type:'text', def:'図の説明'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'図の説明'}]},
   'progress': { cat:'media', label:'進捗バー', icon:'📊', tag:'progress', slots:['css'],
     fields:[{k:'id', label:'ID', type:'text', def:'prog1'},{k:'value', label:'現在値', type:'number', def:'50'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'meter': { cat:'media', label:'メーター', icon:'🎛', tag:'meter', slots:['css'],
+    hint:'イベント「メーターの値を変更」と組み合わせると動かせます。',
     fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'60'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
 
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var'],
@@ -407,30 +387,31 @@ const BLOCKS = {
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'textarea', def:'ここに文章を入力します。'}]},
   'br': { cat:'text', label:'改行', icon:'↵', tag:'br', voidTag:true, slots:[], fields:[] },
   'hr': { cat:'text', label:'区切り線', icon:'─', tag:'hr', voidTag:true, slots:['css'], fields:[] },
-  'b': { cat:'text', label:'太字', icon:'B', tag:'b', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'太字'}]},
-  'strong': { cat:'text', label:'強調', icon:'💪', tag:'strong', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'強調'}]},
-  'i': { cat:'text', label:'斜体', icon:'I', tag:'i', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'斜体'}]},
-  'em': { cat:'text', label:'強調(em)', icon:'❗', tag:'em', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'強調'}]},
-  'u': { cat:'text', label:'下線', icon:'U', tag:'u', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'下線'}]},
-  's': { cat:'text', label:'取消線', icon:'S', tag:'s', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'取消線'}]},
-  'mark': { cat:'text', label:'ハイライト', icon:'🖍', tag:'mark', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'マーカー'}]},
-  'small': { cat:'text', label:'小さい文字', icon:'ᵃ', tag:'small', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'小さめ'}]},
-  'sub': { cat:'text', label:'下付き', icon:'ₓ', tag:'sub', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'2'}]},
-  'sup': { cat:'text', label:'上付き', icon:'ˣ', tag:'sup', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'2'}]},
+  'b': { cat:'text', label:'太字', icon:'B', tag:'b', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'太字'}]},
+  'strong': { cat:'text', label:'強調', icon:'💪', tag:'strong', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'強調'}]},
+  'i': { cat:'text', label:'斜体', icon:'I', tag:'i', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'斜体'}]},
+  'em': { cat:'text', label:'強調(em)', icon:'❗', tag:'em', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'強調'}]},
+  'u': { cat:'text', label:'下線', icon:'U', tag:'u', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'下線'}]},
+  's': { cat:'text', label:'取消線', icon:'S', tag:'s', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'取消線'}]},
+  'mark': { cat:'text', label:'ハイライト', icon:'🖍', tag:'mark', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'マーカー'}]},
+  'small': { cat:'text', label:'小さい文字', icon:'ᵃ', tag:'small', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'小さめ'}]},
+  'sub': { cat:'text', label:'下付き', icon:'ₓ', tag:'sub', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'2'}]},
+  'sup': { cat:'text', label:'上付き', icon:'ˣ', tag:'sup', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'2'}]},
   'abbr': { cat:'text', label:'略語', icon:'…', tag:'abbr', textTag:true, slots:['css','var'],
-    fields:[{k:'title', label:'正式名称', type:'text', def:'HyperText Markup Language'},{k:'text', label:'表示文字', type:'text', def:'HTML'}]},
-  'cite': { cat:'text', label:'引用元', icon:'📖', tag:'cite', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'書籍名'}]},
-  'q': { cat:'text', label:'引用', icon:'❝', tag:'q', textTag:true, slots:['css','var'], fields:[{k:'text', label:'引用文', type:'text', def:'引用文'}]},
-  'blockquote': { cat:'text', label:'引用ブロック', icon:'❞', tag:'blockquote', textTag:true, slots:['css','var'], fields:[{k:'text', label:'引用文', type:'textarea', def:'引用文'}]},
-  'address': { cat:'text', label:'連絡先', icon:'📮', tag:'address', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'textarea', def:'info@example.com'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'title', label:'正式名称', type:'text', def:'HyperText Markup Language'},{k:'text', label:'表示文字', type:'text', def:'HTML'}]},
+  'cite': { cat:'text', label:'引用元', icon:'📖', tag:'cite', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'書籍名'}]},
+  'q': { cat:'text', label:'引用', icon:'❝', tag:'q', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'引用文', type:'text', def:'引用文'}]},
+  'blockquote': { cat:'text', label:'引用ブロック', icon:'❞', tag:'blockquote', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'引用文', type:'textarea', def:'引用文'}]},
+  'address': { cat:'text', label:'連絡先', icon:'📮', tag:'address', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'textarea', def:'info@example.com'}]},
   'time': { cat:'text', label:'日時', icon:'🕐', tag:'time', textTag:true, slots:['css','var'],
-    fields:[{k:'datetime', label:'datetime', type:'text', def:'2026-01-01'},{k:'text', label:'表示文字', type:'text', def:'2026年1月1日'}]},
+    hint:'イベント「今日の日付を入力」などと組み合わせられます。',
+    fields:[{k:'id', label:'ID', type:'text'},{k:'datetime', label:'datetime', type:'text', def:'2026-01-01'},{k:'text', label:'表示文字', type:'text', def:'2026年1月1日'}]},
   'ruby': { cat:'text', label:'ルビ', icon:'🈁', tag:'ruby', textTag:true, slots:['css'],
     hint:'漢字とふりがなをセットで表示。',
-    fields:[{k:'text', label:'漢字', type:'text', def:'漢字'},{k:'ruby', label:'ふりがな', type:'text', def:'かんじ'}]},
-  'kbd': { cat:'text', label:'キー', icon:'⌨', tag:'kbd', textTag:true, slots:['css','var'], fields:[{k:'text', label:'キー', type:'text', def:'Ctrl + C'}]},
-  'code': { cat:'text', label:'コード', icon:'💻', tag:'code', textTag:true, slots:['css','var'], fields:[{k:'text', label:'コード', type:'text', def:'code'}]},
-  'pre': { cat:'text', label:'整形済み', icon:'📄', tag:'pre', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'textarea', def:'複数行の\nテキスト'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'漢字', type:'text', def:'漢字'},{k:'ruby', label:'ふりがな', type:'text', def:'かんじ'}]},
+  'kbd': { cat:'text', label:'キー', icon:'⌨', tag:'kbd', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'キー', type:'text', def:'Ctrl + C'}]},
+  'code': { cat:'text', label:'コード', icon:'💻', tag:'code', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'コード', type:'text', def:'code'}]},
+  'pre': { cat:'text', label:'整形済み', icon:'📄', tag:'pre', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'textarea', def:'複数行の\nテキスト'}]},
   'span': { cat:'text', label:'スパン', icon:'S', tag:'span', textTag:true, slots:['css','var'],
     hint:'文字の一部分だけ装飾したいときに使います。',
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'テキスト'}]},
@@ -455,36 +436,36 @@ const BLOCKS = {
     hint:'クリックで開閉。中に summary と内容を入れます。',
     fields:[{k:'id', label:'ID', type:'text'},{k:'open', label:'初期状態', type:'select', options:[{v:'',l:'閉じる'},{v:'open',l:'開く'}], def:''}]},
   'summary': { cat:'containers', label:'見出し (summary)', icon:'🔽', tag:'summary', textTag:true, slots:['css','var'],
-    fields:[{k:'text', label:'テキスト', type:'text', def:'クリックで開く'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'クリックで開く'}]},
   'dialog': { cat:'containers', label:'ダイアログ', icon:'💬', tag:'dialog', container:true, slots:['container','css'],
     hint:'ポップアップ。「ダイアログを開く」イベントで表示します。',
     fields:[{k:'id', label:'ID', type:'text', def:'dlg1'}]},
   'fieldset': { cat:'containers', label:'グループ枠', icon:'🔲', tag:'fieldset', container:true, slots:['container','css'], fields:[] },
   'legend': { cat:'containers', label:'グループ見出し', icon:'🏷', tag:'legend', textTag:true, slots:['css','var'],
-    fields:[{k:'text', label:'テキスト', type:'text', def:'お問い合わせ'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'お問い合わせ'}]},
 
   'ul': { cat:'lists', label:'箇条書き', icon:'•', tag:'ul', container:true, slots:['container','css'], fields:[] },
   'ol': { cat:'lists', label:'番号つき', icon:'1.', tag:'ol', container:true, slots:['container','css'],
     fields:[{k:'start', label:'開始番号', type:'number', def:'1'}]},
   'li': { cat:'lists', label:'リスト項目', icon:'–', tag:'li', textTag:true, slots:['css','var'],
-    fields:[{k:'value', label:'番号(ol内のみ)', type:'number'},{k:'text', label:'テキスト', type:'text', def:'項目'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'value', label:'番号(ol内のみ)', type:'number'},{k:'text', label:'テキスト', type:'text', def:'項目'}]},
   'dl': { cat:'lists', label:'定義リスト', icon:'📖', tag:'dl', container:true, slots:['container','css'], fields:[] },
-  'dt': { cat:'lists', label:'用語', icon:'📗', tag:'dt', textTag:true, slots:['css','var'], fields:[{k:'text', label:'用語', type:'text', def:'用語'}]},
-  'dd': { cat:'lists', label:'説明', icon:'📘', tag:'dd', textTag:true, slots:['css','var'], fields:[{k:'text', label:'説明', type:'text', def:'説明文'}]},
+  'dt': { cat:'lists', label:'用語', icon:'📗', tag:'dt', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'用語', type:'text', def:'用語'}]},
+  'dd': { cat:'lists', label:'説明', icon:'📘', tag:'dd', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'説明', type:'text', def:'説明文'}]},
 
   'table': { cat:'tables', label:'表 (table)', icon:'📊', tag:'table', container:true, slots:['container','css'],
     hint:'中に thead/tbody → tr → th/td を入れます。',
     fields:[{k:'id', label:'ID', type:'text'}]},
   'caption': { cat:'tables', label:'表のタイトル', icon:'🏷', tag:'caption', textTag:true, slots:['css','var'],
-    fields:[{k:'text', label:'テキスト', type:'text', def:'表のタイトル'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'表のタイトル'}]},
   'thead': { cat:'tables', label:'ヘッダ行', icon:'🔝', tag:'thead', container:true, slots:['container','css'], fields:[] },
   'tbody': { cat:'tables', label:'本体', icon:'📄', tag:'tbody', container:true, slots:['container','css'], fields:[] },
   'tfoot': { cat:'tables', label:'フッタ行', icon:'🔻', tag:'tfoot', container:true, slots:['container','css'], fields:[] },
   'tr': { cat:'tables', label:'行 (tr)', icon:'➖', tag:'tr', container:true, slots:['container','css'], fields:[] },
   'th': { cat:'tables', label:'見出しセル', icon:'🔤', tag:'th', textTag:true, slots:['css','var'],
-    fields:[{k:'colspan', label:'colspan', type:'number'},{k:'text', label:'テキスト', type:'text', def:'見出し'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'colspan', label:'colspan', type:'number'},{k:'text', label:'テキスト', type:'text', def:'見出し'}]},
   'td': { cat:'tables', label:'セル', icon:'🔡', tag:'td', textTag:true, slots:['css','var'],
-    fields:[{k:'colspan', label:'colspan', type:'number'},{k:'text', label:'テキスト', type:'text', def:'セル'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'colspan', label:'colspan', type:'number'},{k:'text', label:'テキスト', type:'text', def:'セル'}]},
 
   'form': { cat:'forms', label:'フォーム (form)', icon:'🧾', tag:'form', container:true, slots:['container','css','event'],
     hint:'イベントスロットに「フォーム内容を表示」を入れると送信時に内容をまとめて表示できます。',
@@ -519,8 +500,8 @@ const BLOCKS = {
     fields:[{k:'id', label:'ID', type:'text', def:'file1'},{k:'accept', label:'種類', type:'text', ph:'（🎁をドロップ）', presetGroup:'accept'}]},
   'input-search': { cat:'forms', label:'検索', icon:'🔍', tag:'input', voidTag:true, slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'search1'},{k:'ph', label:'プレースホルダー', type:'text', def:'検索キーワード'}]},
-  'input-hidden': { cat:'forms', label:'隠しフィールド', icon:'👻', tag:'input', voidTag:true, slots:[],
-    hint:'画面に出ないデータ送信用フィールド。',
+  'input-hidden': { cat:'forms', label:'隠しフィールド', icon:'👻', tag:'input', voidTag:true, slots:['css','event'],
+    hint:'画面に出ないデータ送信用フィールド。イベント「隠しフィールドに値を代入」で値設定できます。',
     fields:[{k:'id', label:'ID', type:'text', def:'hidden1'},{k:'value', label:'値', type:'text', def:'値'}]},
   'textarea': { cat:'forms', label:'複数行入力', icon:'📝', tag:'textarea', slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'textarea1'},{k:'ph', label:'プレースホルダー', type:'text', def:'ご記入ください'},{k:'rows', label:'行数', type:'number', def:'3'}]},
@@ -528,7 +509,7 @@ const BLOCKS = {
     hint:'イベント「チェック状態を表示」と組み合わせられます。',
     fields:[{k:'id', label:'ID', type:'text', def:'check1'},{k:'label', label:'ラベル', type:'text', def:'同意する'}]},
   'radio': { cat:'forms', label:'ラジオボタン', icon:'🔘', tag:'input', voidTag:true, slots:['css','event'],
-    hint:'同じグループ名で1つだけ選択。',
+    hint:'同じグループ名で1つだけ選択。「選んだラジオを表示」イベントで値を表示できます。',
     fields:[{k:'id', label:'ID', type:'text', def:'radio1'},{k:'name', label:'グループ名', type:'text', def:'choice'},{k:'value', label:'値', type:'text', def:'A'},{k:'label', label:'ラベル', type:'text', def:'選択肢A'}]},
   'select': { cat:'forms', label:'セレクト', icon:'🔽', tag:'select', slots:['css','event'],
     hint:'イベント「選択肢の文字を表示」「値をリアルタイム表示」と組み合わせ。',
@@ -585,273 +566,191 @@ const BLOCKS = {
 
   'evt-live-value': { cat:'variables', label:'📺 値をリアルタイム表示', icon:'📺', slotKind:'event',
     hint:'入力のたびに値が反映されます。',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-show-selected-text': { cat:'variables', label:'📋 選んだ選択肢の文字を表示', icon:'📋', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'セレクトID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-show-checked': { cat:'variables', label:'☑️ チェック状態を表示', icon:'☑️', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'チェック元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'},{k:'trueText', label:'ON時の文字', type:'text', def:'✓ オン'},{k:'falseText', label:'OFF時の文字', type:'text', def:'✗ オフ'}]},
+  'evt-show-text': { cat:'variables', label:'💬 クリックでテキスト表示', icon:'💬', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'表示する文字', type:'text', def:'クリックしました！'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-show-date': { cat:'variables', label:'🕐 現在日時を表示', icon:'🕐', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-format-date': { cat:'variables', label:'📅 日付を日本語表示', icon:'📅', slotKind:'event',
+    hint:'「2026-01-01」→「2026年1月1日」に整形。',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'日付入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-toggle-hidden': { cat:'variables', label:'👁 表示/非表示を切替', icon:'👁', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text', def:'target1'}]},
+
+  /* ★ 新規：テキスト操作 */
+  'evt-append-text': { cat:'variables', label:'➕ 文字を後ろに追加', icon:'➕', slotKind:'event',
+    hint:'対象の文字の後ろに、指定した文字を追加します。例：「20」→「20kg」',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'},
+      {k:'text', label:'追加する文字', type:'text', def:'kg'}
+    ]},
+  'evt-prepend-text': { cat:'variables', label:'➕ 文字を前に追加', icon:'➕', slotKind:'event',
+    hint:'対象の文字の前に、指定した文字を追加します。例：「100」→「¥100」',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'},
+      {k:'text', label:'追加する文字', type:'text', def:'¥'}
+    ]},
+  'evt-set-formatted': { cat:'variables', label:'🔤 入力値に単位をつけて表示', icon:'🔤', slotKind:'event',
+    hint:'「20」に「kg」をつけて「20kg」のように表示します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
       {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
+      {k:'prefix', label:'前につける文字', type:'text'},
+      {k:'suffix', label:'後ろにつける文字', type:'text', def:'kg'},
       {k:'toId',   label:'表示先ID', type:'text', def:'out1'}
     ]},
-  'evt-show-selected-text': { cat:'variables', label:'📋 選んだ選択肢の文字を表示', icon:'📋', slotKind:'event',
-    hint:'セレクトで「○○」を選んだ、の「○○」を表示します。',
+  'evt-copy-to-text': { cat:'variables', label:'📝 入力値をテキストへ反映', icon:'📝', slotKind:'event',
+    hint:'input の値を、任意の要素の文字として表示します。',
     fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'セレクトID(空=自分)', type:'text'},
-      {k:'toId',   label:'表示先ID', type:'text', def:'out1'}
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
+      {k:'toId',   label:'対象ID', type:'text'}
     ]},
-  'evt-show-checked': { cat:'variables', label:'☑️ チェック状態を表示', icon:'☑️', slotKind:'event',
+
+  /* ★ 新規：計算・結合 */
+  'evt-calc': { cat:'variables', label:'🧮 計算する（＋−×÷）', icon:'🧮', slotKind:'event',
+    hint:'2つの入力値を計算して表示します。',
     fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'チェック元ID(空=自分)', type:'text'},
-      {k:'toId',   label:'表示先ID', type:'text', def:'out1'},
-      {k:'trueText',  label:'ON時の文字', type:'text', def:'✓ オン'},
-      {k:'falseText', label:'OFF時の文字', type:'text', def:'✗ オフ'}
-    ]},
-  'evt-show-text': { cat:'variables', label:'💬 クリックでテキスト表示', icon:'💬', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'text', label:'表示する文字', type:'text', def:'クリックしました！'},
-      {k:'toId', label:'表示先ID',     type:'text', def:'out1'}
-    ]},
-  'evt-show-date': { cat:'variables', label:'🕐 現在日時を表示', icon:'🕐', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'aId', label:'入力A ID', type:'text'},
+      {k:'op',  label:'演算子', type:'select', options:[{v:'+',l:'＋'},{v:'-',l:'−'},{v:'*',l:'×'},{v:'/',l:'÷'}], def:'+'},
+      {k:'bId', label:'入力B ID', type:'text'},
       {k:'toId', label:'表示先ID', type:'text', def:'out1'}
     ]},
-  'evt-format-date': { cat:'variables', label:'📅 日付を日本語表示', icon:'📅', slotKind:'event',
-    hint:'「2026-01-01」→「2026年1月1日」に整形。',
+  'evt-join-values': { cat:'variables', label:'🔗 2つの入力をつなげる', icon:'🔗', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'aId', label:'入力A ID', type:'text'},
+      {k:'sep', label:'間の文字', type:'text', def:' '},
+      {k:'bId', label:'入力B ID', type:'text'},
+      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
+    ]},
+
+  /* ★ 新規：その他セッター */
+  'evt-meter-set': { cat:'variables', label:'🎛 メーターの値を変更', icon:'🎛', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
+      {k:'toId', label:'メーターのID', type:'text'}
+    ]},
+  'evt-show-radio': { cat:'variables', label:'🔘 選んだラジオを表示', icon:'🔘', slotKind:'event',
+    hint:'ラジオボタンのグループ名を指定すると、選ばれた値を表示します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'日付入力ID(空=自分)', type:'text'},
-      {k:'toId',   label:'表示先ID', type:'text', def:'out1'}
+      {k:'name', label:'ラジオのグループ名', type:'text', def:'choice'},
+      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
     ]},
-  'evt-toggle-hidden': { cat:'variables', label:'👁 表示/非表示を切替', icon:'👁', slotKind:'event',
+  'evt-set-time': { cat:'variables', label:'⏰ 現在時刻を入力', icon:'⏰', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text', def:'target1'}
+      {k:'toId', label:'時刻入力ID', type:'text'}
+    ]},
+  'evt-set-date': { cat:'variables', label:'📅 今日の日付を入力', icon:'📅', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'日付入力ID', type:'text'}
+    ]},
+  'evt-set-hidden': { cat:'variables', label:'👻 隠しフィールドに値を代入', icon:'👻', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'fromId', label:'入力元ID', type:'text'},
+      {k:'toId', label:'隠しフィールドID', type:'text'}
     ]},
 
   'evt-file-to-img': { cat:'variables', label:'📷 選んだ画像を表示', icon:'📷', slotKind:'event',
     hint:'ファイル入力で選んだ画像を img に表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'画像のID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'画像のID', type:'text'}]},
   'evt-file-to-video': { cat:'variables', label:'🎬 選んだ動画を再生', icon:'🎬', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'動画のID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'動画のID', type:'text'}]},
   'evt-file-to-audio': { cat:'variables', label:'🔊 選んだ音声を再生', icon:'🔊', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'音声のID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'音声のID', type:'text'}]},
   'evt-file-name': { cat:'variables', label:'📝 選んだファイル名を表示', icon:'📝', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'表示先ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
 
   'evt-color-to-bg': { cat:'variables', label:'🎨 選んだ色を背景に', icon:'🎨', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'色入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-color-to-text': { cat:'variables', label:'🅰 選んだ色を文字に', icon:'🅰', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'色入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
 
   'evt-range-to-width': { cat:'variables', label:'↔ 値で幅を変更', icon:'↔', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'unit', label:'単位', type:'text', def:'%'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'%'}]},
   'evt-range-to-height': { cat:'variables', label:'↕ 値で高さを変更', icon:'↕', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'unit', label:'単位', type:'text', def:'px'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'px'}]},
   'evt-range-to-opacity': { cat:'variables', label:'💧 値で透明度を変更', icon:'💧', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'max', label:'最大値', type:'number', def:'100'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'evt-range-to-fontsize': { cat:'variables', label:'🔤 値で文字サイズを変更', icon:'🔤', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'unit', label:'単位', type:'text', def:'px'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'px'}]},
 
   'evt-media-play': { cat:'variables', label:'▶️ メディアを再生', icon:'▶️', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'メディアID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-pause': { cat:'variables', label:'⏸ メディアを一時停止', icon:'⏸', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'メディアID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-restart': { cat:'variables', label:'🔄 最初から再生', icon:'🔄', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'メディアID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-toggle': { cat:'variables', label:'⏯ 再生/停止を切替', icon:'⏯', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'メディアID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
 
   'evt-details-toggle': { cat:'variables', label:'📂 detailsを開閉', icon:'📂', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'detailsのID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-open': { cat:'variables', label:'📂 detailsを開く', icon:'📂', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'detailsのID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-close': { cat:'variables', label:'📁 detailsを閉じる', icon:'📁', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'detailsのID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
 
   'evt-progress-set': { cat:'variables', label:'📊 進捗値を変更', icon:'📊', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
-      {k:'toId', label:'progressのID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'progressのID', type:'text'}]},
 
   'evt-canvas-draw': { cat:'variables', label:'🖌 お絵かきモードON', icon:'🖌', slotKind:'event',
     hint:'ボタンを押すと、対象のキャンバスに描けるようになります。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'キャンバスID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-clear': { cat:'variables', label:'🧹 キャンバスを消去', icon:'🧹', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'キャンバスID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-color': { cat:'variables', label:'🖍 ペンの色を変更', icon:'🖍', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'色入力ID(空=自分)', type:'text'},
-      {k:'toId', label:'キャンバスID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'キャンバスID', type:'text'}]},
 
   'evt-form-show': { cat:'variables', label:'📋 フォーム内容を表示', icon:'📋', slotKind:'event',
     hint:'送信時に、フォーム内の入力値をまとめて表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'submit'},
-      {k:'formId', label:'フォームID', type:'text'},
-      {k:'toId', label:'表示先ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'submit'},{k:'formId', label:'フォームID', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-form-reset': { cat:'variables', label:'🧹 フォームをリセット', icon:'🧹', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'formId', label:'フォームID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'formId', label:'フォームID', type:'text'}]},
 
   'evt-counter': { cat:'variables', label:'🔢 カウンター (+/-)', icon:'🔢', slotKind:'event',
     hint:'step=-1 で減算カウンターになります。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'表示先ID', type:'text', def:'out1'},
-      {k:'step', label:'増分 (+/-)', type:'number', def:'1'},
-      {k:'init', label:'初期値', type:'number', def:'0'},
-      {k:'min',  label:'最小', type:'number', def:'0'},
-      {k:'max',  label:'最大', type:'number', def:'9999'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'},{k:'step', label:'増分 (+/-)', type:'number', def:'1'},{k:'init', label:'初期値', type:'number', def:'0'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'9999'}]},
   'evt-copy-value': { cat:'variables', label:'📋 値をコピー', icon:'📋', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'fromId', label:'コピー元ID', type:'text'},
-      {k:'toId',   label:'コピー先ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'コピー元ID', type:'text'},{k:'toId', label:'コピー先ID', type:'text'}]},
   'evt-toggle-text': { cat:'variables', label:'🔄 テキストを切替', icon:'🔄', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'textA', label:'テキストA', type:'text', def:'ON'},
-      {k:'textB', label:'テキストB', type:'text', def:'OFF'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'textA', label:'テキストA', type:'text', def:'ON'},{k:'textB', label:'テキストB', type:'text', def:'OFF'}]},
   'evt-change-color': { cat:'variables', label:'🎨 文字色を変更', icon:'🎨', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'color', label:'色', type:'color', def:'#ff3366', presetGroup:'color'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'color', label:'色', type:'color', def:'#ff3366', presetGroup:'color'}]},
   'evt-change-bg': { cat:'variables', label:'🖌 背景色を変更', icon:'🖌', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'color', label:'色', type:'color', def:'#ffe082', presetGroup:'color'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'color', label:'色', type:'color', def:'#ffe082', presetGroup:'color'}]},
   'evt-change-img': { cat:'variables', label:'🖼 画像を切替', icon:'🖼', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'画像ID', type:'text'},
-      {k:'srcA', label:'画像URL A', type:'url', presetGroup:'url'},
-      {k:'srcB', label:'画像URL B', type:'url', presetGroup:'url'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'画像ID', type:'text'},{k:'srcA', label:'画像URL A', type:'url', presetGroup:'url'},{k:'srcB', label:'画像URL B', type:'url', presetGroup:'url'}]},
   'evt-toggle-class': { cat:'variables', label:'🏷 クラスを切替', icon:'🏷', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'className', label:'クラス名', type:'text', def:'active'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'className', label:'クラス名', type:'text', def:'active'}]},
   'evt-scroll-to': { cat:'variables', label:'⬇ 要素へスクロール', icon:'⬇', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-open-url': { cat:'variables', label:'🔗 URLを開く', icon:'🔗', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'url', label:'URL', type:'url', def:'https://example.com', presetGroup:'url'},
-      {k:'newTab', label:'新しいタブ', type:'select', options:[{v:'1',l:'する'},{v:'',l:'しない'}], def:'1'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'url', label:'URL', type:'url', def:'https://example.com', presetGroup:'url'},{k:'newTab', label:'新しいタブ', type:'select', options:[{v:'1',l:'する'},{v:'',l:'しない'}], def:'1'}]},
   'evt-open-dialog': { cat:'variables', label:'💬 ダイアログを開く', icon:'💬', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
   'evt-close-dialog': { cat:'variables', label:'✖ ダイアログを閉じる', icon:'✖', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
   'evt-random': { cat:'variables', label:'🎲 ランダム表示', icon:'🎲', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'表示先ID', type:'text'},
-      {k:'options', label:'選択肢(改行)', type:'textarea', def:'大吉\n中吉\n小吉\n凶'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'大吉\n中吉\n小吉\n凶'}]},
   'evt-sum-values': { cat:'variables', label:'➕ 入力値の合計を表示', icon:'➕', slotKind:'event',
     hint:'複数の数値入力の合計を表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromIds', label:'入力ID(カンマ区切り)', type:'text', def:'num1,num2,num3'},
-      {k:'toId', label:'表示先ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromIds', label:'入力ID(カンマ区切り)', type:'text', def:'num1,num2,num3'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-alert': { cat:'variables', label:'⚠️ アラート表示', icon:'⚠️', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}
-    ]},
-  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event',
-    fields:[]}
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}]},
+  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]}
 };
 
 const SLOT_LABEL = { container:'中身', css:'CSS', var:'変数', event:'動作' };
@@ -869,10 +768,23 @@ const MEDIA = [];
 const LS_AUTOSAVE = 'html_block_editor_autosave';
 const LS_SLOT = i => 'html_block_editor_slot_' + i;
 
+/* ========== データURL変換 ========== */
+function dataURLToBlob(dataURL){
+  try{
+    const parts = dataURL.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+    const bstr = atob(parts[1]);
+    const u8 = new Uint8Array(bstr.length);
+    for(let i = 0; i < bstr.length; i++) u8[i] = bstr.charCodeAt(i);
+    return new Blob([u8], { type: mime });
+  }catch(e){ return null; }
+}
+
 /* =========================================================
-   履歴（Undo / Redo）
+   履歴
    ========================================================= */
-const MAX_HISTORY = 11; // 現在 + 10ステップ戻れる
+const MAX_HISTORY = 11;
 let historyStack = [];
 let historyIndex = -1;
 let historyTimer = null;
@@ -886,7 +798,6 @@ function captureState(){
     name: currentProjectName || ''
   };
 }
-
 function restoreState(state){
   const root = $('#root-slot');
   root.innerHTML = '';
@@ -896,78 +807,51 @@ function restoreState(state){
   currentProjectName = state.name || '';
   resolveMediaBlocks();
 }
-
 function updateHistButtons(){
-  const undo = $('#btn-undo');
-  const redo = $('#btn-redo');
-  const info = $('#hist-info');
+  const undo = $('#btn-undo'), redo = $('#btn-redo'), info = $('#hist-info');
   if(!undo) return;
-  const canUndo = historyIndex > 0;
-  const canRedo = historyIndex < historyStack.length - 1;
-  undo.disabled = !canUndo;
-  redo.disabled = !canRedo;
+  undo.disabled = !(historyIndex > 0);
+  redo.disabled = !(historyIndex < historyStack.length - 1);
   if(info){
-    if(historyStack.length <= 1){
-      info.textContent = '';
-    } else {
-      info.textContent = (historyIndex) + ' / ' + (historyStack.length - 1) + ' ステップ';
-    }
+    info.textContent = historyStack.length <= 1 ? '' : (historyIndex + ' / ' + (historyStack.length - 1) + ' ステップ');
   }
 }
-
 function takeSnapshot(){
   if(!historyEnabled) return;
   const current = captureState();
   const curStr = JSON.stringify(current);
-  if(historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === curStr){
-    return; // 変化なし
-  }
-  // 未来のスタックを切り捨て
+  if(historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === curStr) return;
   historyStack = historyStack.slice(0, historyIndex + 1);
   historyStack.push(current);
-  if(historyStack.length > MAX_HISTORY){
-    historyStack.shift();
-  }
+  if(historyStack.length > MAX_HISTORY) historyStack.shift();
   historyIndex = historyStack.length - 1;
   updateHistButtons();
 }
-
 function scheduleSnapshot(){
   if(!historyEnabled) return;
   clearTimeout(historyTimer);
   historyTimer = setTimeout(takeSnapshot, SNAPSHOT_DELAY);
 }
-
-function initHistory(){
-  historyStack = [captureState()];
-  historyIndex = 0;
-  updateHistButtons();
-}
-
+function initHistory(){ historyStack = [captureState()]; historyIndex = 0; updateHistButtons(); }
 function doUndo(){
   if(historyIndex <= 0) return;
   clearTimeout(historyTimer);
   historyIndex--;
   restoreState(historyStack[historyIndex]);
-  updateHistButtons();
-  schedulePreview();
-  scheduleSave();
+  updateHistButtons(); schedulePreview(); scheduleSave();
   toast('元に戻しました');
 }
-
 function doRedo(){
   if(historyIndex >= historyStack.length - 1) return;
   clearTimeout(historyTimer);
   historyIndex++;
   restoreState(historyStack[historyIndex]);
-  updateHistButtons();
-  schedulePreview();
-  scheduleSave();
+  updateHistButtons(); schedulePreview(); scheduleSave();
   toast('やり直しました');
 }
 
 /* =========================================================
-   フィールド
+   フィールド生成
    ========================================================= */
 function makeField(f, val, presetGroup){
   if(f.type === 'hidden'){
@@ -1013,12 +897,10 @@ function attachMoveDrag(handle, blockEl){
   if(!handle) return;
   handle.addEventListener('pointerdown', e => {
     if(e.button && e.button !== 0) return;
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     beginMoveDrag(e, blockEl);
   });
 }
-
 function createBlock(type, values){
   const def = BLOCKS[type];
   const el = document.createElement('div');
@@ -1031,8 +913,7 @@ function createBlock(type, values){
     el.classList.add('mini');
     const head = document.createElement('div');
     head.className = 'mini-head';
-    head.innerHTML =
-      '<span class="move-handle" title="ドラッグで移動">⠿</span>' +
+    head.innerHTML = '<span class="move-handle" title="ドラッグで移動">⠿</span>' +
       '<span class="mini-icon">' + (def.icon || '▫') + '</span>' +
       '<span class="mini-name">' + escapeHtml(def.label) + '</span>';
     el.appendChild(head);
@@ -1117,21 +998,38 @@ function deserializeBlock(data){
   });
   return el;
 }
+
+/* ★ dataURL を含めたプロジェクトデータ */
 function projectData(){
   return {
-    version: 6, name: currentProjectName,
+    version: 7, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
-    media: MEDIA.map(m => ({name:m.name, type:m.type, kind:m.kind}))
+    media: MEDIA.map(m => ({
+      name: m.name, type: m.type, kind: m.kind,
+      dataURL: m.dataURL || null
+    }))
   };
 }
+
 function loadProjectData(data){
   if(!data) return;
   currentProjectName = data.name || '';
   PROJECT_SETTINGS = { baseFont: (data.settings && data.settings.baseFont) || '', baseFontSize: (data.settings && data.settings.baseFontSize) || '' };
   MEDIA.length = 0;
-  (data.media || []).forEach(m => { MEDIA.push({ id: 'm' + Math.random().toString(36).slice(2,9), name: m.name, type: m.type, kind: m.kind, url: '', blob: null }); });
+  (data.media || []).forEach(m => {
+    let url = '', blob = null;
+    if(m.dataURL){
+      blob = dataURLToBlob(m.dataURL);
+      if(blob) url = URL.createObjectURL(blob);
+    }
+    MEDIA.push({
+      id: 'm' + Math.random().toString(36).slice(2,9),
+      name: m.name, type: m.type, kind: m.kind,
+      url: url, blob: blob, dataURL: m.dataURL || null
+    });
+  });
   const root = $('#root-slot');
   root.innerHTML = '';
   (data.blocks || []).forEach(b => { const el = deserializeBlock(b); if(el) root.appendChild(el); });
@@ -1182,14 +1080,13 @@ function contentOf(el, v){
 function defaultTrigger(t){
   switch(t){
     case 'evt-live-value': return 'input';
-    case 'evt-show-checked': return 'change';
-    case 'evt-show-selected-text': return 'change';
-    case 'evt-format-date': return 'change';
+    case 'evt-show-checked': case 'evt-show-selected-text': case 'evt-format-date': return 'change';
     case 'evt-file-to-img': case 'evt-file-to-video': case 'evt-file-to-audio': case 'evt-file-name': return 'change';
     case 'evt-color-to-bg': case 'evt-color-to-text': return 'input';
     case 'evt-range-to-width': case 'evt-range-to-height': case 'evt-range-to-opacity': case 'evt-range-to-fontsize': return 'input';
-    case 'evt-progress-set': return 'input';
-    case 'evt-canvas-color': return 'input';
+    case 'evt-progress-set': case 'evt-meter-set': case 'evt-canvas-color': return 'input';
+    case 'evt-set-formatted': case 'evt-copy-to-text': case 'evt-calc': case 'evt-join-values': return 'input';
+    case 'evt-show-radio': return 'change';
     case 'evt-form-show': return 'submit';
     default: return 'click';
   }
@@ -1219,6 +1116,50 @@ function eventBody(t, kv, ownerId){
       return `var t=document.getElementById(${tid});if(t)t.style.display=(t.style.display==='none')?'':'none';`;
     case 'evt-alert':
       return `alert(${JSON.stringify(kv.text||'')});`;
+
+    /* ★ テキスト操作 */
+    case 'evt-append-text':
+      return `var t=document.getElementById(${tid});if(t)t.textContent=(t.textContent||'')+${JSON.stringify(kv.text||'')};`;
+    case 'evt-prepend-text':
+      return `var t=document.getElementById(${tid});if(t)t.textContent=${JSON.stringify(kv.text||'')}+(t.textContent||'');`;
+    case 'evt-set-formatted': {
+      const pre = JSON.stringify(kv.prefix || '');
+      const suf = JSON.stringify(kv.suffix || '');
+      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=${pre}+(s.value||'')+${suf};`;
+    }
+    case 'evt-copy-to-text':
+      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.value;`;
+
+    /* ★ 計算・結合 */
+    case 'evt-calc': {
+      const op = kv.op || '+';
+      const aId = JSON.stringify(kv.aId || '');
+      const bId = JSON.stringify(kv.bId || '');
+      return `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b&&t){var x=parseFloat(a.value)||0,y=parseFloat(b.value)||0,r;if('${op}'==='+')r=x+y;else if('${op}'==='-')r=x-y;else if('${op}'==='*')r=x*y;else if('${op}'==='/')r=y===0?0:x/y;t.textContent=Math.round(r*1000000)/1000000;}`;
+    }
+    case 'evt-join-values': {
+      const aId = JSON.stringify(kv.aId || '');
+      const bId = JSON.stringify(kv.bId || '');
+      const sep = JSON.stringify(kv.sep || '');
+      return `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b&&t)t.textContent=(a.value||'')+${sep}+(b.value||'');`;
+    }
+
+    /* ★ その他のセッター */
+    case 'evt-meter-set':
+      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
+    case 'evt-show-radio': {
+      const name = JSON.stringify(kv.name || '');
+      return `var t=document.getElementById(${tid});if(t){var rs=document.querySelectorAll('input[type=radio][name='+JSON.stringify(${name})+']');var v='';for(var i=0;i<rs.length;i++){if(rs[i].checked){v=rs[i].value;break;}}t.textContent=v;}`;
+    }
+    case 'evt-set-time': {
+      return `var t=document.getElementById(${tid});if(t){var d=new Date();t.value=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}`;
+    }
+    case 'evt-set-date': {
+      return `var t=document.getElementById(${tid});if(t){var d=new Date();t.value=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}`;
+    }
+    case 'evt-set-hidden':
+      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
+
     case 'evt-counter': {
       const step = parseInt(kv.step, 10) || 1, init = parseInt(kv.init, 10) || 0;
       const min = kv.min !== '' ? parseInt(kv.min, 10) : -999999;
@@ -1331,8 +1272,12 @@ function collectEvents(el, v, events, loadEvents, warnings){
     const body = eventBody(t, kv, owner);
     if(!body) return;
     if(trigger === 'load'){ loadEvents.push(body); return; }
-    if(!owner){ warnings.push('動作ブロックの対象に ID がありません'); return; }
+    if(!owner && t !== 'evt-show-radio'){ warnings.push('動作ブロックの対象に ID がありません'); return; }
     const listener = (trigger === 'input') ? 'input' : (trigger === 'change') ? 'change' : (trigger === 'submit') ? 'submit' : 'click';
+    if(!owner){
+      if(listener === 'change') loadEvents.push(`document.querySelectorAll('input[type=radio]').forEach(function(r){r.addEventListener('change',function(){${body}});});`);
+      return;
+    }
     if(listener === 'submit'){
       events.push(`document.getElementById(${JSON.stringify(owner)})?.addEventListener("submit",function(e){e.preventDefault();${body}});`);
     } else {
@@ -1526,6 +1471,7 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       attrs.push('type="hidden"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.value) attrs.push('value="' + escapeHtml(v.value) + '"');
+      collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'textarea': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1698,7 +1644,7 @@ function renderDesignTab(list){
 function renderActionTab(list){
   const help = document.createElement('div');
   help.className = 'event-help';
-  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。<br>下は「入力値を挿入」用の変数ブロックです。';
+  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。<br>例：「20」に「kg」をつけるには「🔤 入力値に単位をつけて表示」を使います。';
   list.appendChild(help);
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
@@ -1710,15 +1656,18 @@ function renderActionTab(list){
     list.appendChild(item);
   });
   const groups = [
-    { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-text','evt-show-date','evt-format-date','evt-toggle-hidden'] },
+    { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-radio','evt-show-text','evt-show-date','evt-format-date','evt-toggle-hidden','evt-copy-to-text'] },
+    { name:'✏️ 文字を加工（単位をつける等）', types:['evt-set-formatted','evt-append-text','evt-prepend-text'] },
+    { name:'🧮 計算・結合', types:['evt-calc','evt-join-values','evt-sum-values'] },
     { name:'📁 ファイルの受け渡し', types:['evt-file-to-img','evt-file-to-video','evt-file-to-audio','evt-file-name'] },
     { name:'🎨 色の受け渡し', types:['evt-color-to-bg','evt-color-to-text'] },
-    { name:'📏 値の受け渡し', types:['evt-range-to-width','evt-range-to-height','evt-range-to-opacity','evt-range-to-fontsize','evt-progress-set'] },
+    { name:'📏 値の受け渡し', types:['evt-range-to-width','evt-range-to-height','evt-range-to-opacity','evt-range-to-fontsize','evt-progress-set','evt-meter-set'] },
+    { name:'⏰ 日付・時刻・隠し', types:['evt-set-date','evt-set-time','evt-set-hidden','evt-copy-value'] },
     { name:'▶️ メディア操作', types:['evt-media-play','evt-media-pause','evt-media-restart','evt-media-toggle'] },
     { name:'📂 開閉・ダイアログ', types:['evt-details-toggle','evt-details-open','evt-details-close','evt-open-dialog','evt-close-dialog'] },
     { name:'🖌 キャンバス', types:['evt-canvas-draw','evt-canvas-clear','evt-canvas-color'] },
-    { name:'🧾 フォーム', types:['evt-form-show','evt-form-reset','evt-sum-values','evt-prevent-submit'] },
-    { name:'🔧 その他の操作', types:['evt-counter','evt-copy-value','evt-toggle-text','evt-change-color','evt-change-bg','evt-change-img','evt-toggle-class','evt-scroll-to','evt-open-url','evt-random','evt-alert'] }
+    { name:'🧾 フォーム', types:['evt-form-show','evt-form-reset','evt-prevent-submit'] },
+    { name:'🔧 その他の操作', types:['evt-counter','evt-toggle-text','evt-change-color','evt-change-bg','evt-change-img','evt-toggle-class','evt-scroll-to','evt-open-url','evt-random','evt-alert'] }
   ];
   groups.forEach(g => {
     const sh = document.createElement('div');
@@ -1820,11 +1769,9 @@ function beginMoveDrag(e, blockEl){
   const type = blockEl.dataset.type;
   const def = BLOCKS[type];
   drag = {
-    mode: 'move',
-    movingBlock: blockEl,
+    mode: 'move', movingBlock: blockEl,
     payload: { kind:'move', type:type, label:def ? def.label : 'ブロック', icon:def ? (def.icon || '📦') : '📦' },
-    srcEl: blockEl,
-    x0: e.clientX, y0: e.clientY, id: e.pointerId,
+    srcEl: blockEl, x0: e.clientX, y0: e.clientY, id: e.pointerId,
     active: false, target: null,
     lastSlot: null, lastRef: null, lastBlock: null, lastField: null, clone: null
   };
@@ -1880,10 +1827,7 @@ function findTarget(x, y){
   }
   const slot = el.closest('.slot');
   if(!slot) return null;
-
-  // 移動時：自分自身の中にはドロップ不可
   if(drag.mode === 'move' && drag.movingBlock && drag.movingBlock.contains(slot)) return null;
-
   const slotName = slot.dataset.slot;
   const need = (drag.payload.kind === 'data') ? 'block' : slotKindOf(drag.payload.type);
   let ok = false;
@@ -1951,25 +1895,16 @@ function finishDrag(){
   if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
   document.body.classList.remove('dragging');
   document.body.classList.remove('move-dragging');
-
-  // --- 移動モード ---
   if(drag.mode === 'move'){
     const blk = drag.movingBlock;
-    if(blk){
-      blk.style.opacity = '';
-      blk.style.pointerEvents = '';
-    }
-    if(!t || !t.slot){ drag = null; return; }
-    if(!blk){ drag = null; return; }
-    // 新しい位置へ挿入
+    if(blk){ blk.style.opacity = ''; blk.style.pointerEvents = ''; }
+    if(!t || !t.slot || !blk){ drag = null; return; }
     if(blk.parentNode) blk.parentNode.removeChild(blk);
     if(t.ref && t.ref !== blk) t.slot.insertBefore(blk, t.ref);
     else t.slot.appendChild(blk);
-    afterChange();
-    return;
+    afterChange(); drag = null; return;
   }
-
-  if(!t) return;
+  if(!t){ return; }
   if(drag.payload.kind === 'preset'){
     if(!t.field) return;
     const inp = t.field.querySelector('.fld');
@@ -2020,12 +1955,8 @@ document.addEventListener('pointerup', function(e){
 document.addEventListener('pointercancel', function(){
   if(!drag) return;
   if(drag.active){
-    clearHighlight();
-    clearPresetHighlights();
-    if(drag.movingBlock){
-      drag.movingBlock.style.opacity = '';
-      drag.movingBlock.style.pointerEvents = '';
-    }
+    clearHighlight(); clearPresetHighlights();
+    if(drag.movingBlock){ drag.movingBlock.style.opacity = ''; drag.movingBlock.style.pointerEvents = ''; }
     if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
     document.body.classList.remove('dragging');
     document.body.classList.remove('move-dragging');
@@ -2038,10 +1969,8 @@ $('#workspace').addEventListener('click', function(e){
   if(!btn) return;
   const blk = btn.closest('.ws-block');
   if(!blk) return;
-  if(btn.dataset.act === 'del'){
-    blk.parentNode.removeChild(blk);
-    afterChange();
-  } else if(btn.dataset.act === 'dup'){
+  if(btn.dataset.act === 'del'){ blk.parentNode.removeChild(blk); afterChange(); }
+  else if(btn.dataset.act === 'dup'){
     const copy = deserializeBlock(serializeBlock(blk));
     if(copy){ blk.parentNode.insertBefore(copy, blk.nextSibling); afterChange(); }
   }
@@ -2057,14 +1986,18 @@ let saveTimer = null;
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
-    try{ localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData())); }catch(err){}
+    try{ localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData())); }
+    catch(err){
+      // 容量オーバー時はメディアのdataURLを省いて再試行
+      try{
+        const d = projectData();
+        d.media = d.media.map(m => ({ name: m.name, type: m.type, kind: m.kind, dataURL: null }));
+        localStorage.setItem(LS_AUTOSAVE, JSON.stringify(d));
+      }catch(e2){ /* 諦める */ }
+    }
   }, 600);
 }
-function afterChange(){
-  schedulePreview();
-  scheduleSave();
-  scheduleSnapshot();
-}
+function afterChange(){ schedulePreview(); scheduleSave(); scheduleSnapshot(); }
 
 function kindFromType(type, name){
   if(type && /^image\//.test(type)) return 'img';
@@ -2080,16 +2013,31 @@ function mimeFromName(name){
   const map = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', gif:'image/gif', webp:'image/webp', svg:'image/svg+xml', mp4:'video/mp4', mov:'video/quicktime', webm:'video/webm', mp3:'audio/mpeg', wav:'audio/wav', m4a:'audio/mp4', ogg:'audio/ogg' };
   return map[ext] || 'application/octet-stream';
 }
+
+/* ★ dataURL を計算してから MEDIA に登録 */
 function addMedia(file){
   const existing = MEDIA.filter(m => m.name === file.name && !m.url)[0];
   const url = URL.createObjectURL(file);
   const kind = kindFromType(file.type, file.name);
+  let target;
   if(existing){
     existing.url = url; existing.blob = file;
     existing.type = file.type || existing.type; existing.kind = kind;
+    target = existing;
   } else {
-    MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name:file.name, type:file.type||mimeFromName(file.name), kind, url, blob:file });
+    target = { id:'m'+Math.random().toString(36).slice(2,9), name:file.name, type:file.type||mimeFromName(file.name), kind, url, blob:file, dataURL:null };
+    MEDIA.push(target);
   }
+  // 非同期で dataURL を計算（セーブ時の永続化用）
+  const reader = new FileReader();
+  reader.onload = function(){
+    target.dataURL = reader.result;
+    // 念のため保存予約
+    scheduleSave();
+  };
+  reader.onerror = function(){ /* 無視 */ };
+  reader.readAsDataURL(file);
+
   renderPalette('data');
   resolveMediaBlocks();
   afterChange();
@@ -2100,11 +2048,12 @@ function addMediaByUrl(){
   if(!url) return;
   const name = url.split('/').pop().split('?')[0] || 'media';
   const kind = /\.(mp4|mov|webm|m4v|ogv)$/i.test(name) ? 'video' : /\.(mp3|wav|m4a|ogg|aac)$/i.test(name) ? 'audio' : 'img';
-  MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name, type:'', kind, url, blob:null });
+  MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name, type:'', kind, url, blob:null, dataURL:null });
   renderPalette('data');
   toast('URLを追加しました');
 }
 
+/* ========== ZIP ========== */
 const CRC_TABLE = (function(){
   const t = new Uint32Array(256);
   for(let n = 0; n < 256; n++){
@@ -2263,14 +2212,14 @@ async function importProjectZip(file){
   entries.filter(e => e.name.indexOf('assets/') === 0).forEach(e => {
     const name = e.name.slice(7);
     const blob = new Blob([e.data], { type: mimeFromName(name) });
-    MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name, type: blob.type, kind: kindFromType(blob.type, name), url: URL.createObjectURL(blob), blob });
+    MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name, type: blob.type, kind: kindFromType(blob.type, name), url: URL.createObjectURL(blob), blob, dataURL: null });
   });
   const restored = MEDIA.slice();
   MEDIA.length = 0;
   (data.media || []).forEach(function(m){
     const found = restored.filter(r => r.name === m.name)[0];
     if(found) MEDIA.push(found);
-    else MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name:m.name, type:m.type, kind:m.kind, url:'', blob:null });
+    else MEDIA.push({ id:'m'+Math.random().toString(36).slice(2,9), name:m.name, type:m.type, kind:m.kind, url:'', blob:null, dataURL:null });
   });
   currentProjectName = data.name || '';
   PROJECT_SETTINGS = { baseFont: (data.settings && data.settings.baseFont) || '', baseFontSize: (data.settings && data.settings.baseFontSize) || '' };
@@ -2354,8 +2303,19 @@ $('#modal').addEventListener('click', function(e){
       currentProjectName = name;
       try{
         localStorage.setItem(LS_SLOT(slot), JSON.stringify({ name, date: new Date().toISOString(), data: projectData() }));
-        toast('スロット ' + slot + ' にセーブしました'); closeModal();
-      }catch(err){ toast('セーブに失敗（容量不足）'); }
+        toast('スロット ' + slot + ' にセーブしました（画像込み）'); closeModal();
+      }catch(err){
+        // 容量オーバー時はメディア無しで再試行
+        try{
+          const d = projectData();
+          d.media = d.media.map(m => ({ name: m.name, type: m.type, kind: m.kind, dataURL: null }));
+          localStorage.setItem(LS_SLOT(slot), JSON.stringify({ name, date: new Date().toISOString(), data: d }));
+          toast('⚠ 容量オーバーのため画像なしで保存しました');
+          closeModal();
+        }catch(e2){
+          toast('セーブに失敗しました（容量不足）');
+        }
+      }
     };
     if(exist) showConfirm('スロット ' + slot + ' に上書きしますか？', doSave);
     else doSave();
@@ -2423,12 +2383,8 @@ $('#vp-seg').addEventListener('click', function(e){
   b.classList.add('active');
   $('#preview-body').classList.toggle('mobile', b.dataset.vp === 'mobile');
 });
-
-/* 履歴ボタン */
 $('#btn-undo').addEventListener('click', doUndo);
 $('#btn-redo').addEventListener('click', doRedo);
-
-/* キーボードショートカット（PCのみ） */
 document.addEventListener('keydown', function(e){
   if(!(e.ctrlKey || e.metaKey)) return;
   const t = e.target;
@@ -2467,7 +2423,6 @@ function init(){
     }
   }catch(e){}
   updatePreview();
-  // 初期化後に履歴を開始
   historyEnabled = true;
   initHistory();
   if(restored) toast('前回の状態を復元しました');
