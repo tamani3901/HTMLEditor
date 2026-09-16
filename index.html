@@ -10,6 +10,20 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;background:#eef1f5;color:#232a31;font-size:14px;user-select:none;-webkit-user-select:none;overflow:hidden;}
   input,select,textarea{user-select:text;-webkit-user-select:text;font-family:inherit;}
   #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* ---- 履歴バー ---- */
+  #topbar{flex:0 0 auto;display:flex;gap:8px;padding:6px 10px;background:#f4f6f9;border-bottom:1px solid #dfe4ea;align-items:center;}
+  .hist-btn{
+    display:flex;align-items:center;gap:6px;padding:6px 14px;
+    border:1px solid #dfe4ea;background:#fff;border-radius:8px;
+    font-size:12.5px;color:#3b4652;cursor:pointer;transition:.12s;font-family:inherit;
+  }
+  .hist-btn:hover:not(:disabled){background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
+  .hist-btn:active:not(:disabled){transform:scale(0.97);}
+  .hist-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .hist-btn .hi{font-size:15px;line-height:1;font-weight:700;}
+  .hist-info{margin-left:auto;font-size:11px;color:#8b97a3;}
+
   #tabbar{flex:0 0 auto;display:flex;gap:6px;padding:8px 10px;background:#fff;border-bottom:1px solid #dfe4ea;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   #tabbar::-webkit-scrollbar{height:5px;}
   #tabbar::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
@@ -50,11 +64,21 @@
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
   #workspace{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;background:#eef1f5;display:flex;flex-direction:column;}
   #root-slot{flex:1 1 auto;min-height:100%;padding:14px;background:#fff;border-radius:12px;border:2px solid #e3e9ef;}
+
   .ws-block{background:#f8fbfd;border:1px solid #dbe2ea;border-left:3px solid #2ec4a6;border-radius:10px;padding:8px;box-shadow:0 1px 2px rgba(20,30,40,.04);transition:box-shadow .12s, outline .12s;}
   .ws-block[data-cat="design"]{border-left-color:#7e57c2;background:#faf8ff;}
   .ws-block.drag-over{outline:2px solid #2ec4a6;outline-offset:1px;}
   .ws-block.mini{display:flex;align-items:center;gap:6px;padding:5px 7px;border-left-color:#9aa7b3;background:#f4f7fa;border-radius:8px;}
-  .mini-head{display:flex;align-items:center;gap:5px;flex:0 0 auto;font-size:11.5px;color:#4a5663;}
+
+  /* 移動用ハンドル */
+  .move-handle{
+    flex:0 0 auto;width:18px;text-align:center;color:#c0cad3;font-size:13px;
+    cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;border-radius:4px;
+  }
+  .move-handle:hover{color:#2ec4a6;background:#e8f8f4;}
+  .move-handle:active{cursor:grabbing;color:#1d9e83;}
+
+  .mini-head{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:11.5px;color:#4a5663;}
   .mini-icon{font-size:13px;}
   .mini-name{font-weight:600;}
   .mini-fields{flex:1 1 auto;display:flex;gap:5px;align-items:center;min-width:0;flex-wrap:wrap;}
@@ -63,7 +87,7 @@
   .mini-fields .fld-hint{display:none;}
   .mini-del{flex:0 0 auto;border:none;background:transparent;color:#b6c0c9;font-size:13px;cursor:pointer;padding:2px 5px;border-radius:5px;}
   .mini-del:hover{background:#ffe9e6;color:#d0442c;}
-  .blk-head{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .blk-head{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
   .blk-icon{font-size:14px;}
   .blk-name{font-size:12.5px;font-weight:700;color:#33404d;}
   .blk-tag{font-size:10.5px;color:#7e8b98;background:#eaeff4;border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;}
@@ -94,7 +118,9 @@
   .drag-clone{position:fixed;z-index:9999;pointer-events:none;display:flex;align-items:center;gap:6px;padding:7px 12px;background:#2ec4a6;color:#fff;font-size:12.5px;font-weight:600;border-radius:9px;box-shadow:0 6px 18px rgba(20,30,40,.28);transform:translate(-50%,-50%);opacity:.94;}
   .drag-clone.preset-clone{background:#ff9800;}
   .drag-clone.design-clone{background:#7e57c2;}
+  .drag-clone.move-clone{background:#6366f1;}
   body.dragging{cursor:grabbing;}
+  body.move-dragging{cursor:grabbing;}
   #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   .panel-head{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #eef1f5;}
   .seg{display:flex;background:#eef2f6;border-radius:8px;padding:2px;}
@@ -135,6 +161,15 @@
 </head>
 <body>
 <div id="app">
+  <header id="topbar">
+    <button class="hist-btn" id="btn-undo" disabled title="1つ前の状態に戻る">
+      <span class="hi">↶</span><span>戻る</span>
+    </button>
+    <button class="hist-btn" id="btn-redo" disabled title="戻した操作をやり直す">
+      <span class="hi">↷</span><span>やり直す</span>
+    </button>
+    <span class="hist-info" id="hist-info"></span>
+  </header>
   <header id="tabbar"></header>
   <div id="main">
     <aside id="palette"><div id="palette-head">かんたん入力</div><div id="palette-list"></div></aside>
@@ -172,6 +207,9 @@ function escapeHtml(s){return String(s == null ? '' : s).replace(/[&<>"']/g, c =
 let toastTimer = null;
 function toast(msg){const t = $('#toast');t.textContent = msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);}
 
+/* =========================================================
+   カテゴリ
+   ========================================================= */
 const CATEGORIES = [
   {id:'presets',     label:'🎁 かんたん入力',    name:'かんたん入力（プリセット）'},
   {id:'design',      label:'🎨 デザイン',        name:'デザインブロック（装飾済み）'},
@@ -308,7 +346,6 @@ const PRESETS = {
 };
 
 const BLOCKS = {
-  /* ===== デザイン ===== */
   'box': { cat:'design', label:'装飾ボックス', icon:'📦', tag:'div', container:true, slots:['container','css'],
     baseStyle:'border:1px solid #d0d7de; border-radius:8px; padding:16px; margin:12px 0; background:#fafbfc;',
     hint:'中に入れたものを枠で囲います。', fields:[{k:'id', label:'ID', type:'text'}] },
@@ -344,70 +381,30 @@ const BLOCKS = {
     baseStyle:'background:#fdecec; border-left:4px solid #e74c3c; border-radius:6px; padding:12px 16px; margin:12px 0; color:#7c1d10;',
     hint:'赤いエラーメッセージ。', fields:[{k:'id', label:'ID', type:'text'}] },
 
-  /* ===== メディア ===== */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css'],
-    fields:[
-      {k:'id', label:'ID', type:'text'},
-      {k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},
-      {k:'alt', label:'代替テキスト', type:'text'},
-      {k:'media', type:'hidden'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},{k:'alt', label:'代替テキスト', type:'text'},{k:'media', type:'hidden'}]},
   'video': { cat:'media', label:'動画', icon:'🎬', tag:'video', slots:['css'],
-    fields:[
-      {k:'id', label:'ID', type:'text'},
-      {k:'src', label:'URL', type:'url', presetGroup:'url'},
-      {k:'media', type:'hidden'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'media', type:'hidden'}]},
   'audio': { cat:'media', label:'音声', icon:'🔊', tag:'audio', slots:['css'],
-    fields:[
-      {k:'id', label:'ID', type:'text'},
-      {k:'src', label:'URL', type:'url', presetGroup:'url'},
-      {k:'media', type:'hidden'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'media', type:'hidden'}]},
   'iframe': { cat:'media', label:'埋め込み', icon:'🌐', tag:'iframe', slots:['css'],
-    fields:[
-      {k:'src', label:'URL', type:'url', presetGroup:'url'},
-      {k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},
-      {k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}
-    ]},
+    fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},{k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}]},
   'canvas': { cat:'media', label:'キャンバス', icon:'🖌', tag:'canvas', slots:['css'],
     hint:'お絵かきエリア。ボタンに「お絵かきモードON」を設定すると描けるようになります。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'canvas1'},
-      {k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},
-      {k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
   'figure': { cat:'media', label:'図 (figure)', icon:'🖼', tag:'figure', container:true, slots:['container','css'],
     hint:'中に画像と figcaption を入れます。', fields:[] },
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'図の説明'}]},
   'progress': { cat:'media', label:'進捗バー', icon:'📊', tag:'progress', slots:['css'],
-    hint:'スライダーやボタンの「進捗値を変更」と組み合わせます。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'prog1'},
-      {k:'value', label:'現在値', type:'number', def:'50'},
-      {k:'max', label:'最大値', type:'number', def:'100'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'prog1'},{k:'value', label:'現在値', type:'number', def:'50'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'meter': { cat:'media', label:'メーター', icon:'🎛', tag:'meter', slots:['css'],
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'meter1'},
-      {k:'value', label:'現在値', type:'number', def:'60'},
-      {k:'min', label:'最小', type:'number', def:'0'},
-      {k:'max', label:'最大', type:'number', def:'100'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'60'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
 
-  /* ===== テキスト ===== */
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var'],
-    fields:[
-      {k:'level', label:'レベル', type:'select', options:['1','2','3','4','5','6'], def:'2'},
-      {k:'id', label:'ID', type:'text'},
-      {k:'text', label:'テキスト', type:'text', def:'見出しテキスト'}
-    ]},
+    fields:[{k:'level', label:'レベル', type:'select', options:['1','2','3','4','5','6'], def:'2'},{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'見出しテキスト'}]},
   'p': { cat:'text', label:'段落', icon:'¶', tag:'p', textTag:true, slots:['css','var'],
-    fields:[
-      {k:'id', label:'ID', type:'text'},
-      {k:'text', label:'テキスト', type:'textarea', def:'ここに文章を入力します。'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'textarea', def:'ここに文章を入力します。'}]},
   'br': { cat:'text', label:'改行', icon:'↵', tag:'br', voidTag:true, slots:[], fields:[] },
   'hr': { cat:'text', label:'区切り線', icon:'─', tag:'hr', voidTag:true, slots:['css'], fields:[] },
   'b': { cat:'text', label:'太字', icon:'B', tag:'b', textTag:true, slots:['css','var'], fields:[{k:'text', label:'テキスト', type:'text', def:'太字'}]},
@@ -438,21 +435,12 @@ const BLOCKS = {
     hint:'文字の一部分だけ装飾したいときに使います。',
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'テキスト'}]},
 
-  /* ===== リンク・ボタン ===== */
   'a': { cat:'interactive', label:'リンク', icon:'🔗', tag:'a', textTag:true, slots:['css','var'],
-    fields:[
-      {k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},
-      {k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},
-      {k:'text', label:'表示文字', type:'text', def:'リンク'}
-    ]},
+    fields:[{k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},{k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},{k:'text', label:'表示文字', type:'text', def:'リンク'}]},
   'button': { cat:'interactive', label:'ボタン', icon:'🔘', tag:'button', slots:['css','var','event'],
     hint:'動作スロットにイベントを入れると、クリックで何かが起こります。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'btn1'},
-      {k:'text', label:'ラベル', type:'text', def:'ボタン'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'btn1'},{k:'text', label:'ラベル', type:'text', def:'ボタン'}]},
 
-  /* ===== 枠・レイアウト ===== */
   'div': { cat:'containers', label:'グループ (div)', icon:'📦', tag:'div', container:true, slots:['container','css'],
     fields:[{k:'id', label:'ID', type:'text'}]},
   'main': { cat:'containers', label:'メイン', icon:'📄', tag:'main', container:true, slots:['container','css'], fields:[] },
@@ -464,11 +452,8 @@ const BLOCKS = {
   'article': { cat:'containers', label:'記事', icon:'📰', tag:'article', container:true, slots:['container','css'], fields:[] },
   'aside': { cat:'containers', label:'サイド', icon:'📑', tag:'aside', container:true, slots:['container','css'], fields:[] },
   'details': { cat:'containers', label:'開閉 (details)', icon:'📂', tag:'details', container:true, slots:['container','css','event'],
-    hint:'クリックで開閉。中に summary と内容を入れます。「開閉を切替」イベントで外から操作も可能。',
-    fields:[
-      {k:'id', label:'ID', type:'text'},
-      {k:'open', label:'初期状態', type:'select', options:[{v:'',l:'閉じる'},{v:'open',l:'開く'}], def:''}
-    ]},
+    hint:'クリックで開閉。中に summary と内容を入れます。',
+    fields:[{k:'id', label:'ID', type:'text'},{k:'open', label:'初期状態', type:'select', options:[{v:'',l:'閉じる'},{v:'open',l:'開く'}], def:''}]},
   'summary': { cat:'containers', label:'見出し (summary)', icon:'🔽', tag:'summary', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'クリックで開く'}]},
   'dialog': { cat:'containers', label:'ダイアログ', icon:'💬', tag:'dialog', container:true, slots:['container','css'],
@@ -478,7 +463,6 @@ const BLOCKS = {
   'legend': { cat:'containers', label:'グループ見出し', icon:'🏷', tag:'legend', textTag:true, slots:['css','var'],
     fields:[{k:'text', label:'テキスト', type:'text', def:'お問い合わせ'}]},
 
-  /* ===== リスト ===== */
   'ul': { cat:'lists', label:'箇条書き', icon:'•', tag:'ul', container:true, slots:['container','css'], fields:[] },
   'ol': { cat:'lists', label:'番号つき', icon:'1.', tag:'ol', container:true, slots:['container','css'],
     fields:[{k:'start', label:'開始番号', type:'number', def:'1'}]},
@@ -488,7 +472,6 @@ const BLOCKS = {
   'dt': { cat:'lists', label:'用語', icon:'📗', tag:'dt', textTag:true, slots:['css','var'], fields:[{k:'text', label:'用語', type:'text', def:'用語'}]},
   'dd': { cat:'lists', label:'説明', icon:'📘', tag:'dd', textTag:true, slots:['css','var'], fields:[{k:'text', label:'説明', type:'text', def:'説明文'}]},
 
-  /* ===== 表 ===== */
   'table': { cat:'tables', label:'表 (table)', icon:'📊', tag:'table', container:true, slots:['container','css'],
     hint:'中に thead/tbody → tr → th/td を入れます。',
     fields:[{k:'id', label:'ID', type:'text'}]},
@@ -503,18 +486,13 @@ const BLOCKS = {
   'td': { cat:'tables', label:'セル', icon:'🔡', tag:'td', textTag:true, slots:['css','var'],
     fields:[{k:'colspan', label:'colspan', type:'number'},{k:'text', label:'テキスト', type:'text', def:'セル'}]},
 
-  /* ===== フォーム ===== */
   'form': { cat:'forms', label:'フォーム (form)', icon:'🧾', tag:'form', container:true, slots:['container','css','event'],
     hint:'イベントスロットに「フォーム内容を表示」を入れると送信時に内容をまとめて表示できます。',
     fields:[{k:'id', label:'ID', type:'text', def:'form1'}]},
   'label': { cat:'forms', label:'ラベル', icon:'🏷', tag:'label', container:true, slots:['container','css'],
     fields:[{k:'for', label:'for属性', type:'text'}]},
   'input-text': { cat:'forms', label:'1行入力', icon:'⌨️', tag:'input', voidTag:true, slots:['css','event'],
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'input1'},
-      {k:'ph', label:'プレースホルダー', type:'text', def:'入力してください'},
-      {k:'list', label:'候補リストID', type:'text', ph:'（datalistのID）'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'input1'},{k:'ph', label:'プレースホルダー', type:'text', def:'入力してください'},{k:'list', label:'候補リストID', type:'text', ph:'（datalistのID）'}]},
   'input-password': { cat:'forms', label:'パスワード', icon:'🔒', tag:'input', voidTag:true, slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'pw1'},{k:'ph', label:'プレースホルダー', type:'text', def:'パスワード'}]},
   'input-email': { cat:'forms', label:'メール', icon:'✉️', tag:'input', voidTag:true, slots:['css','event'],
@@ -532,52 +510,29 @@ const BLOCKS = {
     fields:[{k:'id', label:'ID', type:'text', def:'time1'}]},
   'input-color': { cat:'forms', label:'色選択', icon:'🎨', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「色を背景に」「色を文字に」と組み合わせると便利。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'color1'},
-      {k:'value', label:'初期色', type:'color', def:'#2ec4a6', presetGroup:'color'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'color1'},{k:'value', label:'初期色', type:'color', def:'#2ec4a6', presetGroup:'color'}]},
   'input-range': { cat:'forms', label:'スライダー', icon:'🎚', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「値で幅を変更」などと組み合わせると便利。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'range1'},
-      {k:'min', label:'最小', type:'number', def:'0'},
-      {k:'max', label:'最大', type:'number', def:'100'},
-      {k:'value', label:'初期値', type:'number', def:'50'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'range1'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'},{k:'value', label:'初期値', type:'number', def:'50'}]},
   'input-file': { cat:'forms', label:'ファイル', icon:'📁', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「選択画像を表示」等と組み合わせると、選んだファイルを使えます。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'file1'},
-      {k:'accept', label:'種類', type:'text', ph:'（🎁をドロップ）', presetGroup:'accept'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'file1'},{k:'accept', label:'種類', type:'text', ph:'（🎁をドロップ）', presetGroup:'accept'}]},
   'input-search': { cat:'forms', label:'検索', icon:'🔍', tag:'input', voidTag:true, slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'search1'},{k:'ph', label:'プレースホルダー', type:'text', def:'検索キーワード'}]},
   'input-hidden': { cat:'forms', label:'隠しフィールド', icon:'👻', tag:'input', voidTag:true, slots:[],
     hint:'画面に出ないデータ送信用フィールド。',
     fields:[{k:'id', label:'ID', type:'text', def:'hidden1'},{k:'value', label:'値', type:'text', def:'値'}]},
   'textarea': { cat:'forms', label:'複数行入力', icon:'📝', tag:'textarea', slots:['css','event'],
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'textarea1'},
-      {k:'ph', label:'プレースホルダー', type:'text', def:'ご記入ください'},
-      {k:'rows', label:'行数', type:'number', def:'3'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'textarea1'},{k:'ph', label:'プレースホルダー', type:'text', def:'ご記入ください'},{k:'rows', label:'行数', type:'number', def:'3'}]},
   'checkbox': { cat:'forms', label:'チェックボックス', icon:'☑️', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「チェック状態を表示」と組み合わせられます。',
     fields:[{k:'id', label:'ID', type:'text', def:'check1'},{k:'label', label:'ラベル', type:'text', def:'同意する'}]},
   'radio': { cat:'forms', label:'ラジオボタン', icon:'🔘', tag:'input', voidTag:true, slots:['css','event'],
     hint:'同じグループ名で1つだけ選択。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'radio1'},
-      {k:'name', label:'グループ名', type:'text', def:'choice'},
-      {k:'value', label:'値', type:'text', def:'A'},
-      {k:'label', label:'ラベル', type:'text', def:'選択肢A'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'radio1'},{k:'name', label:'グループ名', type:'text', def:'choice'},{k:'value', label:'値', type:'text', def:'A'},{k:'label', label:'ラベル', type:'text', def:'選択肢A'}]},
   'select': { cat:'forms', label:'セレクト', icon:'🔽', tag:'select', slots:['css','event'],
     hint:'イベント「選択肢の文字を表示」「値をリアルタイム表示」と組み合わせ。',
-    fields:[
-      {k:'id', label:'ID', type:'text', def:'select1'},
-      {k:'options', label:'選択肢(改行)', type:'textarea', def:'選択肢1\n選択肢2\n選択肢3'}
-    ]},
+    fields:[{k:'id', label:'ID', type:'text', def:'select1'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'選択肢1\n選択肢2\n選択肢3'}]},
   'optgroup': { cat:'forms', label:'選択グループ', icon:'📂', tag:'optgroup', slots:[],
     hint:'select の中に直接入れてグループ化します。',
     fields:[{k:'label', label:'グループ名', type:'text', def:'グループ1'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'項目1\n項目2'}]},
@@ -592,7 +547,6 @@ const BLOCKS = {
   'reset': { cat:'forms', label:'リセットボタン', icon:'🔄', tag:'button', slots:['css','var','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'reset1'},{k:'text', label:'ラベル', type:'text', def:'クリア'}]},
 
-  /* ===== CSS ===== */
   'css-width':{cat:'css',label:'幅 width',icon:'↔',cssProp:'width',presetGroup:'size',fields:[{k:'value',type:'text',def:'100%'}]},
   'css-height':{cat:'css',label:'高さ height',icon:'↕',cssProp:'height',presetGroup:'size',fields:[{k:'value',type:'text',def:'auto'}]},
   'css-maxwidth':{cat:'css',label:'最大幅',icon:'↔',cssProp:'max-width',presetGroup:'size',fields:[{k:'value',type:'text',def:'100%'}]},
@@ -624,13 +578,11 @@ const BLOCKS = {
   'css-textshadow':{cat:'css',label:'文字の影',icon:'🌫',cssProp:'text-shadow',fields:[{k:'value',type:'text',def:'1px 1px 2px rgba(0,0,0,0.3)'}]},
   'css-cursor':{cat:'css',label:'カーソル',icon:'🖱',cssProp:'cursor',fields:[{k:'value',type:'select',options:['default','pointer','text','move','not-allowed','help'],def:'pointer'}]},
 
-  /* ===== 動作（変数・イベント） ===== */
   'var-static': { cat:'variables', label:'静的テキスト', icon:'🔢', slotKind:'var',
     fields:[{k:'name', label:'変数名', type:'text', def:'var1'},{k:'value', label:'値', type:'text', def:'表示テキスト'}]},
   'var-input': { cat:'variables', label:'入力値を挿入', icon:'🔗', slotKind:'var',
     fields:[{k:'targetId', label:'参照ID', type:'text', def:'input1'}]},
 
-  /* --- 表示 --- */
   'evt-live-value': { cat:'variables', label:'📺 値をリアルタイム表示', icon:'📺', slotKind:'event',
     hint:'入力のたびに値が反映されます。',
     fields:[
@@ -677,7 +629,6 @@ const BLOCKS = {
       {k:'toId', label:'対象ID', type:'text', def:'target1'}
     ]},
 
-  /* --- ファイル入力の受け渡し --- */
   'evt-file-to-img': { cat:'variables', label:'📷 選んだ画像を表示', icon:'📷', slotKind:'event',
     hint:'ファイル入力で選んだ画像を img に表示します。',
     fields:[
@@ -704,9 +655,7 @@ const BLOCKS = {
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
 
-  /* --- 色入力の受け渡し --- */
   'evt-color-to-bg': { cat:'variables', label:'🎨 選んだ色を背景に', icon:'🎨', slotKind:'event',
-    hint:'色選択で選んだ色を、対象の背景色に反映します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
       {k:'fromId', label:'色入力ID(空=自分)', type:'text'},
@@ -719,9 +668,7 @@ const BLOCKS = {
       {k:'toId', label:'対象ID', type:'text'}
     ]},
 
-  /* --- スライダー・数値の受け渡し --- */
   'evt-range-to-width': { cat:'variables', label:'↔ 値で幅を変更', icon:'↔', slotKind:'event',
-    hint:'スライダーや数値入力の値で、対象の幅を変えます。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
       {k:'fromId', label:'入力ID(空=自分)', type:'text'},
@@ -750,9 +697,7 @@ const BLOCKS = {
       {k:'unit', label:'単位', type:'text', def:'px'}
     ]},
 
-  /* --- メディア操作 --- */
   'evt-media-play': { cat:'variables', label:'▶️ メディアを再生', icon:'▶️', slotKind:'event',
-    hint:'動画・音声のIDを指定すると再生します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'メディアID', type:'text'}
@@ -773,7 +718,6 @@ const BLOCKS = {
       {k:'toId', label:'メディアID', type:'text'}
     ]},
 
-  /* --- details 開閉 --- */
   'evt-details-toggle': { cat:'variables', label:'📂 detailsを開閉', icon:'📂', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
@@ -790,16 +734,13 @@ const BLOCKS = {
       {k:'toId', label:'detailsのID', type:'text'}
     ]},
 
-  /* --- progress/meter --- */
   'evt-progress-set': { cat:'variables', label:'📊 進捗値を変更', icon:'📊', slotKind:'event',
-    hint:'スライダーの値で進捗バーを動かします。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
       {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
       {k:'toId', label:'progressのID', type:'text'}
     ]},
 
-  /* --- キャンバス --- */
   'evt-canvas-draw': { cat:'variables', label:'🖌 お絵かきモードON', icon:'🖌', slotKind:'event',
     hint:'ボタンを押すと、対象のキャンバスに描けるようになります。',
     fields:[
@@ -818,7 +759,6 @@ const BLOCKS = {
       {k:'toId', label:'キャンバスID', type:'text'}
     ]},
 
-  /* --- フォーム --- */
   'evt-form-show': { cat:'variables', label:'📋 フォーム内容を表示', icon:'📋', slotKind:'event',
     hint:'送信時に、フォーム内の入力値をまとめて表示します。',
     fields:[
@@ -832,7 +772,6 @@ const BLOCKS = {
       {k:'formId', label:'フォームID', type:'text'}
     ]},
 
-  /* --- 操作 --- */
   'evt-counter': { cat:'variables', label:'🔢 カウンター (+/-)', icon:'🔢', slotKind:'event',
     hint:'step=-1 で減算カウンターになります。',
     fields:[
@@ -916,12 +855,7 @@ const BLOCKS = {
 };
 
 const SLOT_LABEL = { container:'中身', css:'CSS', var:'変数', event:'動作' };
-const SLOT_EMPTY = {
-  container:'ここにブロックをドロップ',
-  css:'CSSブロックをドロップ',
-  var:'変数ブロックをドロップ',
-  event:'動作ブロックをドロップ'
-};
+const SLOT_EMPTY = { container:'ここにブロックをドロップ', css:'CSSブロックをドロップ', var:'変数ブロックをドロップ', event:'動作ブロックをドロップ' };
 const MAX_DEPTH = 8;
 
 function slotKindOf(type){const d = BLOCKS[type]; if(!d) return null; if(d.cat === 'css') return 'css'; if(d.slotKind) return d.slotKind; return 'block';}
@@ -935,6 +869,106 @@ const MEDIA = [];
 const LS_AUTOSAVE = 'html_block_editor_autosave';
 const LS_SLOT = i => 'html_block_editor_slot_' + i;
 
+/* =========================================================
+   履歴（Undo / Redo）
+   ========================================================= */
+const MAX_HISTORY = 11; // 現在 + 10ステップ戻れる
+let historyStack = [];
+let historyIndex = -1;
+let historyTimer = null;
+let historyEnabled = false;
+const SNAPSHOT_DELAY = 600;
+
+function captureState(){
+  return {
+    blocks: childBlocks($('#root-slot')).map(serializeBlock),
+    settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
+    name: currentProjectName || ''
+  };
+}
+
+function restoreState(state){
+  const root = $('#root-slot');
+  root.innerHTML = '';
+  (state.blocks || []).forEach(b => { const el = deserializeBlock(b); if(el) root.appendChild(el); });
+  PROJECT_SETTINGS.baseFont = (state.settings && state.settings.baseFont) || '';
+  PROJECT_SETTINGS.baseFontSize = (state.settings && state.settings.baseFontSize) || '';
+  currentProjectName = state.name || '';
+  resolveMediaBlocks();
+}
+
+function updateHistButtons(){
+  const undo = $('#btn-undo');
+  const redo = $('#btn-redo');
+  const info = $('#hist-info');
+  if(!undo) return;
+  const canUndo = historyIndex > 0;
+  const canRedo = historyIndex < historyStack.length - 1;
+  undo.disabled = !canUndo;
+  redo.disabled = !canRedo;
+  if(info){
+    if(historyStack.length <= 1){
+      info.textContent = '';
+    } else {
+      info.textContent = (historyIndex) + ' / ' + (historyStack.length - 1) + ' ステップ';
+    }
+  }
+}
+
+function takeSnapshot(){
+  if(!historyEnabled) return;
+  const current = captureState();
+  const curStr = JSON.stringify(current);
+  if(historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === curStr){
+    return; // 変化なし
+  }
+  // 未来のスタックを切り捨て
+  historyStack = historyStack.slice(0, historyIndex + 1);
+  historyStack.push(current);
+  if(historyStack.length > MAX_HISTORY){
+    historyStack.shift();
+  }
+  historyIndex = historyStack.length - 1;
+  updateHistButtons();
+}
+
+function scheduleSnapshot(){
+  if(!historyEnabled) return;
+  clearTimeout(historyTimer);
+  historyTimer = setTimeout(takeSnapshot, SNAPSHOT_DELAY);
+}
+
+function initHistory(){
+  historyStack = [captureState()];
+  historyIndex = 0;
+  updateHistButtons();
+}
+
+function doUndo(){
+  if(historyIndex <= 0) return;
+  clearTimeout(historyTimer);
+  historyIndex--;
+  restoreState(historyStack[historyIndex]);
+  updateHistButtons();
+  schedulePreview();
+  scheduleSave();
+  toast('元に戻しました');
+}
+
+function doRedo(){
+  if(historyIndex >= historyStack.length - 1) return;
+  clearTimeout(historyTimer);
+  historyIndex++;
+  restoreState(historyStack[historyIndex]);
+  updateHistButtons();
+  schedulePreview();
+  scheduleSave();
+  toast('やり直しました');
+}
+
+/* =========================================================
+   フィールド
+   ========================================================= */
 function makeField(f, val, presetGroup){
   if(f.type === 'hidden'){
     const i = document.createElement('input');
@@ -972,6 +1006,19 @@ function makeField(f, val, presetGroup){
   return wrap;
 }
 
+/* =========================================================
+   ブロック生成
+   ========================================================= */
+function attachMoveDrag(handle, blockEl){
+  if(!handle) return;
+  handle.addEventListener('pointerdown', e => {
+    if(e.button && e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    beginMoveDrag(e, blockEl);
+  });
+}
+
 function createBlock(type, values){
   const def = BLOCKS[type];
   const el = document.createElement('div');
@@ -979,11 +1026,15 @@ function createBlock(type, values){
   el.dataset.type = type; el.dataset.cat = def.cat;
   const vals = values || {};
   const isMini = (def.cat === 'css' || def.slotKind);
+
   if(isMini){
     el.classList.add('mini');
     const head = document.createElement('div');
     head.className = 'mini-head';
-    head.innerHTML = '<span class="mini-icon">' + (def.icon || '▫') + '</span><span class="mini-name">' + escapeHtml(def.label) + '</span>';
+    head.innerHTML =
+      '<span class="move-handle" title="ドラッグで移動">⠿</span>' +
+      '<span class="mini-icon">' + (def.icon || '▫') + '</span>' +
+      '<span class="mini-name">' + escapeHtml(def.label) + '</span>';
     el.appendChild(head);
     const fields = document.createElement('div');
     fields.className = 'mini-fields blk-fields';
@@ -993,17 +1044,26 @@ function createBlock(type, values){
     del.className = 'mini-del'; del.dataset.act = 'del'; del.type = 'button';
     del.textContent = '✕'; del.title = '削除';
     el.appendChild(del);
+    attachMoveDrag(head.querySelector('.move-handle'), el);
     return el;
   }
+
   const head = document.createElement('div');
   head.className = 'blk-head';
-  head.innerHTML = '<span class="blk-icon">' + (def.icon || '▫') + '</span><span class="blk-name">' + escapeHtml(def.label) + '</span><code class="blk-tag">' + escapeHtml(tagLabel(def)) + '</code><span class="sp"></span>';
+  head.innerHTML =
+    '<span class="move-handle" title="ドラッグで移動">⠿</span>' +
+    '<span class="blk-icon">' + (def.icon || '▫') + '</span>' +
+    '<span class="blk-name">' + escapeHtml(def.label) + '</span>' +
+    '<code class="blk-tag">' + escapeHtml(tagLabel(def)) + '</code>' +
+    '<span class="sp"></span>';
   const dup = document.createElement('button');
   dup.className = 'blk-btn'; dup.dataset.act = 'dup'; dup.type = 'button'; dup.textContent = '📋'; dup.title = '複製';
   const del = document.createElement('button');
   del.className = 'blk-btn'; del.dataset.act = 'del'; del.type = 'button'; del.textContent = '✕'; del.title = '削除';
   head.appendChild(dup); head.appendChild(del);
   el.appendChild(head);
+  attachMoveDrag(head.querySelector('.move-handle'), el);
+
   if(def.hint){const h = document.createElement('div'); h.className = 'blk-hint'; h.textContent = '💡 ' + def.hint; el.appendChild(h);}
   if(def.fields && def.fields.length){
     const fw = document.createElement('div');
@@ -1059,7 +1119,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 5, name: currentProjectName,
+    version: 6, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
@@ -1125,16 +1185,9 @@ function defaultTrigger(t){
     case 'evt-show-checked': return 'change';
     case 'evt-show-selected-text': return 'change';
     case 'evt-format-date': return 'change';
-    case 'evt-file-to-img':
-    case 'evt-file-to-video':
-    case 'evt-file-to-audio':
-    case 'evt-file-name': return 'change';
-    case 'evt-color-to-bg':
-    case 'evt-color-to-text': return 'input';
-    case 'evt-range-to-width':
-    case 'evt-range-to-height':
-    case 'evt-range-to-opacity':
-    case 'evt-range-to-fontsize': return 'input';
+    case 'evt-file-to-img': case 'evt-file-to-video': case 'evt-file-to-audio': case 'evt-file-name': return 'change';
+    case 'evt-color-to-bg': case 'evt-color-to-text': return 'input';
+    case 'evt-range-to-width': case 'evt-range-to-height': case 'evt-range-to-opacity': case 'evt-range-to-fontsize': return 'input';
     case 'evt-progress-set': return 'input';
     case 'evt-canvas-color': return 'input';
     case 'evt-form-show': return 'submit';
@@ -1415,14 +1468,8 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<button' + attrStr(attrs) + '>' + contentOf(el, v) + '</button>\n';
     }
-    case 'input-text':
-    case 'input-password':
-    case 'input-email':
-    case 'input-url':
-    case 'input-tel':
-    case 'input-search': {
-      const typeMap = { 'input-text':'text', 'input-password':'password', 'input-email':'email',
-        'input-url':'url', 'input-tel':'tel', 'input-search':'search' };
+    case 'input-text': case 'input-password': case 'input-email': case 'input-url': case 'input-tel': case 'input-search': {
+      const typeMap = { 'input-text':'text', 'input-password':'password', 'input-email':'email', 'input-url':'url', 'input-tel':'tel', 'input-search':'search' };
       attrs.push('type="' + typeMap[type] + '"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
@@ -1653,8 +1700,6 @@ function renderActionTab(list){
   help.className = 'event-help';
   help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。<br>下は「入力値を挿入」用の変数ブロックです。';
   list.appendChild(help);
-
-  // 変数系を先頭に
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
     if(!d) return;
@@ -1664,8 +1709,6 @@ function renderActionTab(list){
     setupPaletteDrag(item, { kind:'block', type:type, label:d.label, icon:d.icon });
     list.appendChild(item);
   });
-
-  // グループ分け
   const groups = [
     { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-text','evt-show-date','evt-format-date','evt-toggle-hidden'] },
     { name:'📁 ファイルの受け渡し', types:['evt-file-to-img','evt-file-to-video','evt-file-to-audio','evt-file-name'] },
@@ -1761,23 +1804,47 @@ function renderDataTab(list){
   });
 }
 
+/* =========================================================
+   ドラッグ&ドロップ
+   ========================================================= */
 let drag = null;
 const indicator = document.getElementById('drop-indicator');
 
 function beginDrag(e, payload, srcEl){
   if(drag) return;
-  drag = { payload, srcEl, x0:e.clientX, y0:e.clientY, id:e.pointerId, active:false, target:null, lastSlot:null, lastRef:null, lastBlock:null, lastField:null, clone:null };
+  drag = { mode:'new', payload, srcEl, x0:e.clientX, y0:e.clientY, id:e.pointerId,
+    active:false, target:null, lastSlot:null, lastRef:null, lastBlock:null, lastField:null, clone:null };
+}
+function beginMoveDrag(e, blockEl){
+  if(drag) return;
+  const type = blockEl.dataset.type;
+  const def = BLOCKS[type];
+  drag = {
+    mode: 'move',
+    movingBlock: blockEl,
+    payload: { kind:'move', type:type, label:def ? def.label : 'ブロック', icon:def ? (def.icon || '📦') : '📦' },
+    srcEl: blockEl,
+    x0: e.clientX, y0: e.clientY, id: e.pointerId,
+    active: false, target: null,
+    lastSlot: null, lastRef: null, lastBlock: null, lastField: null, clone: null
+  };
 }
 function activateDrag(){
   drag.active = true;
   const c = document.createElement('div');
   c.className = 'drag-clone';
   if(drag.payload.kind === 'preset') c.classList.add('preset-clone');
+  else if(drag.mode === 'move') c.classList.add('move-clone');
   else if(drag.payload.kind === 'block' && BLOCKS[drag.payload.type] && BLOCKS[drag.payload.type].cat === 'design') c.classList.add('design-clone');
   c.innerHTML = '<span>' + (drag.payload.icon || '📦') + '</span><span>' + escapeHtml(drag.payload.label || '') + '</span>';
   document.body.appendChild(c);
   drag.clone = c;
   document.body.classList.add('dragging');
+  if(drag.mode === 'move' && drag.movingBlock){
+    document.body.classList.add('move-dragging');
+    drag.movingBlock.style.opacity = '0.3';
+    drag.movingBlock.style.pointerEvents = 'none';
+  }
   if(drag.payload.kind === 'preset'){
     document.body.classList.add('preset-drag');
     $$('.fld-row[data-preset-group="' + drag.payload.group + '"]').forEach(el => { el.classList.add('preset-target'); });
@@ -1788,8 +1855,8 @@ function clearPresetHighlights(){
   $$('.preset-target, .preset-hover').forEach(el => el.classList.remove('preset-target', 'preset-hover'));
 }
 function depthOf(el){ let d = 0, p = el.parentElement; while(p){ if(p.classList && p.classList.contains('ws-block')) d++; p = p.parentElement; } return d; }
-function calcRef(slot, y){
-  const kids = childBlocks(slot);
+function calcRef(slot, y, excludeEl){
+  const kids = childBlocks(slot).filter(k => k !== excludeEl);
   for(let i = 0; i < kids.length; i++){
     const r = kids[i].getBoundingClientRect();
     if(y < r.top + r.height / 2) return kids[i];
@@ -1813,6 +1880,10 @@ function findTarget(x, y){
   }
   const slot = el.closest('.slot');
   if(!slot) return null;
+
+  // 移動時：自分自身の中にはドロップ不可
+  if(drag.mode === 'move' && drag.movingBlock && drag.movingBlock.contains(slot)) return null;
+
   const slotName = slot.dataset.slot;
   const need = (drag.payload.kind === 'data') ? 'block' : slotKindOf(drag.payload.type);
   let ok = false;
@@ -1826,7 +1897,8 @@ function findTarget(x, y){
     const d = owner ? depthOf(owner) + 1 : 0;
     if(d > MAX_DEPTH) return null;
   }
-  return { slot, ref: calcRef(slot, y) };
+  const exclude = (drag.mode === 'move') ? drag.movingBlock : null;
+  return { slot, ref: calcRef(slot, y, exclude) };
 }
 function clearHighlight(){
   $$('.drag-over').forEach(e => e.classList.remove('drag-over'));
@@ -1878,6 +1950,25 @@ function finishDrag(){
   clearPresetHighlights();
   if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
   document.body.classList.remove('dragging');
+  document.body.classList.remove('move-dragging');
+
+  // --- 移動モード ---
+  if(drag.mode === 'move'){
+    const blk = drag.movingBlock;
+    if(blk){
+      blk.style.opacity = '';
+      blk.style.pointerEvents = '';
+    }
+    if(!t || !t.slot){ drag = null; return; }
+    if(!blk){ drag = null; return; }
+    // 新しい位置へ挿入
+    if(blk.parentNode) blk.parentNode.removeChild(blk);
+    if(t.ref && t.ref !== blk) t.slot.insertBefore(blk, t.ref);
+    else t.slot.appendChild(blk);
+    afterChange();
+    return;
+  }
+
   if(!t) return;
   if(drag.payload.kind === 'preset'){
     if(!t.field) return;
@@ -1931,8 +2022,13 @@ document.addEventListener('pointercancel', function(){
   if(drag.active){
     clearHighlight();
     clearPresetHighlights();
+    if(drag.movingBlock){
+      drag.movingBlock.style.opacity = '';
+      drag.movingBlock.style.pointerEvents = '';
+    }
     if(drag.clone && drag.clone.parentNode) drag.clone.parentNode.removeChild(drag.clone);
     document.body.classList.remove('dragging');
+    document.body.classList.remove('move-dragging');
   }
   drag = null;
 });
@@ -1964,7 +2060,11 @@ function scheduleSave(){
     try{ localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData())); }catch(err){}
   }, 600);
 }
-function afterChange(){ schedulePreview(); scheduleSave(); }
+function afterChange(){
+  schedulePreview();
+  scheduleSave();
+  scheduleSnapshot();
+}
 
 function kindFromType(type, name){
   if(type && /^image\//.test(type)) return 'img';
@@ -2324,6 +2424,19 @@ $('#vp-seg').addEventListener('click', function(e){
   $('#preview-body').classList.toggle('mobile', b.dataset.vp === 'mobile');
 });
 
+/* 履歴ボタン */
+$('#btn-undo').addEventListener('click', doUndo);
+$('#btn-redo').addEventListener('click', doRedo);
+
+/* キーボードショートカット（PCのみ） */
+document.addEventListener('keydown', function(e){
+  if(!(e.ctrlKey || e.metaKey)) return;
+  const t = e.target;
+  if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  if(e.key === 'z' && !e.shiftKey){ e.preventDefault(); doUndo(); }
+  else if((e.key === 'z' && e.shiftKey) || e.key === 'y'){ e.preventDefault(); doRedo(); }
+});
+
 function buildTabs(){
   const bar = $('#tabbar'); bar.innerHTML = '';
   CATEGORIES.forEach(function(c, idx){
@@ -2354,6 +2467,9 @@ function init(){
     }
   }catch(e){}
   updatePreview();
+  // 初期化後に履歴を開始
+  historyEnabled = true;
+  initHistory();
   if(restored) toast('前回の状態を復元しました');
 }
 init();
