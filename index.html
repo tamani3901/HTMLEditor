@@ -25,6 +25,7 @@
   .tab.active{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
   .tab.preset-tab.active{background:#ff9800;border-color:#ff9800;}
   .tab.design-tab.active{background:#7e57c2;border-color:#7e57c2;}
+  .tab.api-tab.active{background:#e91e63;border-color:#e91e63;}
   #main{flex:1 1 auto;display:grid;grid-template-columns:230px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
   #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   #palette-head{flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;letter-spacing:.04em;border-bottom:1px solid #eef1f5;background:#fbfcfe;}
@@ -37,17 +38,22 @@
   .pal-item.preset-item:hover{background:#fff5e0;border-color:#ffb74d;}
   .pal-item.design-item{background:#f8f5ff;border-color:#e1d5f7;}
   .pal-item.design-item:hover{background:#f0e9ff;border-color:#b39ddb;}
+  .pal-item.api-item{background:#fff0f5;border-color:#f8bbd0;}
+  .pal-item.api-item:hover{background:#ffe0ec;border-color:#f06292;}
   .drag-handle{flex:0 0 auto;width:22px;text-align:center;color:#c0cad3;font-size:14px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;}
   .drag-handle:active{cursor:grabbing;color:#2ec4a6;}
   .pal-item.preset-item .drag-handle:active{color:#ff9800;}
   .pal-item.design-item .drag-handle:active{color:#7e57c2;}
+  .pal-item.api-item .drag-handle:active{color:#e91e63;}
   .pi-icon{font-size:15px;width:20px;text-align:center;flex:0 0 auto;}
   .pi-body{flex:1 1 auto;min-width:0;}
   .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .preset-help{font-size:11px;color:#8b6914;background:#fff8e1;border:1px solid #ffe0b2;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .design-help{font-size:11px;color:#4a2f8b;background:#f0e9ff;border:1px solid #e1d5f7;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .event-help{font-size:11px;color:#0d3e6b;background:#e8f4fd;border:1px solid #b3daff;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
+  .api-help{font-size:11px;color:#880e4f;background:#fff0f5;border:1px solid #f8bbd0;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .preset-group-head{font-size:11px;font-weight:700;color:#e65100;background:#fff3e0;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
+  .api-group-head{font-size:11px;font-weight:700;color:#880e4f;background:#fce4ec;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
   .data-del{flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;width:22px;height:22px;line-height:1;font-size:12px;cursor:pointer;}
   .data-del:hover{background:#ffe9e6;color:#d0442c;}
   .data-item.missing{opacity:.55;}
@@ -59,6 +65,7 @@
   #root-slot{flex:1 1 auto;min-height:100%;padding:14px;background:#fff;border-radius:12px;border:2px solid #e3e9ef;}
   .ws-block{background:#f8fbfd;border:1px solid #dbe2ea;border-left:3px solid #2ec4a6;border-radius:10px;padding:8px;box-shadow:0 1px 2px rgba(20,30,40,.04);transition:box-shadow .12s, outline .12s;}
   .ws-block[data-cat="design"]{border-left-color:#7e57c2;background:#faf8ff;}
+  .ws-block[data-cat="api"]{border-left-color:#e91e63;background:#fff8fa;}
   .ws-block.drag-over{outline:2px solid #2ec4a6;outline-offset:1px;}
   .ws-block.mini{display:flex;align-items:center;gap:6px;padding:5px 7px;border-left-color:#9aa7b3;background:#f4f7fa;border-radius:8px;}
   .move-handle{flex:0 0 auto;width:18px;text-align:center;color:#c0cad3;font-size:13px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;border-radius:4px;}
@@ -105,6 +112,7 @@
   .drag-clone.preset-clone{background:#ff9800;}
   .drag-clone.design-clone{background:#7e57c2;}
   .drag-clone.move-clone{background:#6366f1;}
+  .drag-clone.api-clone{background:#e91e63;}
   body.dragging{cursor:grabbing;}
   body.move-dragging{cursor:grabbing;}
   #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
@@ -112,6 +120,8 @@
   .seg{display:flex;background:#eef2f6;border-radius:8px;padding:2px;}
   .seg button{border:none;background:transparent;font-size:11.5px;padding:5px 9px;border-radius:6px;cursor:pointer;color:#5b6875;}
   .seg button.active{background:#fff;color:#1d9e83;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  .fullscreen-btn{border:1px solid #dfe4ea;background:#fff;border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;color:#5b6875;line-height:1;margin-left:4px;}
+  .fullscreen-btn:hover{background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
   #preview-area{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:8px;gap:8px;}
   #preview-frame-wrap{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:#e9edf2;border-radius:9px;padding:6px;overflow:auto;}
   #preview-body{width:100%;height:100%;border:0;background:#fff;border-radius:6px;}
@@ -141,6 +151,8 @@
   .modal-msg{font-size:13px;line-height:1.75;color:#3b4652;white-space:pre-wrap;margin:0 0 16px;}
   #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);background:#232a31;color:#fff;padding:10px 16px;border-radius:10px;font-size:12.5px;opacity:0;pointer-events:none;transition:.22s;z-index:900;max-width:82vw;text-align:center;}
   #toast.show{opacity:.95;transform:translateX(-50%) translateY(0);}
+  #preview-frame-wrap:fullscreen{background:#1f2733;padding:0;border-radius:0;align-items:center;}
+  #preview-frame-wrap:fullscreen #preview-body{width:100%;height:100%;border-radius:0;max-width:none;}
   @media (max-width:1100px){#main{grid-template-columns:190px minmax(0,1fr) 290px;}.fld-label{min-width:52px;}}
   @media (max-width:840px){#main{grid-template-columns:160px minmax(0,1fr) 240px;}.tab{padding:6px 10px;font-size:11.5px;}}
 </style>
@@ -159,7 +171,10 @@
     <aside id="right">
       <div class="panel-head">
         <div class="seg" id="view-seg"><button data-view="preview" class="active">プレビュー</button><button data-view="code">コード</button></div>
-        <div class="seg" id="vp-seg"><button data-vp="desktop" class="active" title="PC表示">🖥</button><button data-vp="mobile" title="モバイル表示">📱</button></div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <div class="seg" id="vp-seg"><button data-vp="desktop" class="active" title="PC表示">🖥</button><button data-vp="mobile" title="モバイル表示">📱</button></div>
+          <button class="fullscreen-btn" id="btn-fullscreen" title="HTMLを全画面表示">⛶</button>
+        </div>
       </div>
       <div id="preview-area"><div id="preview-frame-wrap"><iframe id="preview-body" title="preview"></iframe></div><pre id="preview-code" class="hidden"></pre></div>
       <div id="action-area">
@@ -192,7 +207,7 @@ function toast(msg){const t = $('#toast');t.textContent = msg;t.classList.add('s
 const CATEGORIES = [
   {id:'presets',     label:'🎁 かんたん入力',    name:'かんたん入力（プリセット）'},
   {id:'design',      label:'🎨 デザイン',        name:'デザインブロック（装飾済み）'},
-  {id:'media',       label:'🖼 メディア',        name:'メディア・画像'},
+  {id:'media',       label:'🖼 メディア',        name:'メディア・画像・SVG'},
   {id:'text',        label:'📝 テキスト',        name:'テキスト・見出し'},
   {id:'interactive', label:'🔗 リンク・ボタン',  name:'リンク・ボタン'},
   {id:'containers',  label:'📦 枠・レイアウト',  name:'枠・レイアウト'},
@@ -201,6 +216,7 @@ const CATEGORIES = [
   {id:'forms',       label:'🧾 フォーム',        name:'フォーム・入力'},
   {id:'css',         label:'🎨 CSS',             name:'CSS・フォント・サイズ'},
   {id:'variables',   label:'🔢 動作',            name:'動作・イベント（受け渡し）'},
+  {id:'api',         label:'🚀 API・応用',       name:'API・タイマー・デバイス'},
   {id:'data',        label:'📁 データ',          name:'インポートデータ'}
 ];
 
@@ -215,9 +231,6 @@ const FONT_OPTIONS = [
   {v:"'Noto Serif JP', 'Yu Mincho', serif", l:'Noto Serif JP'},
   {v:"'M PLUS Rounded 1c', sans-serif", l:'M PLUS 丸ゴシック'},
   {v:"'Zen Maru Gothic', 'Yu Gothic', sans-serif", l:'Zen Maru Gothic'},
-  {v:"'Kaisei Decol', serif", l:'Kaisei Decol'},
-  {v:"'Yomogi', cursive", l:'Yomogi (手書き)'},
-  {v:"'RocknRoll One', sans-serif", l:'RocknRoll One'},
   {v:"Georgia, 'Times New Roman', serif", l:'Georgia'},
   {v:"Arial, Helvetica, sans-serif", l:'Arial'},
   {v:"'Courier New', Courier, monospace", l:'Courier New'}
@@ -251,6 +264,7 @@ const PRESETS = {
   'pre-url-yt':{group:'url',label:'YouTube動画',icon:'▶️',value:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
   'pre-url-map':{group:'url',label:'Googleマップ',icon:'🗺',value:'https://maps.google.com/maps?q=Tokyo&output=embed'},
   'pre-url-site':{group:'url',label:'サンプルサイト',icon:'🌐',value:'https://example.com'},
+  'pre-url-api':{group:'url',label:'サンプルAPI',icon:'🌐',value:'https://jsonplaceholder.typicode.com/todos/1'},
   'pre-color-black':{group:'color',label:'黒',icon:'⬛',value:'#000000'},
   'pre-color-white':{group:'color',label:'白',icon:'⬜',value:'#ffffff'},
   'pre-color-gray':{group:'color',label:'グレー',icon:'🔘',value:'#888888'},
@@ -325,6 +339,7 @@ const PRESETS = {
 };
 
 const BLOCKS = {
+  /* ===== デザイン ===== */
   'box': { cat:'design', label:'装飾ボックス', icon:'📦', tag:'div', container:true, slots:['container','css'],
     baseStyle:'border:1px solid #d0d7de; border-radius:8px; padding:16px; margin:12px 0; background:#fafbfc;',
     hint:'中に入れたものを枠で囲います。', fields:[{k:'id', label:'ID', type:'text'}] },
@@ -360,6 +375,7 @@ const BLOCKS = {
     baseStyle:'background:#fdecec; border-left:4px solid #e74c3c; border-radius:6px; padding:12px 16px; margin:12px 0; color:#7c1d10;',
     hint:'赤いエラーメッセージ。', fields:[{k:'id', label:'ID', type:'text'}] },
 
+  /* ===== メディア ===== */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},{k:'alt', label:'代替テキスト', type:'text'},{k:'media', type:'hidden'}]},
   'video': { cat:'media', label:'動画', icon:'🎬', tag:'video', slots:['css'],
@@ -369,8 +385,16 @@ const BLOCKS = {
   'iframe': { cat:'media', label:'埋め込み', icon:'🌐', tag:'iframe', slots:['css'],
     fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},{k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}]},
   'canvas': { cat:'media', label:'キャンバス', icon:'🖌', tag:'canvas', slots:['css'],
-    hint:'お絵かきエリア。ボタンに「お絵かきモードON」を設定すると描けるようになります。',
+    hint:'お絵かき・図形描画エリア。「お絵かきモードON」で描けます。「図形を描く」で円や四角を描画できます。',
     fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
+  'svg': { cat:'media', label:'SVG図形', icon:'🎨', tag:'svg', slots:['css'],
+    hint:'SVGコードをそのまま貼り付けられます。例: <circle cx="100" cy="100" r="80" fill="#2ec4a6"/>',
+    fields:[
+      {k:'id', label:'ID', type:'text', def:'svg1'},
+      {k:'w', label:'幅', type:'number', def:'200', presetGroup:'size'},
+      {k:'h', label:'高さ', type:'number', def:'200', presetGroup:'size'},
+      {k:'inner', label:'SVGコード', type:'textarea', def:'<circle cx="100" cy="100" r="80" fill="#2ec4a6"/>'}
+    ]},
   'figure': { cat:'media', label:'図 (figure)', icon:'🖼', tag:'figure', container:true, slots:['container','css'],
     hint:'中に画像と figcaption を入れます。', fields:[{k:'id', label:'ID', type:'text'}] },
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
@@ -381,6 +405,7 @@ const BLOCKS = {
     hint:'イベント「メーターの値を変更」と組み合わせると動かせます。',
     fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'60'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
 
+  /* ===== テキスト ===== */
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var'],
     fields:[{k:'level', label:'レベル', type:'select', options:['1','2','3','4','5','6'], def:'2'},{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'見出しテキスト'}]},
   'p': { cat:'text', label:'段落', icon:'¶', tag:'p', textTag:true, slots:['css','var'],
@@ -404,7 +429,6 @@ const BLOCKS = {
   'blockquote': { cat:'text', label:'引用ブロック', icon:'❞', tag:'blockquote', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'引用文', type:'textarea', def:'引用文'}]},
   'address': { cat:'text', label:'連絡先', icon:'📮', tag:'address', textTag:true, slots:['css','var'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'textarea', def:'info@example.com'}]},
   'time': { cat:'text', label:'日時', icon:'🕐', tag:'time', textTag:true, slots:['css','var'],
-    hint:'イベント「今日の日付を入力」などと組み合わせられます。',
     fields:[{k:'id', label:'ID', type:'text'},{k:'datetime', label:'datetime', type:'text', def:'2026-01-01'},{k:'text', label:'表示文字', type:'text', def:'2026年1月1日'}]},
   'ruby': { cat:'text', label:'ルビ', icon:'🈁', tag:'ruby', textTag:true, slots:['css'],
     hint:'漢字とふりがなをセットで表示。',
@@ -558,7 +582,10 @@ const BLOCKS = {
   'css-textdecoration':{cat:'css',label:'文字装飾',icon:'U',cssProp:'text-decoration',presetGroup:'textdecoration',fields:[{k:'value',type:'select',options:['none','underline','line-through','overline'],def:'none'}]},
   'css-textshadow':{cat:'css',label:'文字の影',icon:'🌫',cssProp:'text-shadow',fields:[{k:'value',type:'text',def:'1px 1px 2px rgba(0,0,0,0.3)'}]},
   'css-cursor':{cat:'css',label:'カーソル',icon:'🖱',cssProp:'cursor',fields:[{k:'value',type:'select',options:['default','pointer','text','move','not-allowed','help'],def:'pointer'}]},
+  'css-transition':{cat:'css',label:'アニメ transition',icon:'✨',cssProp:'transition',fields:[{k:'value',type:'text',def:'all 0.3s ease'}]},
+  'css-transform':{cat:'css',label:'変形 transform',icon:'🔄',cssProp:'transform',fields:[{k:'value',type:'text',def:'rotate(0deg)'}]},
 
+  /* ===== 動作（既存） ===== */
   'var-static': { cat:'variables', label:'静的テキスト', icon:'🔢', slotKind:'var',
     fields:[{k:'name', label:'変数名', type:'text', def:'var1'},{k:'value', label:'値', type:'text', def:'表示テキスト'}]},
   'var-input': { cat:'variables', label:'入力値を挿入', icon:'🔗', slotKind:'var',
@@ -571,100 +598,30 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'セレクトID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-show-checked': { cat:'variables', label:'☑️ チェック状態を表示', icon:'☑️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'チェック元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'},{k:'trueText', label:'ON時の文字', type:'text', def:'✓ オン'},{k:'falseText', label:'OFF時の文字', type:'text', def:'✗ オフ'}]},
+  'evt-show-radio': { cat:'variables', label:'🔘 選んだラジオを表示', icon:'🔘', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'name', label:'ラジオのグループ名', type:'text', def:'choice'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-show-text': { cat:'variables', label:'💬 クリックでテキスト表示', icon:'💬', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'表示する文字', type:'text', def:'クリックしました！'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-show-date': { cat:'variables', label:'🕐 現在日時を表示', icon:'🕐', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-format-date': { cat:'variables', label:'📅 日付を日本語表示', icon:'📅', slotKind:'event',
-    hint:'「2026-01-01」→「2026年1月1日」に整形。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'日付入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-toggle-hidden': { cat:'variables', label:'👁 表示/非表示を切替', icon:'👁', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text', def:'target1'}]},
-
-  /* ★ 新規：テキスト操作 */
   'evt-append-text': { cat:'variables', label:'➕ 文字を後ろに追加', icon:'➕', slotKind:'event',
-    hint:'対象の文字の後ろに、指定した文字を追加します。例：「20」→「20kg」',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'text', label:'追加する文字', type:'text', def:'kg'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'text', label:'追加する文字', type:'text', def:'kg'}]},
   'evt-prepend-text': { cat:'variables', label:'➕ 文字を前に追加', icon:'➕', slotKind:'event',
-    hint:'対象の文字の前に、指定した文字を追加します。例：「100」→「¥100」',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'},
-      {k:'text', label:'追加する文字', type:'text', def:'¥'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'text', label:'追加する文字', type:'text', def:'¥'}]},
   'evt-set-formatted': { cat:'variables', label:'🔤 入力値に単位をつけて表示', icon:'🔤', slotKind:'event',
     hint:'「20」に「kg」をつけて「20kg」のように表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
-      {k:'prefix', label:'前につける文字', type:'text'},
-      {k:'suffix', label:'後ろにつける文字', type:'text', def:'kg'},
-      {k:'toId',   label:'表示先ID', type:'text', def:'out1'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'prefix', label:'前につける文字', type:'text'},{k:'suffix', label:'後ろにつける文字', type:'text', def:'kg'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-copy-to-text': { cat:'variables', label:'📝 入力値をテキストへ反映', icon:'📝', slotKind:'event',
-    hint:'input の値を、任意の要素の文字として表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
-      {k:'toId',   label:'対象ID', type:'text'}
-    ]},
-
-  /* ★ 新規：計算・結合 */
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-calc': { cat:'variables', label:'🧮 計算する（＋−×÷）', icon:'🧮', slotKind:'event',
-    hint:'2つの入力値を計算して表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'aId', label:'入力A ID', type:'text'},
-      {k:'op',  label:'演算子', type:'select', options:[{v:'+',l:'＋'},{v:'-',l:'−'},{v:'*',l:'×'},{v:'/',l:'÷'}], def:'+'},
-      {k:'bId', label:'入力B ID', type:'text'},
-      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'aId', label:'入力A ID', type:'text'},{k:'op', label:'演算子', type:'select', options:[{v:'+',l:'＋'},{v:'-',l:'−'},{v:'*',l:'×'},{v:'/',l:'÷'}], def:'+'},{k:'bId', label:'入力B ID', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-join-values': { cat:'variables', label:'🔗 2つの入力をつなげる', icon:'🔗', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'aId', label:'入力A ID', type:'text'},
-      {k:'sep', label:'間の文字', type:'text', def:' '},
-      {k:'bId', label:'入力B ID', type:'text'},
-      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
-    ]},
-
-  /* ★ 新規：その他セッター */
-  'evt-meter-set': { cat:'variables', label:'🎛 メーターの値を変更', icon:'🎛', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
-      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
-      {k:'toId', label:'メーターのID', type:'text'}
-    ]},
-  'evt-show-radio': { cat:'variables', label:'🔘 選んだラジオを表示', icon:'🔘', slotKind:'event',
-    hint:'ラジオボタンのグループ名を指定すると、選ばれた値を表示します。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},
-      {k:'name', label:'ラジオのグループ名', type:'text', def:'choice'},
-      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
-    ]},
-  'evt-set-time': { cat:'variables', label:'⏰ 現在時刻を入力', icon:'⏰', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'時刻入力ID', type:'text'}
-    ]},
-  'evt-set-date': { cat:'variables', label:'📅 今日の日付を入力', icon:'📅', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'日付入力ID', type:'text'}
-    ]},
-  'evt-set-hidden': { cat:'variables', label:'👻 隠しフィールドに値を代入', icon:'👻', slotKind:'event',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'fromId', label:'入力元ID', type:'text'},
-      {k:'toId', label:'隠しフィールドID', type:'text'}
-    ]},
-
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'aId', label:'入力A ID', type:'text'},{k:'sep', label:'間の文字', type:'text', def:' '},{k:'bId', label:'入力B ID', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-file-to-img': { cat:'variables', label:'📷 選んだ画像を表示', icon:'📷', slotKind:'event',
-    hint:'ファイル入力で選んだ画像を img に表示します。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'画像のID', type:'text'}]},
   'evt-file-to-video': { cat:'variables', label:'🎬 選んだ動画を再生', icon:'🎬', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'動画のID', type:'text'}]},
@@ -672,12 +629,10 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'音声のID', type:'text'}]},
   'evt-file-name': { cat:'variables', label:'📝 選んだファイル名を表示', icon:'📝', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
-
   'evt-color-to-bg': { cat:'variables', label:'🎨 選んだ色を背景に', icon:'🎨', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-color-to-text': { cat:'variables', label:'🅰 選んだ色を文字に', icon:'🅰', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
-
   'evt-range-to-width': { cat:'variables', label:'↔ 値で幅を変更', icon:'↔', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'%'}]},
   'evt-range-to-height': { cat:'variables', label:'↕ 値で高さを変更', icon:'↕', slotKind:'event',
@@ -686,7 +641,10 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'evt-range-to-fontsize': { cat:'variables', label:'🔤 値で文字サイズを変更', icon:'🔤', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'px'}]},
-
+  'evt-progress-set': { cat:'variables', label:'📊 進捗値を変更', icon:'📊', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'progressのID', type:'text'}]},
+  'evt-meter-set': { cat:'variables', label:'🎛 メーターの値を変更', icon:'🎛', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'メーターのID', type:'text'}]},
   'evt-media-play': { cat:'variables', label:'▶️ メディアを再生', icon:'▶️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-pause': { cat:'variables', label:'⏸ メディアを一時停止', icon:'⏸', slotKind:'event',
@@ -695,33 +653,35 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-toggle': { cat:'variables', label:'⏯ 再生/停止を切替', icon:'⏯', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
-
   'evt-details-toggle': { cat:'variables', label:'📂 detailsを開閉', icon:'📂', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-open': { cat:'variables', label:'📂 detailsを開く', icon:'📂', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-close': { cat:'variables', label:'📁 detailsを閉じる', icon:'📁', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
-
-  'evt-progress-set': { cat:'variables', label:'📊 進捗値を変更', icon:'📊', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'progressのID', type:'text'}]},
-
   'evt-canvas-draw': { cat:'variables', label:'🖌 お絵かきモードON', icon:'🖌', slotKind:'event',
-    hint:'ボタンを押すと、対象のキャンバスに描けるようになります。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-clear': { cat:'variables', label:'🧹 キャンバスを消去', icon:'🧹', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-color': { cat:'variables', label:'🖍 ペンの色を変更', icon:'🖍', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'キャンバスID', type:'text'}]},
-
+  'evt-canvas-shape': { cat:'variables', label:'🎨 図形を描く', icon:'🎨', slotKind:'event',
+    hint:'円や四角をキャンバスに描画します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'キャンバスID', type:'text'},
+      {k:'shape', label:'種類', type:'select', options:[{v:'rect',l:'四角'},{v:'circle',l:'円'},{v:'text',l:'文字'}], def:'circle'},
+      {k:'color', label:'色', type:'color', def:'#2ec4a6', presetGroup:'color'},
+      {k:'text', label:'文字(文字の場合)', type:'text'}
+    ]},
+  'evt-canvas-animate': { cat:'variables', label:'🎬 アニメ開始(円が動く)', icon:'🎬', slotKind:'event',
+    hint:'円が左右に動くサンプルアニメーションを開始します。',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'},{k:'color', label:'色', type:'color', def:'#e91e63', presetGroup:'color'}]},
   'evt-form-show': { cat:'variables', label:'📋 フォーム内容を表示', icon:'📋', slotKind:'event',
-    hint:'送信時に、フォーム内の入力値をまとめて表示します。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'submit'},{k:'formId', label:'フォームID', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-form-reset': { cat:'variables', label:'🧹 フォームをリセット', icon:'🧹', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'formId', label:'フォームID', type:'text'}]},
-
   'evt-counter': { cat:'variables', label:'🔢 カウンター (+/-)', icon:'🔢', slotKind:'event',
-    hint:'step=-1 で減算カウンターになります。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'},{k:'step', label:'増分 (+/-)', type:'number', def:'1'},{k:'init', label:'初期値', type:'number', def:'0'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'9999'}]},
   'evt-copy-value': { cat:'variables', label:'📋 値をコピー', icon:'📋', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'コピー元ID', type:'text'},{k:'toId', label:'コピー先ID', type:'text'}]},
@@ -746,11 +706,146 @@ const BLOCKS = {
   'evt-random': { cat:'variables', label:'🎲 ランダム表示', icon:'🎲', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'大吉\n中吉\n小吉\n凶'}]},
   'evt-sum-values': { cat:'variables', label:'➕ 入力値の合計を表示', icon:'➕', slotKind:'event',
-    hint:'複数の数値入力の合計を表示します。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromIds', label:'入力ID(カンマ区切り)', type:'text', def:'num1,num2,num3'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-alert': { cat:'variables', label:'⚠️ アラート表示', icon:'⚠️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}]},
-  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]}
+  'evt-set-date': { cat:'variables', label:'📅 今日の日付を入力', icon:'📅', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'日付入力ID', type:'text'}]},
+  'evt-set-time': { cat:'variables', label:'⏰ 現在時刻を入力', icon:'⏰', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'時刻入力ID', type:'text'}]},
+  'evt-set-hidden': { cat:'variables', label:'👻 隠しフィールドに値を代入', icon:'👻', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'入力元ID', type:'text'},{k:'toId', label:'隠しフィールドID', type:'text'}]},
+  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]},
+
+  /* ===== 🚀 API・タイマー・デバイス ===== */
+  'evt-interval': { cat:'api', label:'⏱ 繰り返し実行', icon:'⏱', slotKind:'event',
+    hint:'指定ミリ秒ごとに中の処理を繰り返し実行します。10ms=0.01秒単位で指定できます。',
+    fields:[
+      {k:'interval', label:'間隔(ms) 最小10', type:'number', def:'100'},
+      {k:'timerId', label:'タイマー名', type:'text', def:'t1'},
+      {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'}], def:'start'}
+    ]},
+  'evt-count-up': { cat:'api', label:'⏱ カウントアップ(0.01秒単位)', icon:'⏱', slotKind:'event',
+    hint:'0.01秒精度でカウントアップ表示します。10ms=0.01秒。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'表示先ID', type:'text', def:'timer1'},
+      {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'},
+      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10'}
+    ]},
+  'evt-count-down': { cat:'api', label:'⏳ カウントダウン(0.01秒単位)', icon:'⏳', slotKind:'event',
+    hint:'指定秒数からカウントダウンします。0.01秒精度。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'表示先ID', type:'text', def:'timer1'},
+      {k:'seconds', label:'開始秒数', type:'number', def:'10'},
+      {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'},
+      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10'},
+      {k:'stopMsg', label:'完了時の文字', type:'text', def:'時間切れ！'}
+    ]},
+  'evt-stopwatch': { cat:'api', label:'⏲ ストップウォッチ', icon:'⏲', slotKind:'event',
+    hint:'計測開始/停止/リセットを1つのブロックで操作できます。0.01秒表示。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'表示先ID', type:'text', def:'sw1'},
+      {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'}
+    ]},
+  'evt-delay': { cat:'api', label:'⏱ 遅延実行', icon:'⏱', slotKind:'event',
+    hint:'指定ミリ秒後に処理を実行します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'ms', label:'遅延(ms)', type:'number', def:'1000'},
+      {k:'msg', label:'表示する文字', type:'text', def:'実行されました'}
+    ]},
+
+  'evt-copy-clipboard': { cat:'api', label:'📋 クリップボードにコピー', icon:'📋', slotKind:'event',
+    hint:'入力欄や要素の文字をコピーします。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'fromId', label:'コピー元ID', type:'text'}
+    ]},
+  'evt-vibrate': { cat:'api', label:'📳 バイブレーション', icon:'📳', slotKind:'event',
+    hint:'スマホを振動させます（対応端末のみ）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'ms', label:'振動時間(ms)', type:'number', def:'200'}
+    ]},
+  'evt-geolocation': { cat:'api', label:'🌍 現在地を取得', icon:'🌍', slotKind:'event',
+    hint:'位置情報を取得して緯度経度を表示します（許可が必要）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]},
+  'evt-fetch': { cat:'api', label:'🌐 外部APIから取得', icon:'🌐', slotKind:'event',
+    hint:'URLからJSONを取得して表示します。例: https://jsonplaceholder.typicode.com/todos/1',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'url', label:'API URL', type:'url', def:'https://jsonplaceholder.typicode.com/todos/1', presetGroup:'url'},
+      {k:'key', label:'抜き出すキー(空=全部)', type:'text', def:'title'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]},
+  'evt-beep': { cat:'api', label:'🔊 ビープ音', icon:'🔊', slotKind:'event',
+    hint:'指定した周波数のビープ音を鳴らします。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'freq', label:'周波数(Hz)', type:'number', def:'440'},
+      {k:'ms', label:'長さ(ms)', type:'number', def:'200'}
+    ]},
+  'evt-speech': { cat:'api', label:'🗣 読み上げ', icon:'🗣', slotKind:'event',
+    hint:'テキストを音声で読み上げます（対応ブラウザのみ）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'text', label:'読み上げる文字', type:'text', def:'こんにちは'}
+    ]},
+  'evt-local-save': { cat:'api', label:'💾 ローカルに保存', icon:'💾', slotKind:'event',
+    hint:'ブラウザに値を保存します（リロードしても消えない）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'fromId', label:'値の元ID', type:'text'},
+      {k:'key', label:'キー名', type:'text', def:'mydata'}
+    ]},
+  'evt-local-load': { cat:'api', label:'📂 ローカルから読込', icon:'📂', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'key', label:'キー名', type:'text', def:'mydata'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]},
+  'evt-local-delete': { cat:'api', label:'🗑 ローカルを削除', icon:'🗑', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'key', label:'キー名', type:'text', def:'mydata'}
+    ]},
+  'evt-notification': { cat:'api', label:'🔔 通知を表示', icon:'🔔', slotKind:'event',
+    hint:'ブラウザの通知を表示します（許可が必要）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'title', label:'タイトル', type:'text', def:'お知らせ'},
+      {k:'body', label:'本文', type:'text', def:'通知です'}
+    ]},
+  'evt-fade-in': { cat:'api', label:'🎬 フェードイン', icon:'🎬', slotKind:'event',
+    hint:'対象要素をふわっと表示します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'},
+      {k:'ms', label:'時間(ms)', type:'number', def:'500'}
+    ]},
+  'evt-shake': { cat:'api', label:'📳 要素を揺らす', icon:'📳', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'}
+    ]},
+  'evt-random-color': { cat:'api', label:'🎨 ランダム色を背景に', icon:'🎨', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'}
+    ]},
+  'evt-random-number': { cat:'api', label:'🎲 ランダム数値を表示', icon:'🎲', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'min', label:'最小', type:'number', def:'1'},
+      {k:'max', label:'最大', type:'number', def:'100'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]}
 };
 
 const SLOT_LABEL = { container:'中身', css:'CSS', var:'変数', event:'動作' };
@@ -768,7 +863,6 @@ const MEDIA = [];
 const LS_AUTOSAVE = 'html_block_editor_autosave';
 const LS_SLOT = i => 'html_block_editor_slot_' + i;
 
-/* ========== データURL変換 ========== */
 function dataURLToBlob(dataURL){
   try{
     const parts = dataURL.split(',');
@@ -781,9 +875,7 @@ function dataURLToBlob(dataURL){
   }catch(e){ return null; }
 }
 
-/* =========================================================
-   履歴
-   ========================================================= */
+/* ========== 履歴 ========== */
 const MAX_HISTORY = 11;
 let historyStack = [];
 let historyIndex = -1;
@@ -812,26 +904,19 @@ function updateHistButtons(){
   if(!undo) return;
   undo.disabled = !(historyIndex > 0);
   redo.disabled = !(historyIndex < historyStack.length - 1);
-  if(info){
-    info.textContent = historyStack.length <= 1 ? '' : (historyIndex + ' / ' + (historyStack.length - 1) + ' ステップ');
-  }
+  if(info) info.textContent = historyStack.length <= 1 ? '' : (historyIndex + ' / ' + (historyStack.length - 1) + ' ステップ');
 }
 function takeSnapshot(){
   if(!historyEnabled) return;
   const current = captureState();
-  const curStr = JSON.stringify(current);
-  if(historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === curStr) return;
+  if(historyIndex >= 0 && JSON.stringify(historyStack[historyIndex]) === JSON.stringify(current)) return;
   historyStack = historyStack.slice(0, historyIndex + 1);
   historyStack.push(current);
   if(historyStack.length > MAX_HISTORY) historyStack.shift();
   historyIndex = historyStack.length - 1;
   updateHistButtons();
 }
-function scheduleSnapshot(){
-  if(!historyEnabled) return;
-  clearTimeout(historyTimer);
-  historyTimer = setTimeout(takeSnapshot, SNAPSHOT_DELAY);
-}
+function scheduleSnapshot(){ if(!historyEnabled) return; clearTimeout(historyTimer); historyTimer = setTimeout(takeSnapshot, SNAPSHOT_DELAY); }
 function initHistory(){ historyStack = [captureState()]; historyIndex = 0; updateHistButtons(); }
 function doUndo(){
   if(historyIndex <= 0) return;
@@ -850,9 +935,6 @@ function doRedo(){
   toast('やり直しました');
 }
 
-/* =========================================================
-   フィールド生成
-   ========================================================= */
 function makeField(f, val, presetGroup){
   if(f.type === 'hidden'){
     const i = document.createElement('input');
@@ -890,9 +972,6 @@ function makeField(f, val, presetGroup){
   return wrap;
 }
 
-/* =========================================================
-   ブロック生成
-   ========================================================= */
 function attachMoveDrag(handle, blockEl){
   if(!handle) return;
   handle.addEventListener('pointerdown', e => {
@@ -998,21 +1077,15 @@ function deserializeBlock(data){
   });
   return el;
 }
-
-/* ★ dataURL を含めたプロジェクトデータ */
 function projectData(){
   return {
-    version: 7, name: currentProjectName,
+    version: 8, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
-    media: MEDIA.map(m => ({
-      name: m.name, type: m.type, kind: m.kind,
-      dataURL: m.dataURL || null
-    }))
+    media: MEDIA.map(m => ({ name: m.name, type: m.type, kind: m.kind, dataURL: m.dataURL || null }))
   };
 }
-
 function loadProjectData(data){
   if(!data) return;
   currentProjectName = data.name || '';
@@ -1020,15 +1093,8 @@ function loadProjectData(data){
   MEDIA.length = 0;
   (data.media || []).forEach(m => {
     let url = '', blob = null;
-    if(m.dataURL){
-      blob = dataURLToBlob(m.dataURL);
-      if(blob) url = URL.createObjectURL(blob);
-    }
-    MEDIA.push({
-      id: 'm' + Math.random().toString(36).slice(2,9),
-      name: m.name, type: m.type, kind: m.kind,
-      url: url, blob: blob, dataURL: m.dataURL || null
-    });
+    if(m.dataURL){ blob = dataURLToBlob(m.dataURL); if(blob) url = URL.createObjectURL(blob); }
+    MEDIA.push({ id: 'm' + Math.random().toString(36).slice(2,9), name: m.name, type: m.type, kind: m.kind, url: url, blob: blob, dataURL: m.dataURL || null });
   });
   const root = $('#root-slot');
   root.innerHTML = '';
@@ -1106,6 +1172,10 @@ function eventBody(t, kv, ownerId){
       const tt = JSON.stringify(kv.trueText || 'ON'), ft = JSON.stringify(kv.falseText || 'OFF');
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.checked?${tt}:${ft};`;
     }
+    case 'evt-show-radio': {
+      const name = JSON.stringify(kv.name || '');
+      return `var t=document.getElementById(${tid});if(t){var rs=document.querySelectorAll('input[type=radio][name='+JSON.stringify(${name})+']');var v='';for(var i=0;i<rs.length;i++){if(rs[i].checked){v=rs[i].value;break;}}t.textContent=v;}`;
+    }
     case 'evt-show-text':
       return `var t=document.getElementById(${tid});if(t)t.textContent=${JSON.stringify(kv.text||'')};`;
     case 'evt-show-date':
@@ -1116,8 +1186,6 @@ function eventBody(t, kv, ownerId){
       return `var t=document.getElementById(${tid});if(t)t.style.display=(t.style.display==='none')?'':'none';`;
     case 'evt-alert':
       return `alert(${JSON.stringify(kv.text||'')});`;
-
-    /* ★ テキスト操作 */
     case 'evt-append-text':
       return `var t=document.getElementById(${tid});if(t)t.textContent=(t.textContent||'')+${JSON.stringify(kv.text||'')};`;
     case 'evt-prepend-text':
@@ -1129,8 +1197,6 @@ function eventBody(t, kv, ownerId){
     }
     case 'evt-copy-to-text':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.value;`;
-
-    /* ★ 計算・結合 */
     case 'evt-calc': {
       const op = kv.op || '+';
       const aId = JSON.stringify(kv.aId || '');
@@ -1143,23 +1209,14 @@ function eventBody(t, kv, ownerId){
       const sep = JSON.stringify(kv.sep || '');
       return `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b&&t)t.textContent=(a.value||'')+${sep}+(b.value||'');`;
     }
-
-    /* ★ その他のセッター */
     case 'evt-meter-set':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
-    case 'evt-show-radio': {
-      const name = JSON.stringify(kv.name || '');
-      return `var t=document.getElementById(${tid});if(t){var rs=document.querySelectorAll('input[type=radio][name='+JSON.stringify(${name})+']');var v='';for(var i=0;i<rs.length;i++){if(rs[i].checked){v=rs[i].value;break;}}t.textContent=v;}`;
-    }
-    case 'evt-set-time': {
+    case 'evt-set-time':
       return `var t=document.getElementById(${tid});if(t){var d=new Date();t.value=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}`;
-    }
-    case 'evt-set-date': {
+    case 'evt-set-date':
       return `var t=document.getElementById(${tid});if(t){var d=new Date();t.value=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}`;
-    }
     case 'evt-set-hidden':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
-
     case 'evt-counter': {
       const step = parseInt(kv.step, 10) || 1, init = parseInt(kv.init, 10) || 0;
       const min = kv.min !== '' ? parseInt(kv.min, 10) : -999999;
@@ -1244,12 +1301,134 @@ function eventBody(t, kv, ownerId){
       return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx)ctx.clearRect(0,0,c.width,c.height);}`;
     case 'evt-canvas-color':
       return `var s=document.getElementById(${fid}),c=document.getElementById(${tid});if(s&&c){var ctx=c.getContext('2d');if(ctx)ctx.strokeStyle=s.value;}`;
+    case 'evt-canvas-shape': {
+      const shape = kv.shape || 'circle';
+      const color = JSON.stringify(kv.color || '#2ec4a6');
+      const txt = JSON.stringify(kv.text || '');
+      if(shape === 'rect'){
+        return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.fillRect(c.width/2-50,c.height/2-50,100,100);}}`;
+      }
+      if(shape === 'text'){
+        return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.font='32px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(${txt},c.width/2,c.height/2);}}`;
+      }
+      return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.beginPath();ctx.arc(c.width/2,c.height/2,60,0,Math.PI*2);ctx.fill();}}`;
+    }
+    case 'evt-canvas-animate': {
+      const color = JSON.stringify(kv.color || '#e91e63');
+      return `(function(){var c=document.getElementById(${tid});if(!c)return;if(c._raf)cancelAnimationFrame(c._raf);var ctx=c.getContext('2d');if(!ctx)return;var t0=Date.now();function loop(){ctx.clearRect(0,0,c.width,c.height);var t=(Date.now()-t0)/1000;var x=c.width/2+Math.sin(t*2)*c.width*0.3;ctx.fillStyle=${color};ctx.beginPath();ctx.arc(x,c.height/2,40,0,Math.PI*2);ctx.fill();c._raf=requestAnimationFrame(loop);}loop();})();`;
+    }
     case 'evt-form-show': {
       const formId = JSON.stringify(kv.formId || '');
       return `var f=document.getElementById(${formId}),t=document.getElementById(${tid});if(f&&t){var p=[];var els=f.querySelectorAll('input,select,textarea');for(var i=0;i<els.length;i++){var el=els[i];if(['submit','button','reset','file','hidden'].indexOf(el.type)>=0)continue;var n=el.id||el.name||'';var v=(el.type==='checkbox'||el.type==='radio')?(el.checked?'ON':'OFF'):el.value;if(n)p.push(n+'='+v);}t.textContent=p.join(' / ');}`;
     }
     case 'evt-form-reset':
       return `var f=document.getElementById(${JSON.stringify(kv.formId||'')});if(f)f.reset();`;
+
+    /* ===== API ===== */
+    case 'evt-interval': {
+      const ms = Math.max(10, parseInt(kv.interval, 10) || 100);
+      const tid2 = JSON.stringify(kv.timerId || 't1');
+      if(kv.action === 'stop'){
+        return `if(window.__bt&&window.__bt[${tid2}]){clearInterval(window.__bt[${tid2}]);delete window.__bt[${tid2}];}`;
+      }
+      return `(function(){window.__bt=window.__bt||{};if(window.__bt[${tid2}])clearInterval(window.__bt[${tid2}]);window.__bt[${tid2}]=setInterval(function(){${kv._inner || ''}},${ms});})();`;
+    }
+    case 'evt-count-up': {
+      const act = kv.action || 'start';
+      const interval = Math.max(10, parseInt(kv.interval, 10) || 10);
+      if(act === 'start'){
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);if(t._cs==null)t._cs=Date.now()-(t._el||0);t._cs=Date.now()-(t._el||0);t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2)+'秒';},${interval});})();`;
+      }
+      if(act === 'stop'){
+        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
+      }
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t._el=0;t._cs=null;t.textContent='0.00秒';})();`;
+    }
+    case 'evt-count-down': {
+      const act = kv.action || 'start';
+      const interval = Math.max(10, parseInt(kv.interval, 10) || 10);
+      const sec = parseFloat(kv.seconds) || 10;
+      const stopMsg = JSON.stringify(kv.stopMsg || '時間切れ！');
+      if(act === 'start'){
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);var end=Date.now()+${sec*1000};t._ci=setInterval(function(){var r=(end-Date.now())/1000;if(r<=0){clearInterval(t._ci);t._ci=null;t.textContent=${stopMsg};return;}t.textContent=r.toFixed(2)+'秒';},${interval});})();`;
+      }
+      if(act === 'stop'){
+        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
+      }
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t.textContent=${sec.toFixed(2)}+'秒';})();`;
+    }
+    case 'evt-stopwatch': {
+      const act = kv.action || 'start';
+      if(act === 'start'){
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);if(t._el==null)t._el=0;if(t._cs==null)t._cs=Date.now()-t._el;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2)+'秒';},10);})();`;
+      }
+      if(act === 'stop'){
+        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
+      }
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t._el=0;t._cs=null;t.textContent='0.00秒';})();`;
+    }
+    case 'evt-delay': {
+      const ms = parseInt(kv.ms, 10) || 1000;
+      const msg = JSON.stringify(kv.msg || '実行');
+      return `setTimeout(function(){var t=document.getElementById(${tid});if(t)t.textContent=${msg};},${ms});`;
+    }
+    case 'evt-copy-clipboard': {
+      return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;if(navigator.clipboard){navigator.clipboard.writeText(txt);}})();`;
+    }
+    case 'evt-vibrate': {
+      const ms = parseInt(kv.ms, 10) || 200;
+      return `if(navigator.vibrate)navigator.vibrate(${ms});`;
+    }
+    case 'evt-geolocation': {
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(!navigator.geolocation){t.textContent='未対応';return;}t.textContent='取得中...';navigator.geolocation.getCurrentPosition(function(p){t.textContent='緯度:'+p.coords.latitude.toFixed(4)+' 経度:'+p.coords.longitude.toFixed(4);},function(e){t.textContent='取得失敗: '+e.message;});})();`;
+    }
+    case 'evt-fetch': {
+      const url = JSON.stringify(kv.url || '');
+      const key = kv.key || '';
+      const keyStr = key ? JSON.stringify(key) : 'null';
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;t.textContent='読込中...';fetch(${url}).then(function(r){return r.json();}).then(function(d){var v=d;var k=${keyStr};if(k&&d&&typeof d==='object')v=d[k];if(typeof v==='object')v=JSON.stringify(v);t.textContent=String(v);}).catch(function(e){t.textContent='エラー: '+e.message;});})();`;
+    }
+    case 'evt-beep': {
+      const freq = parseFloat(kv.freq) || 440;
+      const ms = parseInt(kv.ms, 10) || 200;
+      return `(function(){try{var ctx=window.__audioCtx||(window.__audioCtx=new (window.AudioContext||window.webkitAudioContext)());var o=ctx.createOscillator();var g=ctx.createGain();o.type='sine';o.frequency.value=${freq};o.connect(g);g.connect(ctx.destination);g.gain.value=0.1;o.start();setTimeout(function(){o.stop();},${ms});}catch(e){}})();`;
+    }
+    case 'evt-speech': {
+      const text = JSON.stringify(kv.text || '');
+      return `(function(){try{if(!window.speechSynthesis)return;var u=new SpeechSynthesisUtterance(${text});u.lang='ja-JP';speechSynthesis.speak(u);}catch(e){}})();`;
+    }
+    case 'evt-local-save': {
+      const key = JSON.stringify(kv.key || 'mydata');
+      return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;try{localStorage.setItem(${key},txt);}catch(e){}})();`;
+    }
+    case 'evt-local-load': {
+      const key = JSON.stringify(kv.key || 'mydata');
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;try{t.textContent=localStorage.getItem(${key})||'（データなし）';}catch(e){t.textContent='読込失敗';}})();`;
+    }
+    case 'evt-local-delete': {
+      const key = JSON.stringify(kv.key || 'mydata');
+      return `try{localStorage.removeItem(${key});}catch(e){}`;
+    }
+    case 'evt-notification': {
+      const title = JSON.stringify(kv.title || 'お知らせ');
+      const body = JSON.stringify(kv.body || '');
+      return `(function(){if(!('Notification' in window))return;if(Notification.permission==='granted'){new Notification(${title},{body:${body}});}else if(Notification.permission!=='denied'){Notification.requestPermission().then(function(p){if(p==='granted')new Notification(${title},{body:${body}});});}})();`;
+    }
+    case 'evt-fade-in': {
+      const ms = parseInt(kv.ms, 10) || 500;
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;t.style.transition='opacity ${ms}ms ease';t.style.opacity='0';setTimeout(function(){t.style.opacity='1';},30);})();`;
+    }
+    case 'evt-shake': {
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;var s=0;var id=setInterval(function(){s++;var x=(s%2?-1:1)*8;t.style.transform='translateX('+x+'px)';if(s>6){clearInterval(id);t.style.transform='';}},50);})();`;
+    }
+    case 'evt-random-color': {
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;var h=Math.floor(Math.random()*360);t.style.backgroundColor='hsl('+h+',70%,60%)';})();`;
+    }
+    case 'evt-random-number': {
+      const min = parseFloat(kv.min) || 0;
+      const max = parseFloat(kv.max) || 100;
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;t.textContent=Math.floor(Math.random()*(${max}-${min}+1))+${min};})();`;
+    }
   }
   return '';
 }
@@ -1260,6 +1439,15 @@ function collectEvents(el, v, events, loadEvents, warnings){
   const kids = childBlocks(slot);
   if(!kids.length) return;
   const owner = v.id || '';
+
+  // 特別扱い: 繰り返し実行の中身を集める
+  const intervalBlock = kids.find(k => k.dataset.type === 'evt-interval');
+  if(intervalBlock){
+    const kv = getValues(intervalBlock);
+    // 子の中身を集めるのは簡単ではないので、単純に「表示先ID」があれば何かする
+    // ここでは他ブロックの内容を実行できる仕組みは省略（将来拡張）
+  }
+
   kids.forEach(k => {
     const kv = getValues(k);
     const t = k.dataset.type;
@@ -1268,11 +1456,20 @@ function collectEvents(el, v, events, loadEvents, warnings){
       events.push(`document.getElementById(${JSON.stringify(owner)})?.addEventListener("submit",function(e){e.preventDefault();});`);
       return;
     }
+    if(t === 'evt-interval'){ kv._inner = 'window.__btick=window.__btick||0;'; }
     const trigger = kv.trigger || defaultTrigger(t);
     const body = eventBody(t, kv, owner);
     if(!body) return;
     if(trigger === 'load'){ loadEvents.push(body); return; }
-    if(!owner && t !== 'evt-show-radio'){ warnings.push('動作ブロックの対象に ID がありません'); return; }
+    if(!owner && t !== 'evt-show-radio'){
+      // 自分自身のIDがない場合
+      if((t === 'evt-count-up' || t === 'evt-count-down' || t === 'evt-stopwatch' || t === 'evt-interval' || t === 'evt-delay' || t === 'evt-fetch' || t === 'evt-geolocation' || t === 'evt-copy-clipboard' || t === 'evt-vibrate' || t === 'evt-beep' || t === 'evt-speech' || t === 'evt-notification' || t === 'evt-local-save' || t === 'evt-random-color' || t === 'evt-shake' || t === 'evt-fade-in' || t === 'evt-random-number')){
+        // 対象IDを持たない/自分を必要としないイベントは loadEvents として実行
+        loadEvents.push(body);
+        return;
+      }
+      warnings.push('動作ブロックの対象に ID がありません'); return;
+    }
     const listener = (trigger === 'input') ? 'input' : (trigger === 'change') ? 'change' : (trigger === 'submit') ? 'submit' : 'click';
     if(!owner){
       if(listener === 'change') loadEvents.push(`document.querySelectorAll('input[type=radio]').forEach(function(r){r.addEventListener('change',function(){${body}});});`);
@@ -1370,6 +1567,14 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
       pushStyle();
       return pad + '<canvas' + attrStr(attrs) + '></canvas>\n';
+    }
+    case 'svg': {
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
+      if(v.w) attrs.push('width="' + escapeHtml(v.w) + '"');
+      if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
+      attrs.push('xmlns="http://www.w3.org/2000/svg"');
+      pushStyle();
+      return pad + '<svg' + attrStr(attrs) + '>' + (v.inner || '') + '</svg>\n';
     }
     case 'progress': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
@@ -1587,6 +1792,7 @@ function renderPalette(cat){
   if(cat === 'presets'){ renderPresetsTab(list); return; }
   if(cat === 'design'){ renderDesignTab(list); return; }
   if(cat === 'variables'){ renderActionTab(list); return; }
+  if(cat === 'api'){ renderApiTab(list); return; }
   Object.keys(BLOCKS).forEach(type => {
     const d = BLOCKS[type];
     if(d.cat !== cat) return;
@@ -1644,7 +1850,7 @@ function renderDesignTab(list){
 function renderActionTab(list){
   const help = document.createElement('div');
   help.className = 'event-help';
-  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。<br>例：「20」に「kg」をつけるには「🔤 入力値に単位をつけて表示」を使います。';
+  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。';
   list.appendChild(help);
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
@@ -1657,7 +1863,7 @@ function renderActionTab(list){
   });
   const groups = [
     { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-radio','evt-show-text','evt-show-date','evt-format-date','evt-toggle-hidden','evt-copy-to-text'] },
-    { name:'✏️ 文字を加工（単位をつける等）', types:['evt-set-formatted','evt-append-text','evt-prepend-text'] },
+    { name:'✏️ 文字を加工', types:['evt-set-formatted','evt-append-text','evt-prepend-text'] },
     { name:'🧮 計算・結合', types:['evt-calc','evt-join-values','evt-sum-values'] },
     { name:'📁 ファイルの受け渡し', types:['evt-file-to-img','evt-file-to-video','evt-file-to-audio','evt-file-name'] },
     { name:'🎨 色の受け渡し', types:['evt-color-to-bg','evt-color-to-text'] },
@@ -1665,7 +1871,7 @@ function renderActionTab(list){
     { name:'⏰ 日付・時刻・隠し', types:['evt-set-date','evt-set-time','evt-set-hidden','evt-copy-value'] },
     { name:'▶️ メディア操作', types:['evt-media-play','evt-media-pause','evt-media-restart','evt-media-toggle'] },
     { name:'📂 開閉・ダイアログ', types:['evt-details-toggle','evt-details-open','evt-details-close','evt-open-dialog','evt-close-dialog'] },
-    { name:'🖌 キャンバス', types:['evt-canvas-draw','evt-canvas-clear','evt-canvas-color'] },
+    { name:'🖌 キャンバス', types:['evt-canvas-draw','evt-canvas-clear','evt-canvas-color','evt-canvas-shape','evt-canvas-animate'] },
     { name:'🧾 フォーム', types:['evt-form-show','evt-form-reset','evt-prevent-submit'] },
     { name:'🔧 その他の操作', types:['evt-counter','evt-toggle-text','evt-change-color','evt-change-bg','evt-change-img','evt-toggle-class','evt-scroll-to','evt-open-url','evt-random','evt-alert'] }
   ];
@@ -1679,6 +1885,35 @@ function renderActionTab(list){
       if(!d) return;
       const item = document.createElement('div');
       item.className = 'pal-item';
+      item.innerHTML = '<span class="drag-handle" title="ドラッグ">⠿</span><span class="pi-icon">' + (d.icon || '▫') + '</span><span class="pi-body"><span class="pi-label">' + escapeHtml(d.label) + '</span></span>';
+      setupPaletteDrag(item, { kind:'block', type:type, label:d.label, icon:d.icon });
+      list.appendChild(item);
+    });
+  });
+}
+
+/* ★ API・タイマー・デバイス タブ */
+function renderApiTab(list){
+  const help = document.createElement('div');
+  help.className = 'api-help';
+  help.innerHTML = '🚀 <b>タイマー・API・デバイス</b><br>ボタンなどの動作スロットに入れて使います。<br>タイマーは <b>10ms = 0.01秒</b> 単位で指定できます。';
+  list.appendChild(help);
+  const groups = [
+    { name:'⏱ タイマー・ストップウォッチ', types:['evt-interval','evt-count-up','evt-count-down','evt-stopwatch','evt-delay'] },
+    { name:'📱 デバイス機能', types:['evt-vibrate','evt-geolocation','evt-copy-clipboard','evt-notification','evt-speech'] },
+    { name:'🌐 通信・データ', types:['evt-fetch','evt-local-save','evt-local-load','evt-local-delete'] },
+    { name:'🎵 音・アニメーション', types:['evt-beep','evt-fade-in','evt-shake','evt-random-color','evt-random-number'] }
+  ];
+  groups.forEach(g => {
+    const sh = document.createElement('div');
+    sh.className = 'api-group-head';
+    sh.textContent = g.name;
+    list.appendChild(sh);
+    g.types.forEach(type => {
+      const d = BLOCKS[type];
+      if(!d) return;
+      const item = document.createElement('div');
+      item.className = 'pal-item api-item';
       item.innerHTML = '<span class="drag-handle" title="ドラッグ">⠿</span><span class="pi-icon">' + (d.icon || '▫') + '</span><span class="pi-body"><span class="pi-label">' + escapeHtml(d.label) + '</span></span>';
       setupPaletteDrag(item, { kind:'block', type:type, label:d.label, icon:d.icon });
       list.appendChild(item);
@@ -1753,9 +1988,6 @@ function renderDataTab(list){
   });
 }
 
-/* =========================================================
-   ドラッグ&ドロップ
-   ========================================================= */
 let drag = null;
 const indicator = document.getElementById('drop-indicator');
 
@@ -1782,7 +2014,11 @@ function activateDrag(){
   c.className = 'drag-clone';
   if(drag.payload.kind === 'preset') c.classList.add('preset-clone');
   else if(drag.mode === 'move') c.classList.add('move-clone');
-  else if(drag.payload.kind === 'block' && BLOCKS[drag.payload.type] && BLOCKS[drag.payload.type].cat === 'design') c.classList.add('design-clone');
+  else if(drag.payload.kind === 'block' && BLOCKS[drag.payload.type]){
+    const cat = BLOCKS[drag.payload.type].cat;
+    if(cat === 'design') c.classList.add('design-clone');
+    else if(cat === 'api') c.classList.add('api-clone');
+  }
   c.innerHTML = '<span>' + (drag.payload.icon || '📦') + '</span><span>' + escapeHtml(drag.payload.label || '') + '</span>';
   document.body.appendChild(c);
   drag.clone = c;
@@ -1988,12 +2224,11 @@ function scheduleSave(){
   saveTimer = setTimeout(function(){
     try{ localStorage.setItem(LS_AUTOSAVE, JSON.stringify(projectData())); }
     catch(err){
-      // 容量オーバー時はメディアのdataURLを省いて再試行
       try{
         const d = projectData();
         d.media = d.media.map(m => ({ name: m.name, type: m.type, kind: m.kind, dataURL: null }));
         localStorage.setItem(LS_AUTOSAVE, JSON.stringify(d));
-      }catch(e2){ /* 諦める */ }
+      }catch(e2){}
     }
   }, 600);
 }
@@ -2013,8 +2248,6 @@ function mimeFromName(name){
   const map = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', gif:'image/gif', webp:'image/webp', svg:'image/svg+xml', mp4:'video/mp4', mov:'video/quicktime', webm:'video/webm', mp3:'audio/mpeg', wav:'audio/wav', m4a:'audio/mp4', ogg:'audio/ogg' };
   return map[ext] || 'application/octet-stream';
 }
-
-/* ★ dataURL を計算してから MEDIA に登録 */
 function addMedia(file){
   const existing = MEDIA.filter(m => m.name === file.name && !m.url)[0];
   const url = URL.createObjectURL(file);
@@ -2028,16 +2261,9 @@ function addMedia(file){
     target = { id:'m'+Math.random().toString(36).slice(2,9), name:file.name, type:file.type||mimeFromName(file.name), kind, url, blob:file, dataURL:null };
     MEDIA.push(target);
   }
-  // 非同期で dataURL を計算（セーブ時の永続化用）
   const reader = new FileReader();
-  reader.onload = function(){
-    target.dataURL = reader.result;
-    // 念のため保存予約
-    scheduleSave();
-  };
-  reader.onerror = function(){ /* 無視 */ };
+  reader.onload = function(){ target.dataURL = reader.result; scheduleSave(); };
   reader.readAsDataURL(file);
-
   renderPalette('data');
   resolveMediaBlocks();
   afterChange();
@@ -2053,7 +2279,6 @@ function addMediaByUrl(){
   toast('URLを追加しました');
 }
 
-/* ========== ZIP ========== */
 const CRC_TABLE = (function(){
   const t = new Uint32Array(256);
   for(let n = 0; n < 256; n++){
@@ -2305,16 +2530,12 @@ $('#modal').addEventListener('click', function(e){
         localStorage.setItem(LS_SLOT(slot), JSON.stringify({ name, date: new Date().toISOString(), data: projectData() }));
         toast('スロット ' + slot + ' にセーブしました（画像込み）'); closeModal();
       }catch(err){
-        // 容量オーバー時はメディア無しで再試行
         try{
           const d = projectData();
           d.media = d.media.map(m => ({ name: m.name, type: m.type, kind: m.kind, dataURL: null }));
           localStorage.setItem(LS_SLOT(slot), JSON.stringify({ name, date: new Date().toISOString(), data: d }));
-          toast('⚠ 容量オーバーのため画像なしで保存しました');
-          closeModal();
-        }catch(e2){
-          toast('セーブに失敗しました（容量不足）');
-        }
+          toast('⚠ 容量オーバーのため画像なしで保存しました'); closeModal();
+        }catch(e2){ toast('セーブに失敗しました（容量不足）'); }
       }
     };
     if(exist) showConfirm('スロット ' + slot + ' に上書きしますか？', doSave);
@@ -2383,6 +2604,27 @@ $('#vp-seg').addEventListener('click', function(e){
   b.classList.add('active');
   $('#preview-body').classList.toggle('mobile', b.dataset.vp === 'mobile');
 });
+
+/* ★ HTML全画面表示 */
+$('#btn-fullscreen').addEventListener('click', function(){
+  const el = $('#preview-frame-wrap');
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if(el.msRequestFullscreen) el.msRequestFullscreen();
+  } else {
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+});
+function updateFullscreenBtn(){
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  $('#btn-fullscreen').textContent = isFs ? '⛶✕' : '⛶';
+  $('#btn-fullscreen').title = isFs ? '全画面を解除' : 'HTMLを全画面表示';
+}
+document.addEventListener('fullscreenchange', updateFullscreenBtn);
+document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
+
 $('#btn-undo').addEventListener('click', doUndo);
 $('#btn-redo').addEventListener('click', doRedo);
 document.addEventListener('keydown', function(e){
@@ -2400,6 +2642,7 @@ function buildTabs(){
     b.className = 'tab' + (idx === 0 ? ' active' : '');
     if(c.id === 'presets') b.classList.add('preset-tab');
     if(c.id === 'design') b.classList.add('design-tab');
+    if(c.id === 'api') b.classList.add('api-tab');
     b.type = 'button';
     b.dataset.cat = c.id;
     b.textContent = c.label;
@@ -2425,6 +2668,7 @@ function init(){
   updatePreview();
   historyEnabled = true;
   initHistory();
+  updateFullscreenBtn();
   if(restored) toast('前回の状態を復元しました');
 }
 init();
