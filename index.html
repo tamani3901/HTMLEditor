@@ -249,22 +249,33 @@ const PRESET_GROUPS = {
   fontsize:'🔤 文字サイズ', radius:'⭕ 角の丸み', weight:'💪 文字の太さ', align:'≡ 文字揃え',
   display:'📺 表示モード', flexdir:'↔ フレックスの方向', justify:'⇔ 横方向の配置',
   alignitems:'⇕ 縦方向の配置', lineheight:'☰ 行の高さ', letterspacing:'⟷ 文字間隔',
-  textdecoration:'U 文字装飾', opacity:'💧 透明度', border:'▭ 枠線', shadow:'🌑 影'
+  textdecoration:'U 文字装飾', opacity:'💧 透明度', border:'▭ 枠線', shadow:'🌑 影',
+  svg:'🎨 SVG図形サンプル（SVG図形のコード欄へ）',
+  interval:'⏱ タイマー間隔（ミリ秒 / 10ms = 0.01秒）',
+  seconds:'⏳ カウント秒数',
+  api:'🌐 API URLサンプル',
+  freq:'🔊 音の周波数 (Hz)',
+  duration:'⏱ 音の長さ（ミリ秒）',
+  vibrate:'📳 振動時間（ミリ秒）'
 };
 
 const PRESETS = {
+  /* ファイルの種類 */
   'pre-accept-img':{group:'accept',label:'画像',icon:'🖼',value:'image/*'},
   'pre-accept-video':{group:'accept',label:'動画',icon:'🎬',value:'video/*'},
   'pre-accept-audio':{group:'accept',label:'音声',icon:'🔊',value:'audio/*'},
   'pre-accept-pdf':{group:'accept',label:'PDF',icon:'📄',value:'application/pdf'},
   'pre-accept-all':{group:'accept',label:'すべて',icon:'📦',value:'*/*'},
+
+  /* URL */
   'pre-url-img1':{group:'url',label:'サンプル画像',icon:'🖼',value:'https://picsum.photos/400/300'},
   'pre-url-img2':{group:'url',label:'プレースホルダー',icon:'🖼',value:'https://placehold.co/400x300'},
   'pre-url-photo':{group:'url',label:'フリー写真',icon:'📷',value:'https://picsum.photos/seed/1/600/400'},
   'pre-url-yt':{group:'url',label:'YouTube動画',icon:'▶️',value:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
   'pre-url-map':{group:'url',label:'Googleマップ',icon:'🗺',value:'https://maps.google.com/maps?q=Tokyo&output=embed'},
   'pre-url-site':{group:'url',label:'サンプルサイト',icon:'🌐',value:'https://example.com'},
-  'pre-url-api':{group:'url',label:'サンプルAPI',icon:'🌐',value:'https://jsonplaceholder.typicode.com/todos/1'},
+
+  /* 色 */
   'pre-color-black':{group:'color',label:'黒',icon:'⬛',value:'#000000'},
   'pre-color-white':{group:'color',label:'白',icon:'⬜',value:'#ffffff'},
   'pre-color-gray':{group:'color',label:'グレー',icon:'🔘',value:'#888888'},
@@ -275,6 +286,8 @@ const PRESETS = {
   'pre-color-purple':{group:'color',label:'紫',icon:'🟪',value:'#9b59b6'},
   'pre-color-orange':{group:'color',label:'オレンジ',icon:'🟧',value:'#e67e22'},
   'pre-color-pink':{group:'color',label:'ピンク',icon:'🌸',value:'#ff69b4'},
+
+  /* サイズ */
   'pre-size-0':{group:'size',label:'なし (0)',icon:'⊘',value:'0'},
   'pre-size-xs':{group:'size',label:'極小 (4px)',icon:'🤏',value:'4px'},
   'pre-size-s':{group:'size',label:'小 (8px)',icon:'🤏',value:'8px'},
@@ -284,62 +297,137 @@ const PRESETS = {
   'pre-size-auto':{group:'size',label:'自動 (auto)',icon:'✨',value:'auto'},
   'pre-size-full':{group:'size',label:'画面いっぱい (100%)',icon:'🖥',value:'100%'},
   'pre-size-half':{group:'size',label:'半分 (50%)',icon:'◐',value:'50%'},
+
+  /* 文字サイズ */
   'pre-font-xs':{group:'fontsize',label:'小 (12px)',icon:'ᵃ',value:'12px'},
   'pre-font-s':{group:'fontsize',label:'標準 (16px)',icon:'A',value:'16px'},
   'pre-font-m':{group:'fontsize',label:'やや大 (20px)',icon:'A',value:'20px'},
   'pre-font-l':{group:'fontsize',label:'大 (24px)',icon:'A',value:'24px'},
   'pre-font-xl':{group:'fontsize',label:'特大 (32px)',icon:'A',value:'32px'},
   'pre-font-xxl':{group:'fontsize',label:'超特大 (48px)',icon:'A',value:'48px'},
+
+  /* 角丸 */
   'pre-radius-0':{group:'radius',label:'角ばる (0)',icon:'▢',value:'0'},
   'pre-radius-s':{group:'radius',label:'少し (4px)',icon:'▢',value:'4px'},
   'pre-radius-m':{group:'radius',label:'中 (8px)',icon:'⬜',value:'8px'},
   'pre-radius-l':{group:'radius',label:'大 (16px)',icon:'⬜',value:'16px'},
   'pre-radius-round':{group:'radius',label:'丸ボタン',icon:'⚪',value:'999px'},
+
+  /* 太さ */
   'pre-weight-normal':{group:'weight',label:'普通',icon:'A',value:'normal'},
   'pre-weight-bold':{group:'weight',label:'太字',icon:'B',value:'bold'},
   'pre-weight-light':{group:'weight',label:'細字',icon:'a',value:'300'},
+
+  /* 揃え */
   'pre-align-l':{group:'align',label:'左揃え',icon:'⬅',value:'left'},
   'pre-align-c':{group:'align',label:'中央揃え',icon:'↔',value:'center'},
   'pre-align-r':{group:'align',label:'右揃え',icon:'➡',value:'right'},
+
+  /* 表示 */
   'pre-display-block':{group:'display',label:'ブロック',icon:'▭',value:'block'},
   'pre-display-flex':{group:'display',label:'フレックス',icon:'🔀',value:'flex'},
   'pre-display-none':{group:'display',label:'非表示',icon:'🚫',value:'none'},
+
+  /* flex */
   'pre-flexdir-row':{group:'flexdir',label:'横に並べる',icon:'↔',value:'row'},
   'pre-flexdir-col':{group:'flexdir',label:'縦に並べる',icon:'↕',value:'column'},
+
+  /* 横配置 */
   'pre-justify-start':{group:'justify',label:'左寄せ',icon:'⬅',value:'flex-start'},
   'pre-justify-center':{group:'justify',label:'中央',icon:'↔',value:'center'},
   'pre-justify-end':{group:'justify',label:'右寄せ',icon:'➡',value:'flex-end'},
   'pre-justify-between':{group:'justify',label:'両端揃え',icon:'↔',value:'space-between'},
+
+  /* 縦配置 */
   'pre-alignitems-start':{group:'alignitems',label:'上寄せ',icon:'⬆',value:'flex-start'},
   'pre-alignitems-center':{group:'alignitems',label:'中央',icon:'↕',value:'center'},
   'pre-alignitems-end':{group:'alignitems',label:'下寄せ',icon:'⬇',value:'flex-end'},
   'pre-alignitems-stretch':{group:'alignitems',label:'伸ばす',icon:'⇕',value:'stretch'},
+
+  /* 行の高さ */
   'pre-lineheight-tight':{group:'lineheight',label:'狭い(1.2)',icon:'☰',value:'1.2'},
   'pre-lineheight-normal':{group:'lineheight',label:'標準(1.5)',icon:'☰',value:'1.5'},
   'pre-lineheight-loose':{group:'lineheight',label:'広い(2)',icon:'☰',value:'2'},
+
+  /* 文字間隔 */
   'pre-letterspacing-0':{group:'letterspacing',label:'なし(0)',icon:'⟷',value:'0'},
   'pre-letterspacing-sm':{group:'letterspacing',label:'狭め(1px)',icon:'⟷',value:'1px'},
   'pre-letterspacing-lg':{group:'letterspacing',label:'広め(3px)',icon:'⟷',value:'3px'},
+
+  /* 文字装飾 */
   'pre-textdecoration-none':{group:'textdecoration',label:'なし',icon:'⊘',value:'none'},
   'pre-textdecoration-under':{group:'textdecoration',label:'下線',icon:'U',value:'underline'},
   'pre-textdecoration-strike':{group:'textdecoration',label:'取消線',icon:'S',value:'line-through'},
   'pre-textdecoration-over':{group:'textdecoration',label:'上線',icon:'O',value:'overline'},
+
+  /* 透明度 */
   'pre-opacity-0':{group:'opacity',label:'透明(0)',icon:'👻',value:'0'},
   'pre-opacity-25':{group:'opacity',label:'うっすら(0.25)',icon:'🌒',value:'0.25'},
   'pre-opacity-50':{group:'opacity',label:'半分(0.5)',icon:'🌓',value:'0.5'},
   'pre-opacity-75':{group:'opacity',label:'やや濃い(0.75)',icon:'🌔',value:'0.75'},
   'pre-opacity-100':{group:'opacity',label:'不透明(1)',icon:'🌕',value:'1'},
+
+  /* 枠線 */
   'pre-border-none':{group:'border',label:'枠線なし',icon:'⊘',value:'none'},
   'pre-border-thin':{group:'border',label:'細い枠線',icon:'▭',value:'1px solid #cccccc'},
   'pre-border-bold':{group:'border',label:'太い枠線',icon:'▬',value:'3px solid #333333'},
   'pre-border-round':{group:'border',label:'点線',icon:'┄',value:'2px dashed #999999'},
+
+  /* 影 */
   'pre-shadow-none':{group:'shadow',label:'影なし',icon:'⊘',value:'none'},
   'pre-shadow-soft':{group:'shadow',label:'柔らかい影',icon:'🌫',value:'0 2px 6px rgba(0,0,0,0.15)'},
-  'pre-shadow-strong':{group:'shadow',label:'濃い影',icon:'🌑',value:'0 4px 12px rgba(0,0,0,0.35)'}
+  'pre-shadow-strong':{group:'shadow',label:'濃い影',icon:'🌑',value:'0 4px 12px rgba(0,0,0,0.35)'},
+
+  /* ★ SVG図形サンプル */
+  'pre-svg-circle':{group:'svg',label:'円',icon:'⭕',value:'<circle cx="100" cy="100" r="80" fill="#2ec4a6"/>'},
+  'pre-svg-rect':{group:'svg',label:'四角',icon:'▭',value:'<rect x="20" y="20" width="160" height="160" fill="#3498db"/>'},
+  'pre-svg-star':{group:'svg',label:'星',icon:'⭐',value:'<polygon points="100,20 120,80 185,80 132,120 152,180 100,145 48,180 68,120 15,80 80,80" fill="#f1c40f"/>'},
+  'pre-svg-heart':{group:'svg',label:'ハート',icon:'❤️',value:'<path d="M100,180 C40,130 20,90 20,70 C20,40 45,20 70,20 C85,20 95,30 100,40 C105,30 115,20 130,20 C155,20 180,40 180,70 C180,90 160,130 100,180Z" fill="#e74c3c"/>'},
+  'pre-svg-triangle':{group:'svg',label:'三角',icon:'🔺',value:'<polygon points="100,20 180,180 20,180" fill="#9b59b6"/>'},
+  'pre-svg-line':{group:'svg',label:'線',icon:'─',value:'<line x1="20" y1="100" x2="180" y2="100" stroke="#333333" stroke-width="4"/>'},
+  'pre-svg-text':{group:'svg',label:'文字',icon:'A',value:'<text x="100" y="110" font-size="60" text-anchor="middle" fill="#e91e63">ABC</text>'},
+  'pre-svg-gradient':{group:'svg',label:'グラデ円',icon:'🌈',value:'<defs><radialGradient id="g1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#3498db"/></radialGradient></defs><circle cx="100" cy="100" r="80" fill="url(#g1)"/>'},
+  'pre-svg-face':{group:'svg',label:'顔文字',icon:'🙂',value:'<circle cx="100" cy="100" r="80" fill="#f1c40f"/><circle cx="75" cy="85" r="8" fill="#333"/><circle cx="125" cy="85" r="8" fill="#333"/><path d="M60,120 Q100,160 140,120" stroke="#333" stroke-width="4" fill="none"/>'},
+
+  /* ★ タイマー間隔 */
+  'pre-int-10':{group:'interval',label:'0.01秒 (10ms)',icon:'⏱',value:'10'},
+  'pre-int-50':{group:'interval',label:'0.05秒 (50ms)',icon:'⏱',value:'50'},
+  'pre-int-100':{group:'interval',label:'0.1秒 (100ms)',icon:'⏱',value:'100'},
+  'pre-int-250':{group:'interval',label:'0.25秒 (250ms)',icon:'⏱',value:'250'},
+  'pre-int-500':{group:'interval',label:'0.5秒 (500ms)',icon:'⏱',value:'500'},
+  'pre-int-1000':{group:'interval',label:'1秒 (1000ms)',icon:'⏱',value:'1000'},
+
+  /* ★ カウント秒数 */
+  'pre-sec-3':{group:'seconds',label:'3秒',icon:'⏳',value:'3'},
+  'pre-sec-5':{group:'seconds',label:'5秒',icon:'⏳',value:'5'},
+  'pre-sec-10':{group:'seconds',label:'10秒',icon:'⏳',value:'10'},
+  'pre-sec-30':{group:'seconds',label:'30秒',icon:'⏳',value:'30'},
+  'pre-sec-60':{group:'seconds',label:'60秒',icon:'⏳',value:'60'},
+
+  /* ★ API URL */
+  'pre-api-todo':{group:'api',label:'サンプル(todo)',icon:'🌐',value:'https://jsonplaceholder.typicode.com/todos/1'},
+  'pre-api-user':{group:'api',label:'ユーザー情報',icon:'👤',value:'https://jsonplaceholder.typicode.com/users/1'},
+  'pre-api-post':{group:'api',label:'投稿データ',icon:'📝',value:'https://jsonplaceholder.typicode.com/posts/1'},
+  'pre-api-weather':{group:'api',label:'天気API(東京)',icon:'☀️',value:'https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.76&current_weather=true'},
+
+  /* ★ 周波数 */
+  'pre-freq-low':{group:'freq',label:'低音 (220Hz)',icon:'🔊',value:'220'},
+  'pre-freq-mid':{group:'freq',label:'標準 (440Hz)',icon:'🔊',value:'440'},
+  'pre-freq-high':{group:'freq',label:'高音 (880Hz)',icon:'🔊',value:'880'},
+
+  /* ★ 音の長さ */
+  'pre-dur-short':{group:'duration',label:'短い (100ms)',icon:'⏱',value:'100'},
+  'pre-dur-mid':{group:'duration',label:'普通 (200ms)',icon:'⏱',value:'200'},
+  'pre-dur-long':{group:'duration',label:'長い (500ms)',icon:'⏱',value:'500'},
+
+  /* ★ 振動 */
+  'pre-vib-short':{group:'vibrate',label:'短い (100ms)',icon:'📳',value:'100'},
+  'pre-vib-mid':{group:'vibrate',label:'普通 (200ms)',icon:'📳',value:'200'},
+  'pre-vib-long':{group:'vibrate',label:'長い (500ms)',icon:'📳',value:'500'}
 };
 
 const BLOCKS = {
-  /* ===== デザイン ===== */
+  /* デザイン */
   'box': { cat:'design', label:'装飾ボックス', icon:'📦', tag:'div', container:true, slots:['container','css'],
     baseStyle:'border:1px solid #d0d7de; border-radius:8px; padding:16px; margin:12px 0; background:#fafbfc;',
     hint:'中に入れたものを枠で囲います。', fields:[{k:'id', label:'ID', type:'text'}] },
@@ -375,7 +463,7 @@ const BLOCKS = {
     baseStyle:'background:#fdecec; border-left:4px solid #e74c3c; border-radius:6px; padding:12px 16px; margin:12px 0; color:#7c1d10;',
     hint:'赤いエラーメッセージ。', fields:[{k:'id', label:'ID', type:'text'}] },
 
-  /* ===== メディア ===== */
+  /* メディア */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},{k:'alt', label:'代替テキスト', type:'text'},{k:'media', type:'hidden'}]},
   'video': { cat:'media', label:'動画', icon:'🎬', tag:'video', slots:['css'],
@@ -388,24 +476,25 @@ const BLOCKS = {
     hint:'お絵かき・図形描画エリア。「お絵かきモードON」で描けます。「図形を描く」で円や四角を描画できます。',
     fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
   'svg': { cat:'media', label:'SVG図形', icon:'🎨', tag:'svg', slots:['css'],
-    hint:'SVGコードをそのまま貼り付けられます。例: <circle cx="100" cy="100" r="80" fill="#2ec4a6"/>',
+    hint:'SVGコードをそのまま貼り付け。🎁タブから図形サンプルをドロップできます。',
     fields:[
       {k:'id', label:'ID', type:'text', def:'svg1'},
       {k:'w', label:'幅', type:'number', def:'200', presetGroup:'size'},
       {k:'h', label:'高さ', type:'number', def:'200', presetGroup:'size'},
-      {k:'inner', label:'SVGコード', type:'textarea', def:'<circle cx="100" cy="100" r="80" fill="#2ec4a6"/>'}
+      {k:'inner', label:'SVGコード', type:'textarea', def:'<circle cx="100" cy="100" r="80" fill="#2ec4a6"/>', presetGroup:'svg'}
     ]},
   'figure': { cat:'media', label:'図 (figure)', icon:'🖼', tag:'figure', container:true, slots:['container','css'],
     hint:'中に画像と figcaption を入れます。', fields:[{k:'id', label:'ID', type:'text'}] },
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'図の説明'}]},
   'progress': { cat:'media', label:'進捗バー', icon:'📊', tag:'progress', slots:['css'],
-    fields:[{k:'id', label:'ID', type:'text', def:'prog1'},{k:'value', label:'現在値', type:'number', def:'50'},{k:'max', label:'最大値', type:'number', def:'100'}]},
+    hint:'IDを付けて「📊 進捗を数値で設定」「➕ 進捗を増やす」「📊 進捗値を変更」などの動作を組み合わせます。',
+    fields:[{k:'id', label:'ID', type:'text', def:'prog1'},{k:'value', label:'現在値', type:'number', def:'0'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'meter': { cat:'media', label:'メーター', icon:'🎛', tag:'meter', slots:['css'],
-    hint:'イベント「メーターの値を変更」と組み合わせると動かせます。',
-    fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'60'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
+    hint:'IDを付けて「🎛 メーターを数値で設定」「➕ メーターを増やす」などで動かせます。',
+    fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'0'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
 
-  /* ===== テキスト ===== */
+  /* テキスト */
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var'],
     fields:[{k:'level', label:'レベル', type:'select', options:['1','2','3','4','5','6'], def:'2'},{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'見出しテキスト'}]},
   'p': { cat:'text', label:'段落', icon:'¶', tag:'p', textTag:true, slots:['css','var'],
@@ -517,7 +606,7 @@ const BLOCKS = {
     hint:'イベント「色を背景に」「色を文字に」と組み合わせると便利。',
     fields:[{k:'id', label:'ID', type:'text', def:'color1'},{k:'value', label:'初期色', type:'color', def:'#2ec4a6', presetGroup:'color'}]},
   'input-range': { cat:'forms', label:'スライダー', icon:'🎚', tag:'input', voidTag:true, slots:['css','event'],
-    hint:'イベント「値で幅を変更」などと組み合わせると便利。',
+    hint:'イベント「値で幅を変更」「📊 進捗値を変更」「🎛 メーターの値を変更」などと組み合わせると便利。',
     fields:[{k:'id', label:'ID', type:'text', def:'range1'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'},{k:'value', label:'初期値', type:'number', def:'50'}]},
   'input-file': { cat:'forms', label:'ファイル', icon:'📁', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「選択画像を表示」等と組み合わせると、選んだファイルを使えます。',
@@ -585,7 +674,7 @@ const BLOCKS = {
   'css-transition':{cat:'css',label:'アニメ transition',icon:'✨',cssProp:'transition',fields:[{k:'value',type:'text',def:'all 0.3s ease'}]},
   'css-transform':{cat:'css',label:'変形 transform',icon:'🔄',cssProp:'transform',fields:[{k:'value',type:'text',def:'rotate(0deg)'}]},
 
-  /* ===== 動作（既存） ===== */
+  /* 動作（変数） */
   'var-static': { cat:'variables', label:'静的テキスト', icon:'🔢', slotKind:'var',
     fields:[{k:'name', label:'変数名', type:'text', def:'var1'},{k:'value', label:'値', type:'text', def:'表示テキスト'}]},
   'var-input': { cat:'variables', label:'入力値を挿入', icon:'🔗', slotKind:'var',
@@ -641,9 +730,9 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'evt-range-to-fontsize': { cat:'variables', label:'🔤 値で文字サイズを変更', icon:'🔤', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'px'}]},
-  'evt-progress-set': { cat:'variables', label:'📊 進捗値を変更', icon:'📊', slotKind:'event',
+  'evt-progress-set': { cat:'variables', label:'📊 スライダー値で進捗を変更', icon:'📊', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'progressのID', type:'text'}]},
-  'evt-meter-set': { cat:'variables', label:'🎛 メーターの値を変更', icon:'🎛', slotKind:'event',
+  'evt-meter-set': { cat:'variables', label:'🎛 スライダー値でメーターを変更', icon:'🎛', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'メーターのID', type:'text'}]},
   'evt-media-play': { cat:'variables', label:'▶️ メディアを再生', icon:'▶️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
@@ -666,7 +755,7 @@ const BLOCKS = {
   'evt-canvas-color': { cat:'variables', label:'🖍 ペンの色を変更', icon:'🖍', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-shape': { cat:'variables', label:'🎨 図形を描く', icon:'🎨', slotKind:'event',
-    hint:'円や四角をキャンバスに描画します。',
+    hint:'円・四角・文字をキャンバスに描画します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'キャンバスID', type:'text'},
@@ -675,7 +764,6 @@ const BLOCKS = {
       {k:'text', label:'文字(文字の場合)', type:'text'}
     ]},
   'evt-canvas-animate': { cat:'variables', label:'🎬 アニメ開始(円が動く)', icon:'🎬', slotKind:'event',
-    hint:'円が左右に動くサンプルアニメーションを開始します。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'},{k:'color', label:'色', type:'color', def:'#e91e63', presetGroup:'color'}]},
   'evt-form-show': { cat:'variables', label:'📋 フォーム内容を表示', icon:'📋', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'submit'},{k:'formId', label:'フォームID', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
@@ -717,88 +805,107 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'入力元ID', type:'text'},{k:'toId', label:'隠しフィールドID', type:'text'}]},
   'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]},
 
-  /* ===== 🚀 API・タイマー・デバイス ===== */
+  /* API・タイマー・デバイス */
   'evt-interval': { cat:'api', label:'⏱ 繰り返し実行', icon:'⏱', slotKind:'event',
-    hint:'指定ミリ秒ごとに中の処理を繰り返し実行します。10ms=0.01秒単位で指定できます。',
+    hint:'指定ミリ秒ごとに処理を繰り返し実行します。10ms=0.01秒単位で指定できます。',
     fields:[
-      {k:'interval', label:'間隔(ms) 最小10', type:'number', def:'100'},
+      {k:'interval', label:'間隔(ms) 最小10', type:'number', def:'100', presetGroup:'interval'},
       {k:'timerId', label:'タイマー名', type:'text', def:'t1'},
       {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'}], def:'start'}
     ]},
   'evt-count-up': { cat:'api', label:'⏱ カウントアップ(0.01秒単位)', icon:'⏱', slotKind:'event',
-    hint:'0.01秒精度でカウントアップ表示します。10ms=0.01秒。',
+    hint:'0.01秒精度でカウントアップ。表示は数値のみ（例: 1.23）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text', def:'timer1'},
       {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'},
-      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10'}
+      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10', presetGroup:'interval'}
     ]},
   'evt-count-down': { cat:'api', label:'⏳ カウントダウン(0.01秒単位)', icon:'⏳', slotKind:'event',
-    hint:'指定秒数からカウントダウンします。0.01秒精度。',
+    hint:'指定秒数からカウントダウン。表示は数値のみ。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text', def:'timer1'},
-      {k:'seconds', label:'開始秒数', type:'number', def:'10'},
+      {k:'seconds', label:'開始秒数', type:'number', def:'10', presetGroup:'seconds'},
       {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'},
-      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10'},
+      {k:'interval', label:'更新間隔(ms)', type:'number', def:'10', presetGroup:'interval'},
       {k:'stopMsg', label:'完了時の文字', type:'text', def:'時間切れ！'}
     ]},
-  'evt-stopwatch': { cat:'api', label:'⏲ ストップウォッチ', icon:'⏲', slotKind:'event',
-    hint:'計測開始/停止/リセットを1つのブロックで操作できます。0.01秒表示。',
+  'evt-stopwatch': { cat:'api', label:'Ⲵ ストップウォッチ', icon:'Ⲵ', slotKind:'event',
+    hint:'0.01秒表示。表示は数値のみ。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text', def:'sw1'},
       {k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'}
     ]},
   'evt-delay': { cat:'api', label:'⏱ 遅延実行', icon:'⏱', slotKind:'event',
-    hint:'指定ミリ秒後に処理を実行します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'ms', label:'遅延(ms)', type:'number', def:'1000'},
-      {k:'msg', label:'表示する文字', type:'text', def:'実行されました'}
+      {k:'ms', label:'遅延(ms)', type:'number', def:'1000', presetGroup:'interval'},
+      {k:'msg', label:'表示する文字', type:'text', def:'実行されました'},
+      {k:'toId', label:'表示先ID', type:'text'}
     ]},
-
+  'evt-progress-num': { cat:'api', label:'📊 進捗を数値で設定', icon:'📊', slotKind:'event',
+    hint:'進捗バーの値を、指定した数値に直接セットします。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'progressのID', type:'text'},
+      {k:'value', label:'設定値', type:'number', def:'50'}
+    ]},
+  'evt-progress-add': { cat:'api', label:'➕ 進捗を増やす', icon:'➕', slotKind:'event',
+    hint:'進捗バーの値を加算/減算します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'progressのID', type:'text'},
+      {k:'step', label:'増分 (+/-)', type:'number', def:'10'}
+    ]},
+  'evt-meter-num': { cat:'api', label:'🎛 メーターを数値で設定', icon:'🎛', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'メーターのID', type:'text'},
+      {k:'value', label:'設定値', type:'number', def:'50'}
+    ]},
+  'evt-meter-add': { cat:'api', label:'➕ メーターを増やす', icon:'➕', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'メーターのID', type:'text'},
+      {k:'step', label:'増分 (+/-)', type:'number', def:'10'}
+    ]},
   'evt-copy-clipboard': { cat:'api', label:'📋 クリップボードにコピー', icon:'📋', slotKind:'event',
-    hint:'入力欄や要素の文字をコピーします。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'fromId', label:'コピー元ID', type:'text'}
     ]},
   'evt-vibrate': { cat:'api', label:'📳 バイブレーション', icon:'📳', slotKind:'event',
-    hint:'スマホを振動させます（対応端末のみ）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'ms', label:'振動時間(ms)', type:'number', def:'200'}
+      {k:'ms', label:'振動時間(ms)', type:'number', def:'200', presetGroup:'vibrate'}
     ]},
   'evt-geolocation': { cat:'api', label:'🌍 現在地を取得', icon:'🌍', slotKind:'event',
-    hint:'位置情報を取得して緯度経度を表示します（許可が必要）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-fetch': { cat:'api', label:'🌐 外部APIから取得', icon:'🌐', slotKind:'event',
-    hint:'URLからJSONを取得して表示します。例: https://jsonplaceholder.typicode.com/todos/1',
+    hint:'URLからJSONを取得して表示します。🎁からサンプルを選べます。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'url', label:'API URL', type:'url', def:'https://jsonplaceholder.typicode.com/todos/1', presetGroup:'url'},
+      {k:'url', label:'API URL', type:'url', def:'https://jsonplaceholder.typicode.com/todos/1', presetGroup:'api'},
       {k:'key', label:'抜き出すキー(空=全部)', type:'text', def:'title'},
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-beep': { cat:'api', label:'🔊 ビープ音', icon:'🔊', slotKind:'event',
-    hint:'指定した周波数のビープ音を鳴らします。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'freq', label:'周波数(Hz)', type:'number', def:'440'},
-      {k:'ms', label:'長さ(ms)', type:'number', def:'200'}
+      {k:'freq', label:'周波数(Hz)', type:'number', def:'440', presetGroup:'freq'},
+      {k:'ms', label:'長さ(ms)', type:'number', def:'200', presetGroup:'duration'}
     ]},
   'evt-speech': { cat:'api', label:'🗣 読み上げ', icon:'🗣', slotKind:'event',
-    hint:'テキストを音声で読み上げます（対応ブラウザのみ）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'text', label:'読み上げる文字', type:'text', def:'こんにちは'}
     ]},
   'evt-local-save': { cat:'api', label:'💾 ローカルに保存', icon:'💾', slotKind:'event',
-    hint:'ブラウザに値を保存します（リロードしても消えない）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'fromId', label:'値の元ID', type:'text'},
@@ -816,14 +923,12 @@ const BLOCKS = {
       {k:'key', label:'キー名', type:'text', def:'mydata'}
     ]},
   'evt-notification': { cat:'api', label:'🔔 通知を表示', icon:'🔔', slotKind:'event',
-    hint:'ブラウザの通知を表示します（許可が必要）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'title', label:'タイトル', type:'text', def:'お知らせ'},
       {k:'body', label:'本文', type:'text', def:'通知です'}
     ]},
   'evt-fade-in': { cat:'api', label:'🎬 フェードイン', icon:'🎬', slotKind:'event',
-    hint:'対象要素をふわっと表示します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'対象ID', type:'text'},
@@ -875,7 +980,6 @@ function dataURLToBlob(dataURL){
   }catch(e){ return null; }
 }
 
-/* ========== 履歴 ========== */
 const MAX_HISTORY = 11;
 let historyStack = [];
 let historyIndex = -1;
@@ -1079,7 +1183,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 8, name: currentProjectName,
+    version: 9, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
@@ -1337,12 +1441,12 @@ function eventBody(t, kv, ownerId){
       const act = kv.action || 'start';
       const interval = Math.max(10, parseInt(kv.interval, 10) || 10);
       if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);if(t._cs==null)t._cs=Date.now()-(t._el||0);t._cs=Date.now()-(t._el||0);t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2)+'秒';},${interval});})();`;
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},${interval});})();`;
       }
       if(act === 'stop'){
         return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       }
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t._el=0;t._cs=null;t.textContent='0.00秒';})();`;
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t._el=0;t._cs=null;t.textContent='0.00';})();`;
     }
     case 'evt-count-down': {
       const act = kv.action || 'start';
@@ -1350,27 +1454,43 @@ function eventBody(t, kv, ownerId){
       const sec = parseFloat(kv.seconds) || 10;
       const stopMsg = JSON.stringify(kv.stopMsg || '時間切れ！');
       if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);var end=Date.now()+${sec*1000};t._ci=setInterval(function(){var r=(end-Date.now())/1000;if(r<=0){clearInterval(t._ci);t._ci=null;t.textContent=${stopMsg};return;}t.textContent=r.toFixed(2)+'秒';},${interval});})();`;
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);var end=Date.now()+${sec*1000};t._ci=setInterval(function(){var r=(end-Date.now())/1000;if(r<=0){clearInterval(t._ci);t._ci=null;t.textContent=${stopMsg};return;}t.textContent=r.toFixed(2);},${interval});})();`;
       }
       if(act === 'stop'){
         return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       }
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t.textContent=${sec.toFixed(2)}+'秒';})();`;
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t.textContent='${sec.toFixed(2)}';})();`;
     }
     case 'evt-stopwatch': {
       const act = kv.action || 'start';
       if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);if(t._el==null)t._el=0;if(t._cs==null)t._cs=Date.now()-t._el;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2)+'秒';},10);})();`;
+        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},10);})();`;
       }
       if(act === 'stop'){
         return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       }
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);t._ci=null;t._el=0;t._cs=null;t.textContent='0.00秒';})();`;
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t._el=0;t._cs=null;t.textContent='0.00';})();`;
     }
     case 'evt-delay': {
       const ms = parseInt(kv.ms, 10) || 1000;
       const msg = JSON.stringify(kv.msg || '実行');
       return `setTimeout(function(){var t=document.getElementById(${tid});if(t)t.textContent=${msg};},${ms});`;
+    }
+    case 'evt-progress-num': {
+      const val = parseFloat(kv.value) || 0;
+      return `var t=document.getElementById(${tid});if(t)t.value=${val};`;
+    }
+    case 'evt-progress-add': {
+      const step = parseFloat(kv.step) || 10;
+      return `var t=document.getElementById(${tid});if(t){var v=(parseFloat(t.value)||0)+(${step});var mx=parseFloat(t.max)||100;if(v<0)v=0;if(v>mx)v=mx;t.value=v;}`;
+    }
+    case 'evt-meter-num': {
+      const val = parseFloat(kv.value) || 0;
+      return `var t=document.getElementById(${tid});if(t)t.value=${val};`;
+    }
+    case 'evt-meter-add': {
+      const step = parseFloat(kv.step) || 10;
+      return `var t=document.getElementById(${tid});if(t){var v=(parseFloat(t.value)||0)+(${step});var mn=parseFloat(t.min)||0;var mx=parseFloat(t.max)||100;if(v<mn)v=mn;if(v>mx)v=mx;t.value=v;}`;
     }
     case 'evt-copy-clipboard': {
       return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;if(navigator.clipboard){navigator.clipboard.writeText(txt);}})();`;
@@ -1440,12 +1560,10 @@ function collectEvents(el, v, events, loadEvents, warnings){
   if(!kids.length) return;
   const owner = v.id || '';
 
-  // 特別扱い: 繰り返し実行の中身を集める
   const intervalBlock = kids.find(k => k.dataset.type === 'evt-interval');
   if(intervalBlock){
     const kv = getValues(intervalBlock);
-    // 子の中身を集めるのは簡単ではないので、単純に「表示先ID」があれば何かする
-    // ここでは他ブロックの内容を実行できる仕組みは省略（将来拡張）
+    kv._inner = 'window.__btick=window.__btick||0;';
   }
 
   kids.forEach(k => {
@@ -1462,9 +1580,7 @@ function collectEvents(el, v, events, loadEvents, warnings){
     if(!body) return;
     if(trigger === 'load'){ loadEvents.push(body); return; }
     if(!owner && t !== 'evt-show-radio'){
-      // 自分自身のIDがない場合
       if((t === 'evt-count-up' || t === 'evt-count-down' || t === 'evt-stopwatch' || t === 'evt-interval' || t === 'evt-delay' || t === 'evt-fetch' || t === 'evt-geolocation' || t === 'evt-copy-clipboard' || t === 'evt-vibrate' || t === 'evt-beep' || t === 'evt-speech' || t === 'evt-notification' || t === 'evt-local-save' || t === 'evt-random-color' || t === 'evt-shake' || t === 'evt-fade-in' || t === 'evt-random-number')){
-        // 対象IDを持たない/自分を必要としないイベントは loadEvents として実行
         loadEvents.push(body);
         return;
       }
@@ -1578,17 +1694,19 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
     }
     case 'progress': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.value) attrs.push('value="' + escapeHtml(v.value) + '"');
+      if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
       if(v.max) attrs.push('max="' + escapeHtml(v.max) + '"');
       pushStyle();
+      collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<progress' + attrStr(attrs) + '></progress>\n';
     }
     case 'meter': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      if(v.value) attrs.push('value="' + escapeHtml(v.value) + '"');
+      if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
       if(v.min) attrs.push('min="' + escapeHtml(v.min) + '"');
       if(v.max) attrs.push('max="' + escapeHtml(v.max) + '"');
       pushStyle();
+      collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<meter' + attrStr(attrs) + '></meter>\n';
     }
     case 'heading': {
@@ -1807,7 +1925,7 @@ function renderPalette(cat){
 function renderPresetsTab(list){
   const help = document.createElement('div');
   help.className = 'preset-help';
-  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。';
+  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。<br>SVG図形・タイマー間隔・API URLなども用意しています。';
   list.appendChild(help);
   const groups = {};
   Object.keys(PRESETS).forEach(type => {
@@ -1892,14 +2010,14 @@ function renderActionTab(list){
   });
 }
 
-/* ★ API・タイマー・デバイス タブ */
 function renderApiTab(list){
   const help = document.createElement('div');
   help.className = 'api-help';
-  help.innerHTML = '🚀 <b>タイマー・API・デバイス</b><br>ボタンなどの動作スロットに入れて使います。<br>タイマーは <b>10ms = 0.01秒</b> 単位で指定できます。';
+  help.innerHTML = '🚀 <b>タイマー・API・デバイス</b><br>ボタンなどの動作スロットに入れて使います。<br>タイマーは <b>10ms = 0.01秒</b> 単位。表示は数値のみ（0.01など）。';
   list.appendChild(help);
   const groups = [
     { name:'⏱ タイマー・ストップウォッチ', types:['evt-interval','evt-count-up','evt-count-down','evt-stopwatch','evt-delay'] },
+    { name:'📊 進捗・メーター操作', types:['evt-progress-num','evt-progress-add','evt-meter-num','evt-meter-add'] },
     { name:'📱 デバイス機能', types:['evt-vibrate','evt-geolocation','evt-copy-clipboard','evt-notification','evt-speech'] },
     { name:'🌐 通信・データ', types:['evt-fetch','evt-local-save','evt-local-load','evt-local-delete'] },
     { name:'🎵 音・アニメーション', types:['evt-beep','evt-fade-in','evt-shake','evt-random-color','evt-random-number'] }
@@ -2381,7 +2499,6 @@ function collectUsedMediaNames(){
   walk(projectData().blocks);
   return Object.keys(names);
 }
-
 async function exportHTML(){
   const res = generateHTML();
   if(!res.html) return;
@@ -2604,8 +2721,6 @@ $('#vp-seg').addEventListener('click', function(e){
   b.classList.add('active');
   $('#preview-body').classList.toggle('mobile', b.dataset.vp === 'mobile');
 });
-
-/* ★ HTML全画面表示 */
 $('#btn-fullscreen').addEventListener('click', function(){
   const el = $('#preview-frame-wrap');
   if(!document.fullscreenElement && !document.webkitFullscreenElement){
