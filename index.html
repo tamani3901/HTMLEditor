@@ -10,6 +10,8 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;background:#eef1f5;color:#232a31;font-size:14px;user-select:none;-webkit-user-select:none;overflow:hidden;}
   input,select,textarea{user-select:text;-webkit-user-select:text;font-family:inherit;}
   #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* ---- 履歴バー ---- */
   #topbar{flex:0 0 auto;display:flex;gap:8px;padding:6px 10px;background:#f4f6f9;border-bottom:1px solid #dfe4ea;align-items:center;}
   .hist-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid #dfe4ea;background:#fff;border-radius:8px;font-size:12.5px;color:#3b4652;cursor:pointer;transition:.12s;font-family:inherit;}
   .hist-btn:hover:not(:disabled){background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
@@ -17,22 +19,39 @@
   .hist-btn:disabled{opacity:.4;cursor:not-allowed;}
   .hist-btn .hi{font-size:15px;line-height:1;font-weight:700;}
   .hist-info{margin-left:auto;font-size:11px;color:#8b97a3;}
-  #tabbar{flex:0 0 auto;display:flex;gap:6px;padding:8px 10px;background:#fff;border-bottom:1px solid #dfe4ea;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  #tabbar::-webkit-scrollbar{height:5px;}
-  #tabbar::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
-  .tab{flex:0 0 auto;padding:7px 13px;border-radius:999px;border:1px solid #dfe4ea;background:#f8fafc;font-size:12.5px;color:#3b4652;cursor:pointer;white-space:nowrap;transition:.15s;}
+
+  /* ---- タブ（2段レイアウト） ---- */
+  #tabbar{
+    flex:0 0 auto;display:flex;flex-wrap:wrap;gap:5px;
+    padding:8px 10px;background:#fff;border-bottom:1px solid #dfe4ea;
+    align-items:flex-start;align-content:flex-start;
+  }
+  .tab{
+    flex:0 0 auto;padding:6px 11px;border-radius:999px;border:1px solid #dfe4ea;
+    background:#f8fafc;font-size:11.5px;color:#3b4652;cursor:pointer;white-space:nowrap;
+    transition:.15s;line-height:1.3;
+  }
   .tab:hover{background:#eef7f5;border-color:#8fd8c8;}
   .tab.active{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
   .tab.preset-tab.active{background:#ff9800;border-color:#ff9800;}
   .tab.design-tab.active{background:#7e57c2;border-color:#7e57c2;}
   .tab.api-tab.active{background:#e91e63;border-color:#e91e63;}
-  #main{flex:1 1 auto;display:grid;grid-template-columns:230px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
+  .tab.api-tab{order:1;}
+  .tab[data-cat="data"]{order:1;}
+
+  #main{flex:1 1 auto;display:grid;grid-template-columns:240px minmax(0,1fr) 340px;min-height:0;overflow:hidden;}
   #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   #palette-head{flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;letter-spacing:.04em;border-bottom:1px solid #eef1f5;background:#fbfcfe;}
   #palette-list{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px;display:flex;flex-direction:column;gap:6px;overscroll-behavior:contain;}
   #palette-list::-webkit-scrollbar{width:6px;}
   #palette-list::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
-  .pal-item{display:flex;align-items:center;gap:6px;padding:7px 9px 7px 4px;border:1px solid #dfe4ea;border-radius:9px;background:#fbfdff;font-size:12.5px;transition:.12s;flex:0 0 auto;touch-action:pan-y;}
+
+  /* ★ パレット項目を大きく・ドラッグ領域を広く */
+  .pal-item{
+    display:flex;align-items:stretch;gap:6px;padding:0;border:1px solid #dfe4ea;
+    border-radius:10px;background:#fbfdff;font-size:12.5px;transition:.12s;
+    flex:0 0 auto;touch-action:pan-y;overflow:hidden;min-height:42px;
+  }
   .pal-item:hover{border-color:#8fd8c8;background:#f2fbf9;}
   .pal-item.preset-item{background:#fffbf2;border-color:#ffe0b2;}
   .pal-item.preset-item:hover{background:#fff5e0;border-color:#ffb74d;}
@@ -40,27 +59,42 @@
   .pal-item.design-item:hover{background:#f0e9ff;border-color:#b39ddb;}
   .pal-item.api-item{background:#fff0f5;border-color:#f8bbd0;}
   .pal-item.api-item:hover{background:#ffe0ec;border-color:#f06292;}
-  .drag-handle{flex:0 0 auto;width:22px;text-align:center;color:#c0cad3;font-size:14px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;}
-  .drag-handle:active{cursor:grabbing;color:#2ec4a6;}
-  .pal-item.preset-item .drag-handle:active{color:#ff9800;}
-  .pal-item.design-item .drag-handle:active{color:#7e57c2;}
-  .pal-item.api-item .drag-handle:active{color:#e91e63;}
-  .pi-icon{font-size:15px;width:20px;text-align:center;flex:0 0 auto;}
-  .pi-body{flex:1 1 auto;min-width:0;}
-  .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  /* ★ 広いドラッグハンドル */
+  .drag-handle{
+    flex:0 0 auto;width:38px;display:flex;align-items:center;justify-content:center;
+    background:#f1f5f8;color:#96a3b0;font-size:18px;cursor:grab;
+    touch-action:none;user-select:none;line-height:1;font-weight:700;
+    letter-spacing:-2px;padding-left:6px;
+    transition:.12s;
+  }
+  .drag-handle:hover{background:#e0f0eb;color:#1d9e83;}
+  .drag-handle:active{cursor:grabbing;background:#c8e8e0;color:#0d8c72;}
+  .pal-item.preset-item .drag-handle{background:#fff3e0;color:#c58a3b;}
+  .pal-item.preset-item .drag-handle:active{background:#ffd28f;color:#8b5000;}
+  .pal-item.design-item .drag-handle{background:#f0e9ff;color:#9d7ec5;}
+  .pal-item.design-item .drag-handle:active{background:#d8c5f5;color:#5c3a8c;}
+  .pal-item.api-item .drag-handle{background:#ffe0ec;color:#c9527a;}
+  .pal-item.api-item .drag-handle:active{background:#ffb8d1;color:#8b1d42;}
+
+  .pi-icon{font-size:15px;width:22px;text-align:center;flex:0 0 auto;align-self:center;}
+  .pi-body{flex:1 1 auto;min-width:0;display:flex;align-items:center;padding:8px 8px 8px 0;}
+  .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;}
+
   .preset-help{font-size:11px;color:#8b6914;background:#fff8e1;border:1px solid #ffe0b2;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .design-help{font-size:11px;color:#4a2f8b;background:#f0e9ff;border:1px solid #e1d5f7;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .event-help{font-size:11px;color:#0d3e6b;background:#e8f4fd;border:1px solid #b3daff;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .api-help{font-size:11px;color:#880e4f;background:#fff0f5;border:1px solid #f8bbd0;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
   .preset-group-head{font-size:11px;font-weight:700;color:#e65100;background:#fff3e0;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
   .api-group-head{font-size:11px;font-weight:700;color:#880e4f;background:#fce4ec;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
-  .data-del{flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;width:22px;height:22px;line-height:1;font-size:12px;cursor:pointer;}
+  .data-del{flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;width:26px;height:26px;line-height:1;font-size:13px;cursor:pointer;align-self:center;margin-right:6px;}
   .data-del:hover{background:#ffe9e6;color:#d0442c;}
   .data-item.missing{opacity:.55;}
   .data-add{display:flex;gap:6px;margin-bottom:4px;flex:0 0 auto;}
   .data-add .act{flex:1 1 auto;font-size:11.5px;padding:7px 4px;}
   .data-empty{font-size:11.5px;color:#a8b3bd;padding:10px 4px;line-height:1.6;}
-  .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;}
+  .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;align-self:center;}
+
   #workspace{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;background:#eef1f5;display:flex;flex-direction:column;}
   #root-slot{flex:1 1 auto;min-height:100%;padding:14px;background:#fff;border-radius:12px;border:2px solid #e3e9ef;}
   .ws-block{background:#f8fbfd;border:1px solid #dbe2ea;border-left:3px solid #2ec4a6;border-radius:10px;padding:8px;box-shadow:0 1px 2px rgba(20,30,40,.04);transition:box-shadow .12s, outline .12s;}
@@ -68,9 +102,9 @@
   .ws-block[data-cat="api"]{border-left-color:#e91e63;background:#fff8fa;}
   .ws-block.drag-over{outline:2px solid #2ec4a6;outline-offset:1px;}
   .ws-block.mini{display:flex;align-items:center;gap:6px;padding:5px 7px;border-left-color:#9aa7b3;background:#f4f7fa;border-radius:8px;}
-  .move-handle{flex:0 0 auto;width:18px;text-align:center;color:#c0cad3;font-size:13px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:2px 0;border-radius:4px;}
+  .move-handle{flex:0 0 auto;width:22px;text-align:center;color:#a3b0bc;font-size:14px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:4px 0;border-radius:5px;font-weight:700;letter-spacing:-2px;padding-left:6px;}
   .move-handle:hover{color:#2ec4a6;background:#e8f8f4;}
-  .move-handle:active{cursor:grabbing;color:#1d9e83;}
+  .move-handle:active{cursor:grabbing;color:#1d9e83;background:#c8e8e0;}
   .mini-head{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:11.5px;color:#4a5663;}
   .mini-icon{font-size:13px;}
   .mini-name{font-weight:600;}
@@ -115,6 +149,7 @@
   .drag-clone.api-clone{background:#e91e63;}
   body.dragging{cursor:grabbing;}
   body.move-dragging{cursor:grabbing;}
+
   #right{background:#fff;border-left:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   .panel-head{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #eef1f5;}
   .seg{display:flex;background:#eef2f6;border-radius:8px;padding:2px;}
@@ -153,8 +188,8 @@
   #toast.show{opacity:.95;transform:translateX(-50%) translateY(0);}
   #preview-frame-wrap:fullscreen{background:#1f2733;padding:0;border-radius:0;align-items:center;}
   #preview-frame-wrap:fullscreen #preview-body{width:100%;height:100%;border-radius:0;max-width:none;}
-  @media (max-width:1100px){#main{grid-template-columns:190px minmax(0,1fr) 290px;}.fld-label{min-width:52px;}}
-  @media (max-width:840px){#main{grid-template-columns:160px minmax(0,1fr) 240px;}.tab{padding:6px 10px;font-size:11.5px;}}
+  @media (max-width:1100px){#main{grid-template-columns:200px minmax(0,1fr) 300px;}.fld-label{min-width:52px;}}
+  @media (max-width:840px){#main{grid-template-columns:170px minmax(0,1fr) 250px;}.tab{padding:5px 9px;font-size:11px;}}
 </style>
 </head>
 <body>
@@ -205,12 +240,12 @@ let toastTimer = null;
 function toast(msg){const t = $('#toast');t.textContent = msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);}
 
 const CATEGORIES = [
-  {id:'presets',     label:'🎁 かんたん入力',    name:'かんたん入力（プリセット）'},
+  {id:'presets',     label:'🎁 かんたん',        name:'かんたん入力（プリセット）'},
   {id:'design',      label:'🎨 デザイン',        name:'デザインブロック（装飾済み）'},
   {id:'media',       label:'🖼 メディア',        name:'メディア・画像・SVG'},
   {id:'text',        label:'📝 テキスト',        name:'テキスト・見出し'},
-  {id:'interactive', label:'🔗 リンク・ボタン',  name:'リンク・ボタン'},
-  {id:'containers',  label:'📦 枠・レイアウト',  name:'枠・レイアウト'},
+  {id:'interactive', label:'🔗 リンク',          name:'リンク・ボタン'},
+  {id:'containers',  label:'📦 枠',              name:'枠・レイアウト'},
   {id:'lists',       label:'📋 リスト',          name:'リスト・箇条書き'},
   {id:'tables',      label:'📊 表',              name:'表（テーブル）'},
   {id:'forms',       label:'🧾 フォーム',        name:'フォーム・入力'},
@@ -260,22 +295,17 @@ const PRESET_GROUPS = {
 };
 
 const PRESETS = {
-  /* ファイルの種類 */
   'pre-accept-img':{group:'accept',label:'画像',icon:'🖼',value:'image/*'},
   'pre-accept-video':{group:'accept',label:'動画',icon:'🎬',value:'video/*'},
   'pre-accept-audio':{group:'accept',label:'音声',icon:'🔊',value:'audio/*'},
   'pre-accept-pdf':{group:'accept',label:'PDF',icon:'📄',value:'application/pdf'},
   'pre-accept-all':{group:'accept',label:'すべて',icon:'📦',value:'*/*'},
-
-  /* URL */
   'pre-url-img1':{group:'url',label:'サンプル画像',icon:'🖼',value:'https://picsum.photos/400/300'},
   'pre-url-img2':{group:'url',label:'プレースホルダー',icon:'🖼',value:'https://placehold.co/400x300'},
   'pre-url-photo':{group:'url',label:'フリー写真',icon:'📷',value:'https://picsum.photos/seed/1/600/400'},
   'pre-url-yt':{group:'url',label:'YouTube動画',icon:'▶️',value:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
   'pre-url-map':{group:'url',label:'Googleマップ',icon:'🗺',value:'https://maps.google.com/maps?q=Tokyo&output=embed'},
   'pre-url-site':{group:'url',label:'サンプルサイト',icon:'🌐',value:'https://example.com'},
-
-  /* 色 */
   'pre-color-black':{group:'color',label:'黒',icon:'⬛',value:'#000000'},
   'pre-color-white':{group:'color',label:'白',icon:'⬜',value:'#ffffff'},
   'pre-color-gray':{group:'color',label:'グレー',icon:'🔘',value:'#888888'},
@@ -286,8 +316,6 @@ const PRESETS = {
   'pre-color-purple':{group:'color',label:'紫',icon:'🟪',value:'#9b59b6'},
   'pre-color-orange':{group:'color',label:'オレンジ',icon:'🟧',value:'#e67e22'},
   'pre-color-pink':{group:'color',label:'ピンク',icon:'🌸',value:'#ff69b4'},
-
-  /* サイズ */
   'pre-size-0':{group:'size',label:'なし (0)',icon:'⊘',value:'0'},
   'pre-size-xs':{group:'size',label:'極小 (4px)',icon:'🤏',value:'4px'},
   'pre-size-s':{group:'size',label:'小 (8px)',icon:'🤏',value:'8px'},
@@ -297,88 +325,58 @@ const PRESETS = {
   'pre-size-auto':{group:'size',label:'自動 (auto)',icon:'✨',value:'auto'},
   'pre-size-full':{group:'size',label:'画面いっぱい (100%)',icon:'🖥',value:'100%'},
   'pre-size-half':{group:'size',label:'半分 (50%)',icon:'◐',value:'50%'},
-
-  /* 文字サイズ */
   'pre-font-xs':{group:'fontsize',label:'小 (12px)',icon:'ᵃ',value:'12px'},
   'pre-font-s':{group:'fontsize',label:'標準 (16px)',icon:'A',value:'16px'},
   'pre-font-m':{group:'fontsize',label:'やや大 (20px)',icon:'A',value:'20px'},
   'pre-font-l':{group:'fontsize',label:'大 (24px)',icon:'A',value:'24px'},
   'pre-font-xl':{group:'fontsize',label:'特大 (32px)',icon:'A',value:'32px'},
-  'pre-font-xxl':{group:'fontsize',label:'超特大 (48px)',icon:'A',value:'48px'},
-
-  /* 角丸 */
+  'pre-font-xxl':{group:'fontsize',label:'特大 (48px)',icon:'A',value:'48px'},
   'pre-radius-0':{group:'radius',label:'角ばる (0)',icon:'▢',value:'0'},
   'pre-radius-s':{group:'radius',label:'少し (4px)',icon:'▢',value:'4px'},
   'pre-radius-m':{group:'radius',label:'中 (8px)',icon:'⬜',value:'8px'},
   'pre-radius-l':{group:'radius',label:'大 (16px)',icon:'⬜',value:'16px'},
   'pre-radius-round':{group:'radius',label:'丸ボタン',icon:'⚪',value:'999px'},
-
-  /* 太さ */
   'pre-weight-normal':{group:'weight',label:'普通',icon:'A',value:'normal'},
   'pre-weight-bold':{group:'weight',label:'太字',icon:'B',value:'bold'},
   'pre-weight-light':{group:'weight',label:'細字',icon:'a',value:'300'},
-
-  /* 揃え */
   'pre-align-l':{group:'align',label:'左揃え',icon:'⬅',value:'left'},
   'pre-align-c':{group:'align',label:'中央揃え',icon:'↔',value:'center'},
   'pre-align-r':{group:'align',label:'右揃え',icon:'➡',value:'right'},
-
-  /* 表示 */
   'pre-display-block':{group:'display',label:'ブロック',icon:'▭',value:'block'},
   'pre-display-flex':{group:'display',label:'フレックス',icon:'🔀',value:'flex'},
   'pre-display-none':{group:'display',label:'非表示',icon:'🚫',value:'none'},
-
-  /* flex */
   'pre-flexdir-row':{group:'flexdir',label:'横に並べる',icon:'↔',value:'row'},
   'pre-flexdir-col':{group:'flexdir',label:'縦に並べる',icon:'↕',value:'column'},
-
-  /* 横配置 */
   'pre-justify-start':{group:'justify',label:'左寄せ',icon:'⬅',value:'flex-start'},
   'pre-justify-center':{group:'justify',label:'中央',icon:'↔',value:'center'},
   'pre-justify-end':{group:'justify',label:'右寄せ',icon:'➡',value:'flex-end'},
   'pre-justify-between':{group:'justify',label:'両端揃え',icon:'↔',value:'space-between'},
-
-  /* 縦配置 */
   'pre-alignitems-start':{group:'alignitems',label:'上寄せ',icon:'⬆',value:'flex-start'},
   'pre-alignitems-center':{group:'alignitems',label:'中央',icon:'↕',value:'center'},
   'pre-alignitems-end':{group:'alignitems',label:'下寄せ',icon:'⬇',value:'flex-end'},
   'pre-alignitems-stretch':{group:'alignitems',label:'伸ばす',icon:'⇕',value:'stretch'},
-
-  /* 行の高さ */
   'pre-lineheight-tight':{group:'lineheight',label:'狭い(1.2)',icon:'☰',value:'1.2'},
   'pre-lineheight-normal':{group:'lineheight',label:'標準(1.5)',icon:'☰',value:'1.5'},
   'pre-lineheight-loose':{group:'lineheight',label:'広い(2)',icon:'☰',value:'2'},
-
-  /* 文字間隔 */
   'pre-letterspacing-0':{group:'letterspacing',label:'なし(0)',icon:'⟷',value:'0'},
   'pre-letterspacing-sm':{group:'letterspacing',label:'狭め(1px)',icon:'⟷',value:'1px'},
   'pre-letterspacing-lg':{group:'letterspacing',label:'広め(3px)',icon:'⟷',value:'3px'},
-
-  /* 文字装飾 */
   'pre-textdecoration-none':{group:'textdecoration',label:'なし',icon:'⊘',value:'none'},
   'pre-textdecoration-under':{group:'textdecoration',label:'下線',icon:'U',value:'underline'},
   'pre-textdecoration-strike':{group:'textdecoration',label:'取消線',icon:'S',value:'line-through'},
   'pre-textdecoration-over':{group:'textdecoration',label:'上線',icon:'O',value:'overline'},
-
-  /* 透明度 */
   'pre-opacity-0':{group:'opacity',label:'透明(0)',icon:'👻',value:'0'},
   'pre-opacity-25':{group:'opacity',label:'うっすら(0.25)',icon:'🌒',value:'0.25'},
   'pre-opacity-50':{group:'opacity',label:'半分(0.5)',icon:'🌓',value:'0.5'},
   'pre-opacity-75':{group:'opacity',label:'やや濃い(0.75)',icon:'🌔',value:'0.75'},
   'pre-opacity-100':{group:'opacity',label:'不透明(1)',icon:'🌕',value:'1'},
-
-  /* 枠線 */
   'pre-border-none':{group:'border',label:'枠線なし',icon:'⊘',value:'none'},
   'pre-border-thin':{group:'border',label:'細い枠線',icon:'▭',value:'1px solid #cccccc'},
   'pre-border-bold':{group:'border',label:'太い枠線',icon:'▬',value:'3px solid #333333'},
   'pre-border-round':{group:'border',label:'点線',icon:'┄',value:'2px dashed #999999'},
-
-  /* 影 */
   'pre-shadow-none':{group:'shadow',label:'影なし',icon:'⊘',value:'none'},
   'pre-shadow-soft':{group:'shadow',label:'柔らかい影',icon:'🌫',value:'0 2px 6px rgba(0,0,0,0.15)'},
   'pre-shadow-strong':{group:'shadow',label:'濃い影',icon:'🌑',value:'0 4px 12px rgba(0,0,0,0.35)'},
-
-  /* ★ SVG図形サンプル */
   'pre-svg-circle':{group:'svg',label:'円',icon:'⭕',value:'<circle cx="100" cy="100" r="80" fill="#2ec4a6"/>'},
   'pre-svg-rect':{group:'svg',label:'四角',icon:'▭',value:'<rect x="20" y="20" width="160" height="160" fill="#3498db"/>'},
   'pre-svg-star':{group:'svg',label:'星',icon:'⭐',value:'<polygon points="100,20 120,80 185,80 132,120 152,180 100,145 48,180 68,120 15,80 80,80" fill="#f1c40f"/>'},
@@ -388,39 +386,28 @@ const PRESETS = {
   'pre-svg-text':{group:'svg',label:'文字',icon:'A',value:'<text x="100" y="110" font-size="60" text-anchor="middle" fill="#e91e63">ABC</text>'},
   'pre-svg-gradient':{group:'svg',label:'グラデ円',icon:'🌈',value:'<defs><radialGradient id="g1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#3498db"/></radialGradient></defs><circle cx="100" cy="100" r="80" fill="url(#g1)"/>'},
   'pre-svg-face':{group:'svg',label:'顔文字',icon:'🙂',value:'<circle cx="100" cy="100" r="80" fill="#f1c40f"/><circle cx="75" cy="85" r="8" fill="#333"/><circle cx="125" cy="85" r="8" fill="#333"/><path d="M60,120 Q100,160 140,120" stroke="#333" stroke-width="4" fill="none"/>'},
-
-  /* ★ タイマー間隔 */
   'pre-int-10':{group:'interval',label:'0.01秒 (10ms)',icon:'⏱',value:'10'},
   'pre-int-50':{group:'interval',label:'0.05秒 (50ms)',icon:'⏱',value:'50'},
   'pre-int-100':{group:'interval',label:'0.1秒 (100ms)',icon:'⏱',value:'100'},
   'pre-int-250':{group:'interval',label:'0.25秒 (250ms)',icon:'⏱',value:'250'},
   'pre-int-500':{group:'interval',label:'0.5秒 (500ms)',icon:'⏱',value:'500'},
   'pre-int-1000':{group:'interval',label:'1秒 (1000ms)',icon:'⏱',value:'1000'},
-
-  /* ★ カウント秒数 */
   'pre-sec-3':{group:'seconds',label:'3秒',icon:'⏳',value:'3'},
   'pre-sec-5':{group:'seconds',label:'5秒',icon:'⏳',value:'5'},
   'pre-sec-10':{group:'seconds',label:'10秒',icon:'⏳',value:'10'},
   'pre-sec-30':{group:'seconds',label:'30秒',icon:'⏳',value:'30'},
   'pre-sec-60':{group:'seconds',label:'60秒',icon:'⏳',value:'60'},
-
-  /* ★ API URL */
   'pre-api-todo':{group:'api',label:'サンプル(todo)',icon:'🌐',value:'https://jsonplaceholder.typicode.com/todos/1'},
   'pre-api-user':{group:'api',label:'ユーザー情報',icon:'👤',value:'https://jsonplaceholder.typicode.com/users/1'},
   'pre-api-post':{group:'api',label:'投稿データ',icon:'📝',value:'https://jsonplaceholder.typicode.com/posts/1'},
   'pre-api-weather':{group:'api',label:'天気API(東京)',icon:'☀️',value:'https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.76&current_weather=true'},
-
-  /* ★ 周波数 */
+  'pre-api-ip':{group:'api',label:'IPアドレス',icon:'🌐',value:'https://api.ipify.org?format=json'},
   'pre-freq-low':{group:'freq',label:'低音 (220Hz)',icon:'🔊',value:'220'},
   'pre-freq-mid':{group:'freq',label:'標準 (440Hz)',icon:'🔊',value:'440'},
   'pre-freq-high':{group:'freq',label:'高音 (880Hz)',icon:'🔊',value:'880'},
-
-  /* ★ 音の長さ */
   'pre-dur-short':{group:'duration',label:'短い (100ms)',icon:'⏱',value:'100'},
   'pre-dur-mid':{group:'duration',label:'普通 (200ms)',icon:'⏱',value:'200'},
   'pre-dur-long':{group:'duration',label:'長い (500ms)',icon:'⏱',value:'500'},
-
-  /* ★ 振動 */
   'pre-vib-short':{group:'vibrate',label:'短い (100ms)',icon:'📳',value:'100'},
   'pre-vib-mid':{group:'vibrate',label:'普通 (200ms)',icon:'📳',value:'200'},
   'pre-vib-long':{group:'vibrate',label:'長い (500ms)',icon:'📳',value:'500'}
@@ -462,6 +449,9 @@ const BLOCKS = {
   'error-box': { cat:'design', label:'エラーボックス（赤）', icon:'❌', tag:'div', container:true, slots:['container','css'],
     baseStyle:'background:#fdecec; border-left:4px solid #e74c3c; border-radius:6px; padding:12px 16px; margin:12px 0; color:#7c1d10;',
     hint:'赤いエラーメッセージ。', fields:[{k:'id', label:'ID', type:'text'}] },
+  'divider-text': { cat:'design', label:'見出し区切り線', icon:'┈', tag:'div', container:true, slots:['css'],
+    baseStyle:'display:flex; align-items:center; gap:12px; margin:20px 0; color:#8b97a3;',
+    hint:'中央にタイトル付きの区切り線を表示。中にテキストを入れます。', fields:[{k:'id', label:'ID', type:'text'}] },
 
   /* メディア */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css'],
@@ -473,7 +463,7 @@ const BLOCKS = {
   'iframe': { cat:'media', label:'埋め込み', icon:'🌐', tag:'iframe', slots:['css'],
     fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},{k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}]},
   'canvas': { cat:'media', label:'キャンバス', icon:'🖌', tag:'canvas', slots:['css'],
-    hint:'お絵かき・図形描画エリア。「お絵かきモードON」で描けます。「図形を描く」で円や四角を描画できます。',
+    hint:'お絵かき・図形描画エリア。「お絵かきモードON」で描けます。',
     fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
   'svg': { cat:'media', label:'SVG図形', icon:'🎨', tag:'svg', slots:['css'],
     hint:'SVGコードをそのまま貼り付け。🎁タブから図形サンプルをドロップできます。',
@@ -488,7 +478,7 @@ const BLOCKS = {
   'figcaption': { cat:'media', label:'図のキャプション', icon:'📝', tag:'figcaption', textTag:true, slots:['css','var'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'図の説明'}]},
   'progress': { cat:'media', label:'進捗バー', icon:'📊', tag:'progress', slots:['css'],
-    hint:'IDを付けて「📊 進捗を数値で設定」「➕ 進捗を増やす」「📊 進捗値を変更」などの動作を組み合わせます。',
+    hint:'IDを付けて「📊 進捗を数値で設定」「➕ 進捗を増やす」などの動作を組み合わせます。',
     fields:[{k:'id', label:'ID', type:'text', def:'prog1'},{k:'value', label:'現在値', type:'number', def:'0'},{k:'max', label:'最大値', type:'number', def:'100'}]},
   'meter': { cat:'media', label:'メーター', icon:'🎛', tag:'meter', slots:['css'],
     hint:'IDを付けて「🎛 メーターを数値で設定」「➕ メーターを増やす」などで動かせます。',
@@ -528,6 +518,10 @@ const BLOCKS = {
   'span': { cat:'text', label:'スパン', icon:'S', tag:'span', textTag:true, slots:['css','var'],
     hint:'文字の一部分だけ装飾したいときに使います。',
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'テキスト'}]},
+  'html-raw': { cat:'text', label:'生のHTML挿入', icon:'🔧', tag:'div', container:true, slots:['css'], emptyOk:true,
+    baseStyle:'',
+    hint:'上級者向け。HTMLタグをそのまま出力します。',
+    fields:[{k:'id', label:'ID', type:'text'},{k:'raw', label:'HTMLコード', type:'textarea', def:'<b>カスタムHTML</b>'}]},
 
   'a': { cat:'interactive', label:'リンク', icon:'🔗', tag:'a', textTag:true, slots:['css','var'],
     fields:[{k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},{k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},{k:'text', label:'表示文字', type:'text', def:'リンク'}]},
@@ -606,7 +600,7 @@ const BLOCKS = {
     hint:'イベント「色を背景に」「色を文字に」と組み合わせると便利。',
     fields:[{k:'id', label:'ID', type:'text', def:'color1'},{k:'value', label:'初期色', type:'color', def:'#2ec4a6', presetGroup:'color'}]},
   'input-range': { cat:'forms', label:'スライダー', icon:'🎚', tag:'input', voidTag:true, slots:['css','event'],
-    hint:'イベント「値で幅を変更」「📊 進捗値を変更」「🎛 メーターの値を変更」などと組み合わせると便利。',
+    hint:'イベント「値で幅を変更」「📊 進捗値を変更」などと組み合わせ。',
     fields:[{k:'id', label:'ID', type:'text', def:'range1'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'},{k:'value', label:'初期値', type:'number', def:'50'}]},
   'input-file': { cat:'forms', label:'ファイル', icon:'📁', tag:'input', voidTag:true, slots:['css','event'],
     hint:'イベント「選択画像を表示」等と組み合わせると、選んだファイルを使えます。',
@@ -671,10 +665,9 @@ const BLOCKS = {
   'css-textdecoration':{cat:'css',label:'文字装飾',icon:'U',cssProp:'text-decoration',presetGroup:'textdecoration',fields:[{k:'value',type:'select',options:['none','underline','line-through','overline'],def:'none'}]},
   'css-textshadow':{cat:'css',label:'文字の影',icon:'🌫',cssProp:'text-shadow',fields:[{k:'value',type:'text',def:'1px 1px 2px rgba(0,0,0,0.3)'}]},
   'css-cursor':{cat:'css',label:'カーソル',icon:'🖱',cssProp:'cursor',fields:[{k:'value',type:'select',options:['default','pointer','text','move','not-allowed','help'],def:'pointer'}]},
-  'css-transition':{cat:'css',label:'アニメ transition',icon:'✨',cssProp:'transition',fields:[{k:'value',type:'text',def:'all 0.3s ease'}]},
-  'css-transform':{cat:'css',label:'変形 transform',icon:'🔄',cssProp:'transform',fields:[{k:'value',type:'text',def:'rotate(0deg)'}]},
+  'css-transition':{cat:'css',label:'アニメ',icon:'✨',cssProp:'transition',fields:[{k:'value',type:'text',def:'all 0.3s ease'}]},
+  'css-transform':{cat:'css',label:'変形',icon:'🔄',cssProp:'transform',fields:[{k:'value',type:'text',def:'rotate(0deg)'}]},
 
-  /* 動作（変数） */
   'var-static': { cat:'variables', label:'静的テキスト', icon:'🔢', slotKind:'var',
     fields:[{k:'name', label:'変数名', type:'text', def:'var1'},{k:'value', label:'値', type:'text', def:'表示テキスト'}]},
   'var-input': { cat:'variables', label:'入力値を挿入', icon:'🔗', slotKind:'var',
@@ -693,23 +686,104 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'表示する文字', type:'text', def:'クリックしました！'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-show-date': { cat:'variables', label:'🕐 現在日時を表示', icon:'🕐', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-today-jp': { cat:'variables', label:'📅 今日の曜日付き日付を表示', icon:'📅', slotKind:'event',
+    hint:'「2026年1月1日（木）」の形式で表示します。',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'load'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-format-date': { cat:'variables', label:'📅 日付を日本語表示', icon:'📅', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'日付入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-toggle-hidden': { cat:'variables', label:'👁 表示/非表示を切替', icon:'👁', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text', def:'target1'}]},
+  'evt-copy-to-text': { cat:'variables', label:'📝 入力値をテキストへ反映', icon:'📝', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
+
+  /* ===== 文字加工 ===== */
   'evt-append-text': { cat:'variables', label:'➕ 文字を後ろに追加', icon:'➕', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'text', label:'追加する文字', type:'text', def:'kg'}]},
   'evt-prepend-text': { cat:'variables', label:'➕ 文字を前に追加', icon:'➕', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'text', label:'追加する文字', type:'text', def:'¥'}]},
   'evt-set-formatted': { cat:'variables', label:'🔤 入力値に単位をつけて表示', icon:'🔤', slotKind:'event',
-    hint:'「20」に「kg」をつけて「20kg」のように表示します。',
+    hint:'「20」に「kg」をつけて「20kg」のように表示。',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'prefix', label:'前につける文字', type:'text'},{k:'suffix', label:'後ろにつける文字', type:'text', def:'kg'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
-  'evt-copy-to-text': { cat:'variables', label:'📝 入力値をテキストへ反映', icon:'📝', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
+  'evt-uppercase': { cat:'variables', label:'🔠 大文字に変換', icon:'🔠', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-lowercase': { cat:'variables', label:'🔡 小文字に変換', icon:'🔡', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-trim': { cat:'variables', label:'✂️ 前後の空白を削除', icon:'✂️', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-replace-text': { cat:'variables', label:'🔄 文字を置換', icon:'🔄', slotKind:'event',
+    hint:'対象の文字の中の「A」を「B」に置き換えます。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'},
+      {k:'from', label:'置換される文字', type:'text', def:'A'},
+      {k:'to', label:'置換後の文字', type:'text', def:'B'}
+    ]},
+  'evt-slice-text': { cat:'variables', label:'✂️ 文字を切り出し', icon:'✂️', slotKind:'event',
+    hint:'入力の一部だけを取り出して表示。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
+      {k:'start', label:'開始位置', type:'number', def:'0'},
+      {k:'len', label:'文字数(空=最後まで)', type:'number'},
+      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
+    ]},
+  'evt-count-chars': { cat:'variables', label:'🔢 文字数を表示', icon:'🔢', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-number-format': { cat:'variables', label:'🔢 3桁カンマ区切り', icon:'🔢', slotKind:'event',
+    hint:'「1234567」→「1,234,567」',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+
+  /* ===== 計算 ===== */
   'evt-calc': { cat:'variables', label:'🧮 計算する（＋−×÷）', icon:'🧮', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'aId', label:'入力A ID', type:'text'},{k:'op', label:'演算子', type:'select', options:[{v:'+',l:'＋'},{v:'-',l:'−'},{v:'*',l:'×'},{v:'/',l:'÷'}], def:'+'},{k:'bId', label:'入力B ID', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-math-op': { cat:'variables', label:'🧮 数学演算（四捨五入など）', icon:'🧮', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},
+      {k:'fromId', label:'入力元ID(空=自分)', type:'text'},
+      {k:'op', label:'演算', type:'select', options:[
+        {v:'round', l:'四捨五入'},
+        {v:'floor', l:'切り捨て'},
+        {v:'ceil', l:'切り上げ'},
+        {v:'abs', l:'絶対値'},
+        {v:'sqrt', l:'平方根'},
+        {v:'neg', l:'符号反転'}
+      ], def:'round'},
+      {k:'toId', label:'表示先ID', type:'text', def:'out1'}
+    ]},
   'evt-join-values': { cat:'variables', label:'🔗 2つの入力をつなげる', icon:'🔗', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'aId', label:'入力A ID', type:'text'},{k:'sep', label:'間の文字', type:'text', def:' '},{k:'bId', label:'入力B ID', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
+  'evt-sum-values': { cat:'variables', label:'➕ 入力値の合計を表示', icon:'➕', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromIds', label:'入力ID(カンマ区切り)', type:'text', def:'num1,num2,num3'},{k:'toId', label:'表示先ID', type:'text'}]},
+
+  /* ===== 要素操作 ===== */
+  'evt-set-value': { cat:'variables', label:'✏️ 入力欄に値を代入', icon:'✏️', slotKind:'event',
+    hint:'指定した入力欄に、決まった値や別の入力の値を入れます。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'fromId', label:'コピー元ID(空=固定値使用)', type:'text'},
+      {k:'value', label:'固定値(コピー元が空の場合)', type:'text'},
+      {k:'toId', label:'代入先ID', type:'text'}
+    ]},
+  'evt-clear-value': { cat:'variables', label:'🧹 入力欄を空にする', icon:'🧹', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
+  'evt-set-html': { cat:'variables', label:'📝 HTMLを挿入', icon:'📝', slotKind:'event',
+    hint:'指定した要素の中にHTMLを挿入します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'対象ID', type:'text'},
+      {k:'html', label:'HTML', type:'textarea', def:'<b>挿入</b>'}
+    ]},
+  'evt-add-class': { cat:'variables', label:'🏷 クラスを追加', icon:'🏷', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'className', label:'クラス名', type:'text', def:'active'}]},
+  'evt-remove-class': { cat:'variables', label:'🏷 クラスを削除', icon:'🏷', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'className', label:'クラス名', type:'text', def:'active'}]},
+  'evt-focus': { cat:'variables', label:'🎯 入力欄にフォーカス', icon:'🎯', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
+  'evt-click-other': { cat:'variables', label:'👆 他の要素をクリック', icon:'👆', slotKind:'event',
+    hint:'他のボタンを自動でクリックします。',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
+
+  /* ===== ファイル受け渡し ===== */
   'evt-file-to-img': { cat:'variables', label:'📷 選んだ画像を表示', icon:'📷', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'画像のID', type:'text'}]},
   'evt-file-to-video': { cat:'variables', label:'🎬 選んだ動画を再生', icon:'🎬', slotKind:'event',
@@ -718,10 +792,14 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'音声のID', type:'text'}]},
   'evt-file-name': { cat:'variables', label:'📝 選んだファイル名を表示', icon:'📝', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'change'},{k:'fromId', label:'ファイル入力ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
+
+  /* ===== 色 ===== */
   'evt-color-to-bg': { cat:'variables', label:'🎨 選んだ色を背景に', icon:'🎨', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-color-to-text': { cat:'variables', label:'🅰 選んだ色を文字に', icon:'🅰', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'}]},
+
+  /* ===== 値の受け渡し ===== */
   'evt-range-to-width': { cat:'variables', label:'↔ 値で幅を変更', icon:'↔', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力ID(空=自分)', type:'text'},{k:'toId', label:'対象ID', type:'text'},{k:'unit', label:'単位', type:'text', def:'%'}]},
   'evt-range-to-height': { cat:'variables', label:'↕ 値で高さを変更', icon:'↕', slotKind:'event',
@@ -734,6 +812,18 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'progressのID', type:'text'}]},
   'evt-meter-set': { cat:'variables', label:'🎛 スライダー値でメーターを変更', icon:'🎛', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'メーターのID', type:'text'}]},
+
+  /* ===== 日付時刻隠し ===== */
+  'evt-set-date': { cat:'variables', label:'📅 今日の日付を入力', icon:'📅', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'日付入力ID', type:'text'}]},
+  'evt-set-time': { cat:'variables', label:'⏰ 現在時刻を入力', icon:'⏰', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'時刻入力ID', type:'text'}]},
+  'evt-set-hidden': { cat:'variables', label:'👻 隠しフィールドに値を代入', icon:'👻', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'入力元ID', type:'text'},{k:'toId', label:'隠しフィールドID', type:'text'}]},
+  'evt-copy-value': { cat:'variables', label:'📋 値をコピー', icon:'📋', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'コピー元ID', type:'text'},{k:'toId', label:'コピー先ID', type:'text'}]},
+
+  /* ===== メディア操作 ===== */
   'evt-media-play': { cat:'variables', label:'▶️ メディアを再生', icon:'▶️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-pause': { cat:'variables', label:'⏸ メディアを一時停止', icon:'⏸', slotKind:'event',
@@ -742,12 +832,20 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
   'evt-media-toggle': { cat:'variables', label:'⏯ 再生/停止を切替', icon:'⏯', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'メディアID', type:'text'}]},
+
+  /* ===== 開閉 ===== */
   'evt-details-toggle': { cat:'variables', label:'📂 detailsを開閉', icon:'📂', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-open': { cat:'variables', label:'📂 detailsを開く', icon:'📂', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
   'evt-details-close': { cat:'variables', label:'📁 detailsを閉じる', icon:'📁', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'detailsのID', type:'text'}]},
+  'evt-open-dialog': { cat:'variables', label:'💬 ダイアログを開く', icon:'💬', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
+  'evt-close-dialog': { cat:'variables', label:'✖ ダイアログを閉じる', icon:'✖', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
+
+  /* ===== キャンバス ===== */
   'evt-canvas-draw': { cat:'variables', label:'🖌 お絵かきモードON', icon:'🖌', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-clear': { cat:'variables', label:'🧹 キャンバスを消去', icon:'🧹', slotKind:'event',
@@ -755,7 +853,6 @@ const BLOCKS = {
   'evt-canvas-color': { cat:'variables', label:'🖍 ペンの色を変更', icon:'🖍', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'色入力ID(空=自分)', type:'text'},{k:'toId', label:'キャンバスID', type:'text'}]},
   'evt-canvas-shape': { cat:'variables', label:'🎨 図形を描く', icon:'🎨', slotKind:'event',
-    hint:'円・四角・文字をキャンバスに描画します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'キャンバスID', type:'text'},
@@ -763,16 +860,19 @@ const BLOCKS = {
       {k:'color', label:'色', type:'color', def:'#2ec4a6', presetGroup:'color'},
       {k:'text', label:'文字(文字の場合)', type:'text'}
     ]},
-  'evt-canvas-animate': { cat:'variables', label:'🎬 アニメ開始(円が動く)', icon:'🎬', slotKind:'event',
+  'evt-canvas-animate': { cat:'variables', label:'🎬 アニメ開始', icon:'🎬', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'キャンバスID', type:'text'},{k:'color', label:'色', type:'color', def:'#e91e63', presetGroup:'color'}]},
+
+  /* ===== フォーム ===== */
   'evt-form-show': { cat:'variables', label:'📋 フォーム内容を表示', icon:'📋', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'submit'},{k:'formId', label:'フォームID', type:'text'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-form-reset': { cat:'variables', label:'🧹 フォームをリセット', icon:'🧹', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'formId', label:'フォームID', type:'text'}]},
+  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]},
+
+  /* ===== その他 ===== */
   'evt-counter': { cat:'variables', label:'🔢 カウンター (+/-)', icon:'🔢', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'out1'},{k:'step', label:'増分 (+/-)', type:'number', def:'1'},{k:'init', label:'初期値', type:'number', def:'0'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'9999'}]},
-  'evt-copy-value': { cat:'variables', label:'📋 値をコピー', icon:'📋', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'コピー元ID', type:'text'},{k:'toId', label:'コピー先ID', type:'text'}]},
   'evt-toggle-text': { cat:'variables', label:'🔄 テキストを切替', icon:'🔄', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'textA', label:'テキストA', type:'text', def:'ON'},{k:'textB', label:'テキストB', type:'text', def:'OFF'}]},
   'evt-change-color': { cat:'variables', label:'🎨 文字色を変更', icon:'🎨', slotKind:'event',
@@ -785,27 +885,22 @@ const BLOCKS = {
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'},{k:'className', label:'クラス名', type:'text', def:'active'}]},
   'evt-scroll-to': { cat:'variables', label:'⬇ 要素へスクロール', icon:'⬇', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
+  'evt-scroll-top': { cat:'variables', label:'⬆ ページ先頭へ', icon:'⬆', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'}]},
   'evt-open-url': { cat:'variables', label:'🔗 URLを開く', icon:'🔗', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'url', label:'URL', type:'url', def:'https://example.com', presetGroup:'url'},{k:'newTab', label:'新しいタブ', type:'select', options:[{v:'1',l:'する'},{v:'',l:'しない'}], def:'1'}]},
-  'evt-open-dialog': { cat:'variables', label:'💬 ダイアログを開く', icon:'💬', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
-  'evt-close-dialog': { cat:'variables', label:'✖ ダイアログを閉じる', icon:'✖', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'ダイアログID', type:'text'}]},
+  'evt-page-reload': { cat:'variables', label:'🔄 ページを再読込', icon:'🔄', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'}]},
+  'evt-print': { cat:'variables', label:'🖨 印刷', icon:'🖨', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'}]},
+  'evt-toggle-fs-elem': { cat:'variables', label:'⛶ 要素を全画面に', icon:'⛶', slotKind:'event',
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-random': { cat:'variables', label:'🎲 ランダム表示', icon:'🎲', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'大吉\n中吉\n小吉\n凶'}]},
-  'evt-sum-values': { cat:'variables', label:'➕ 入力値の合計を表示', icon:'➕', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromIds', label:'入力ID(カンマ区切り)', type:'text', def:'num1,num2,num3'},{k:'toId', label:'表示先ID', type:'text'}]},
   'evt-alert': { cat:'variables', label:'⚠️ アラート表示', icon:'⚠️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}]},
-  'evt-set-date': { cat:'variables', label:'📅 今日の日付を入力', icon:'📅', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'日付入力ID', type:'text'}]},
-  'evt-set-time': { cat:'variables', label:'⏰ 現在時刻を入力', icon:'⏰', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'時刻入力ID', type:'text'}]},
-  'evt-set-hidden': { cat:'variables', label:'👻 隠しフィールドに値を代入', icon:'👻', slotKind:'event',
-    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'fromId', label:'入力元ID', type:'text'},{k:'toId', label:'隠しフィールドID', type:'text'}]},
-  'evt-prevent-submit': { cat:'variables', label:'🛑 送信をキャンセル', icon:'🛑', slotKind:'event', fields:[]},
 
-  /* API・タイマー・デバイス */
+  /* ===== API ===== */
   'evt-interval': { cat:'api', label:'⏱ 繰り返し実行', icon:'⏱', slotKind:'event',
     hint:'指定ミリ秒ごとに処理を繰り返し実行します。10ms=0.01秒単位で指定できます。',
     fields:[
@@ -822,7 +917,6 @@ const BLOCKS = {
       {k:'interval', label:'更新間隔(ms)', type:'number', def:'10', presetGroup:'interval'}
     ]},
   'evt-count-down': { cat:'api', label:'⏳ カウントダウン(0.01秒単位)', icon:'⏳', slotKind:'event',
-    hint:'指定秒数からカウントダウン。表示は数値のみ。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text', def:'timer1'},
@@ -832,7 +926,6 @@ const BLOCKS = {
       {k:'stopMsg', label:'完了時の文字', type:'text', def:'時間切れ！'}
     ]},
   'evt-stopwatch': { cat:'api', label:'Ⲵ ストップウォッチ', icon:'Ⲵ', slotKind:'event',
-    hint:'0.01秒表示。表示は数値のみ。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text', def:'sw1'},
@@ -846,14 +939,12 @@ const BLOCKS = {
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-progress-num': { cat:'api', label:'📊 進捗を数値で設定', icon:'📊', slotKind:'event',
-    hint:'進捗バーの値を、指定した数値に直接セットします。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'progressのID', type:'text'},
       {k:'value', label:'設定値', type:'number', def:'50'}
     ]},
   'evt-progress-add': { cat:'api', label:'➕ 進捗を増やす', icon:'➕', slotKind:'event',
-    hint:'進捗バーの値を加算/減算します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'progressのID', type:'text'},
@@ -876,6 +967,14 @@ const BLOCKS = {
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'fromId', label:'コピー元ID', type:'text'}
     ]},
+  'evt-share': { cat:'api', label:'📤 共有', icon:'📤', slotKind:'event',
+    hint:'端末の共有メニューを開きます（対応端末のみ）。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'title', label:'タイトル', type:'text', def:'共有'},
+      {k:'text', label:'本文', type:'text', def:'このページを共有します'},
+      {k:'url', label:'URL(空=現在のページ)', type:'url'}
+    ]},
   'evt-vibrate': { cat:'api', label:'📳 バイブレーション', icon:'📳', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
@@ -886,8 +985,20 @@ const BLOCKS = {
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
+  'evt-battery': { cat:'api', label:'🔋 バッテリー情報', icon:'🔋', slotKind:'event',
+    hint:'バッテリー残量と充電状態を表示します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]},
+  'evt-online': { cat:'api', label:'📶 オンライン状態を表示', icon:'📶', slotKind:'event',
+    hint:'オンライン/オフラインを表示します。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'load'},
+      {k:'toId', label:'表示先ID', type:'text'}
+    ]},
   'evt-fetch': { cat:'api', label:'🌐 外部APIから取得', icon:'🌐', slotKind:'event',
-    hint:'URLからJSONを取得して表示します。🎁からサンプルを選べます。',
+    hint:'URLからデータを取得して表示します（JSON/テキスト両対応）。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'url', label:'API URL', type:'url', def:'https://jsonplaceholder.typicode.com/todos/1', presetGroup:'api'},
@@ -927,6 +1038,19 @@ const BLOCKS = {
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'title', label:'タイトル', type:'text', def:'お知らせ'},
       {k:'body', label:'本文', type:'text', def:'通知です'}
+    ]},
+  'evt-download-text': { cat:'api', label:'💾 テキストをファイル保存', icon:'💾', slotKind:'event',
+    hint:'入力したテキストをファイルとしてダウンロードします。',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'fromId', label:'元の入力ID(空=自分)', type:'text'},
+      {k:'filename', label:'ファイル名', type:'text', def:'memo.txt'}
+    ]},
+  'evt-download-canvas': { cat:'api', label:'🖼 キャンバスを画像保存', icon:'🖼', slotKind:'event',
+    fields:[
+      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
+      {k:'toId', label:'キャンバスID', type:'text'},
+      {k:'filename', label:'ファイル名', type:'text', def:'art.png'}
     ]},
   'evt-fade-in': { cat:'api', label:'🎬 フェードイン', icon:'🎬', slotKind:'event',
     fields:[
@@ -1183,7 +1307,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 9, name: currentProjectName,
+    version: 10, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
@@ -1256,8 +1380,11 @@ function defaultTrigger(t){
     case 'evt-range-to-width': case 'evt-range-to-height': case 'evt-range-to-opacity': case 'evt-range-to-fontsize': return 'input';
     case 'evt-progress-set': case 'evt-meter-set': case 'evt-canvas-color': return 'input';
     case 'evt-set-formatted': case 'evt-copy-to-text': case 'evt-calc': case 'evt-join-values': return 'input';
+    case 'evt-uppercase': case 'evt-lowercase': case 'evt-trim': case 'evt-slice-text': return 'input';
+    case 'evt-count-chars': case 'evt-number-format': case 'evt-math-op': return 'input';
     case 'evt-show-radio': return 'change';
     case 'evt-form-show': return 'submit';
+    case 'evt-today-jp': case 'evt-online': return 'load';
     default: return 'click';
   }
 }
@@ -1267,25 +1394,32 @@ function eventBody(t, kv, ownerId){
   const toId = kv.toId || '';
   const fid = JSON.stringify(fromId);
   const tid = JSON.stringify(toId);
+
+  /* 汎用: 出力先がinput/textareaならvalue、それ以外はtextContent */
+  const setOut = "var S=function(t,x){if(!t)return;if(t.tagName==='INPUT'||t.tagName==='TEXTAREA'){t.value=x;}else{t.textContent=x;}};";
+
   switch(t){
     case 'evt-live-value':
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.value;`;
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,s.value);`;
     case 'evt-show-selected-text':
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t){var o=s.options?s.options[s.selectedIndex]:null;t.textContent=o?o.text:(s.value||'');}`;
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s){var o=s.options?s.options[s.selectedIndex]:null;S(t,o?o.text:(s.value||''));}`;
     case 'evt-show-checked': {
       const tt = JSON.stringify(kv.trueText || 'ON'), ft = JSON.stringify(kv.falseText || 'OFF');
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.checked?${tt}:${ft};`;
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,s.checked?${tt}:${ft});`;
     }
     case 'evt-show-radio': {
       const name = JSON.stringify(kv.name || '');
-      return `var t=document.getElementById(${tid});if(t){var rs=document.querySelectorAll('input[type=radio][name='+JSON.stringify(${name})+']');var v='';for(var i=0;i<rs.length;i++){if(rs[i].checked){v=rs[i].value;break;}}t.textContent=v;}`;
+      return setOut + `var t=document.getElementById(${tid});if(t){var rs=document.querySelectorAll('input[type=radio][name='+JSON.stringify(${name})+']');var v='';for(var i=0;i<rs.length;i++){if(rs[i].checked){v=rs[i].value;break;}}S(t,v);}`;
     }
     case 'evt-show-text':
-      return `var t=document.getElementById(${tid});if(t)t.textContent=${JSON.stringify(kv.text||'')};`;
+      return setOut + `var t=document.getElementById(${tid});S(t,${JSON.stringify(kv.text||'')});`;
     case 'evt-show-date':
-      return `var t=document.getElementById(${tid});if(t)t.textContent=new Date().toLocaleString('ja-JP');`;
+      return setOut + `var t=document.getElementById(${tid});S(t,new Date().toLocaleString('ja-JP'));`;
+    case 'evt-today-jp': {
+      return setOut + `var t=document.getElementById(${tid});var d=new Date();var wk=['日','月','火','水','木','金','土'][d.getDay()];S(t,d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+wk+'）');`;
+    }
     case 'evt-format-date':
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t&&s.value){var d=new Date(s.value);if(!isNaN(d.getTime())){t.textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';}}`;
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&s.value){var d=new Date(s.value);if(!isNaN(d.getTime())){S(t,d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日');}}`;
     case 'evt-toggle-hidden':
       return `var t=document.getElementById(${tid});if(t)t.style.display=(t.style.display==='none')?'':'none';`;
     case 'evt-alert':
@@ -1295,26 +1429,71 @@ function eventBody(t, kv, ownerId){
     case 'evt-prepend-text':
       return `var t=document.getElementById(${tid});if(t)t.textContent=${JSON.stringify(kv.text||'')}+(t.textContent||'');`;
     case 'evt-set-formatted': {
-      const pre = JSON.stringify(kv.prefix || '');
-      const suf = JSON.stringify(kv.suffix || '');
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=${pre}+(s.value||'')+${suf};`;
+      const pre = JSON.stringify(kv.prefix || ''), suf = JSON.stringify(kv.suffix || '');
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,${pre}+(s.value||'')+${suf});`;
     }
     case 'evt-copy-to-text':
-      return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.textContent=s.value;`;
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,s.value);`;
+    case 'evt-uppercase':
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').toUpperCase());`;
+    case 'evt-lowercase':
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').toLowerCase());`;
+    case 'evt-trim':
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').trim());`;
+    case 'evt-replace-text': {
+      const fr = JSON.stringify(kv.from || ''), to = JSON.stringify(kv.to || '');
+      return `var t=document.getElementById(${tid});if(t)t.textContent=(t.textContent||'').split(${fr}).join(${to});`;
+    }
+    case 'evt-slice-text': {
+      const st = parseInt(kv.start, 10) || 0;
+      const hasLen = kv.len !== '' && kv.len != null;
+      const ln = hasLen ? parseInt(kv.len, 10) : null;
+      if(hasLen){
+        return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').substr(${st},${ln}));`;
+      }
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').substr(${st}));`;
+    }
+    case 'evt-count-chars':
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,(s.value||'').length+'文字');`;
+    case 'evt-number-format':
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s){var n=parseFloat(s.value)||0;S(t,n.toLocaleString('ja-JP'));}`;
     case 'evt-calc': {
       const op = kv.op || '+';
-      const aId = JSON.stringify(kv.aId || '');
-      const bId = JSON.stringify(kv.bId || '');
-      return `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b&&t){var x=parseFloat(a.value)||0,y=parseFloat(b.value)||0,r;if('${op}'==='+')r=x+y;else if('${op}'==='-')r=x-y;else if('${op}'==='*')r=x*y;else if('${op}'==='/')r=y===0?0:x/y;t.textContent=Math.round(r*1000000)/1000000;}`;
+      const aId = JSON.stringify(kv.aId || ''), bId = JSON.stringify(kv.bId || '');
+      return setOut + `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b){var x=parseFloat(a.value)||0,y=parseFloat(b.value)||0,r;if('${op}'==='+')r=x+y;else if('${op}'==='-')r=x-y;else if('${op}'==='*')r=x*y;else if('${op}'==='/')r=y===0?0:x/y;S(t,Math.round(r*1000000)/1000000);}`;
+    }
+    case 'evt-math-op': {
+      const op = kv.op || 'round';
+      return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s){var x=parseFloat(s.value)||0,r=x;if('${op}'==='round')r=Math.round(x);else if('${op}'==='floor')r=Math.floor(x);else if('${op}'==='ceil')r=Math.ceil(x);else if('${op}'==='abs')r=Math.abs(x);else if('${op}'==='sqrt')r=Math.sqrt(x);else if('${op}'==='neg')r=-x;S(t,r);}`;
     }
     case 'evt-join-values': {
-      const aId = JSON.stringify(kv.aId || '');
-      const bId = JSON.stringify(kv.bId || '');
-      const sep = JSON.stringify(kv.sep || '');
-      return `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b&&t)t.textContent=(a.value||'')+${sep}+(b.value||'');`;
+      const aId = JSON.stringify(kv.aId || ''), bId = JSON.stringify(kv.bId || ''), sep = JSON.stringify(kv.sep || '');
+      return setOut + `var a=document.getElementById(${aId}),b=document.getElementById(${bId}),t=document.getElementById(${tid});if(a&&b)S(t,(a.value||'')+${sep}+(b.value||''));`;
+    }
+    case 'evt-sum-values': {
+      const ids = String(kv.fromIds||'').split(',').map(s=>s.trim()).filter(Boolean);
+      return setOut + `var ids=${JSON.stringify(ids)};var sum=0;ids.forEach(function(id){var e=document.getElementById(id);if(e)sum+=parseFloat(e.value||0)||0;});var t=document.getElementById(${tid});S(t,sum);`;
     }
     case 'evt-meter-set':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.value=s.value;`;
+    case 'evt-set-value': {
+      const val = JSON.stringify(kv.value || '');
+      return `var t=document.getElementById(${tid});if(!t)return;var src=document.getElementById(${fid});var v=src?src.value:${val};if(t.tagName==='INPUT'||t.tagName==='TEXTAREA')t.value=v;else t.textContent=v;`;
+    }
+    case 'evt-clear-value':
+      return `var t=document.getElementById(${tid});if(t){if(t.tagName==='INPUT'||t.tagName==='TEXTAREA')t.value='';else t.textContent='';}`;
+    case 'evt-set-html': {
+      const html = JSON.stringify(kv.html || '');
+      return `var t=document.getElementById(${tid});if(t)t.innerHTML=${html};`;
+    }
+    case 'evt-add-class':
+      return `var t=document.getElementById(${tid});if(t)t.classList.add(${JSON.stringify(kv.className||'active')});`;
+    case 'evt-remove-class':
+      return `var t=document.getElementById(${tid});if(t)t.classList.remove(${JSON.stringify(kv.className||'active')});`;
+    case 'evt-focus':
+      return `var t=document.getElementById(${tid});if(t&&t.focus)t.focus();`;
+    case 'evt-click-other':
+      return `var t=document.getElementById(${tid});if(t&&t.click)t.click();`;
     case 'evt-set-time':
       return `var t=document.getElementById(${tid});if(t){var d=new Date();t.value=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}`;
     case 'evt-set-date':
@@ -1345,6 +1524,14 @@ function eventBody(t, kv, ownerId){
       return `var t=document.getElementById(${tid});if(t)t.classList.toggle(${JSON.stringify(kv.className||'active')});`;
     case 'evt-scroll-to':
       return `var t=document.getElementById(${tid});if(t)t.scrollIntoView({behavior:'smooth'});`;
+    case 'evt-scroll-top':
+      return `window.scrollTo({top:0,behavior:'smooth'});`;
+    case 'evt-page-reload':
+      return `location.reload();`;
+    case 'evt-print':
+      return `window.print();`;
+    case 'evt-toggle-fs-elem':
+      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(document.fullscreenElement===t){document.exitFullscreen();}else if(t.requestFullscreen){t.requestFullscreen();}})();`;
     case 'evt-open-url':
       return `window.open(${JSON.stringify(kv.url||'')},${JSON.stringify(kv.newTab?'_blank':'_self')});`;
     case 'evt-open-dialog':
@@ -1353,11 +1540,7 @@ function eventBody(t, kv, ownerId){
       return `var t=document.getElementById(${tid});if(t&&t.close)t.close();`;
     case 'evt-random': {
       const opts = String(kv.options||'').split('\n').map(s=>s.trim()).filter(Boolean);
-      return `var opts=${JSON.stringify(opts)};var t=document.getElementById(${tid});if(t&&opts.length)t.textContent=opts[Math.floor(Math.random()*opts.length)];`;
-    }
-    case 'evt-sum-values': {
-      const ids = String(kv.fromIds||'').split(',').map(s=>s.trim()).filter(Boolean);
-      return `var ids=${JSON.stringify(ids)};var sum=0;ids.forEach(function(id){var e=document.getElementById(id);if(e)sum+=parseFloat(e.value||0)||0;});var t=document.getElementById(${tid});if(t)t.textContent=sum;`;
+      return setOut + `var opts=${JSON.stringify(opts)};var t=document.getElementById(${tid});if(opts.length)S(t,opts[Math.floor(Math.random()*opts.length)]);`;
     }
     case 'evt-file-to-img':
       return `var f=document.getElementById(${fid}),i=document.getElementById(${tid});if(f&&i&&f.files&&f.files[0]){if(i._u)URL.revokeObjectURL(i._u);i._u=URL.createObjectURL(f.files[0]);i.src=i._u;}`;
@@ -1366,7 +1549,7 @@ function eventBody(t, kv, ownerId){
     case 'evt-file-to-audio':
       return `var f=document.getElementById(${fid}),a=document.getElementById(${tid});if(f&&a&&f.files&&f.files[0]){if(a._u)URL.revokeObjectURL(a._u);a._u=URL.createObjectURL(f.files[0]);a.src=a._u;try{a.load();}catch(e){}}`;
     case 'evt-file-name':
-      return `var f=document.getElementById(${fid}),t=document.getElementById(${tid});if(f&&t&&f.files&&f.files[0]){t.textContent=f.files[0].name;}`;
+      return setOut + `var f=document.getElementById(${fid}),t=document.getElementById(${tid});if(f&&f.files&&f.files[0])S(t,f.files[0].name);`;
     case 'evt-color-to-bg':
       return `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s&&t)t.style.backgroundColor=s.value;`;
     case 'evt-color-to-text':
@@ -1409,12 +1592,8 @@ function eventBody(t, kv, ownerId){
       const shape = kv.shape || 'circle';
       const color = JSON.stringify(kv.color || '#2ec4a6');
       const txt = JSON.stringify(kv.text || '');
-      if(shape === 'rect'){
-        return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.fillRect(c.width/2-50,c.height/2-50,100,100);}}`;
-      }
-      if(shape === 'text'){
-        return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.font='32px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(${txt},c.width/2,c.height/2);}}`;
-      }
+      if(shape === 'rect') return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.fillRect(c.width/2-50,c.height/2-50,100,100);}}`;
+      if(shape === 'text') return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.font='32px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(${txt},c.width/2,c.height/2);}}`;
       return `var c=document.getElementById(${tid});if(c){var ctx=c.getContext('2d');if(ctx){ctx.fillStyle=${color};ctx.beginPath();ctx.arc(c.width/2,c.height/2,60,0,Math.PI*2);ctx.fill();}}`;
     }
     case 'evt-canvas-animate': {
@@ -1423,7 +1602,7 @@ function eventBody(t, kv, ownerId){
     }
     case 'evt-form-show': {
       const formId = JSON.stringify(kv.formId || '');
-      return `var f=document.getElementById(${formId}),t=document.getElementById(${tid});if(f&&t){var p=[];var els=f.querySelectorAll('input,select,textarea');for(var i=0;i<els.length;i++){var el=els[i];if(['submit','button','reset','file','hidden'].indexOf(el.type)>=0)continue;var n=el.id||el.name||'';var v=(el.type==='checkbox'||el.type==='radio')?(el.checked?'ON':'OFF'):el.value;if(n)p.push(n+'='+v);}t.textContent=p.join(' / ');}`;
+      return setOut + `var f=document.getElementById(${formId}),t=document.getElementById(${tid});if(f){var p=[];var els=f.querySelectorAll('input,select,textarea');for(var i=0;i<els.length;i++){var el=els[i];if(['submit','button','reset','file','hidden'].indexOf(el.type)>=0)continue;var n=el.id||el.name||'';var v=(el.type==='checkbox'||el.type==='radio')?(el.checked?'ON':'OFF'):el.value;if(n)p.push(n+'='+v);}S(t,p.join(' / '));}`;
     }
     case 'evt-form-reset':
       return `var f=document.getElementById(${JSON.stringify(kv.formId||'')});if(f)f.reset();`;
@@ -1432,20 +1611,14 @@ function eventBody(t, kv, ownerId){
     case 'evt-interval': {
       const ms = Math.max(10, parseInt(kv.interval, 10) || 100);
       const tid2 = JSON.stringify(kv.timerId || 't1');
-      if(kv.action === 'stop'){
-        return `if(window.__bt&&window.__bt[${tid2}]){clearInterval(window.__bt[${tid2}]);delete window.__bt[${tid2}];}`;
-      }
+      if(kv.action === 'stop') return `if(window.__bt&&window.__bt[${tid2}]){clearInterval(window.__bt[${tid2}]);delete window.__bt[${tid2}];}`;
       return `(function(){window.__bt=window.__bt||{};if(window.__bt[${tid2}])clearInterval(window.__bt[${tid2}]);window.__bt[${tid2}]=setInterval(function(){${kv._inner || ''}},${ms});})();`;
     }
     case 'evt-count-up': {
       const act = kv.action || 'start';
       const interval = Math.max(10, parseInt(kv.interval, 10) || 10);
-      if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},${interval});})();`;
-      }
-      if(act === 'stop'){
-        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
-      }
+      if(act === 'start') return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},${interval});})();`;
+      if(act === 'stop') return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t._el=0;t._cs=null;t.textContent='0.00';})();`;
     }
     case 'evt-count-down': {
@@ -1453,28 +1626,20 @@ function eventBody(t, kv, ownerId){
       const interval = Math.max(10, parseInt(kv.interval, 10) || 10);
       const sec = parseFloat(kv.seconds) || 10;
       const stopMsg = JSON.stringify(kv.stopMsg || '時間切れ！');
-      if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);var end=Date.now()+${sec*1000};t._ci=setInterval(function(){var r=(end-Date.now())/1000;if(r<=0){clearInterval(t._ci);t._ci=null;t.textContent=${stopMsg};return;}t.textContent=r.toFixed(2);},${interval});})();`;
-      }
-      if(act === 'stop'){
-        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
-      }
+      if(act === 'start') return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)clearInterval(t._ci);var end=Date.now()+${sec*1000};t._ci=setInterval(function(){var r=(end-Date.now())/1000;if(r<=0){clearInterval(t._ci);t._ci=null;t.textContent=${stopMsg};return;}t.textContent=r.toFixed(2);},${interval});})();`;
+      if(act === 'stop') return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t.textContent='${sec.toFixed(2)}';})();`;
     }
     case 'evt-stopwatch': {
       const act = kv.action || 'start';
-      if(act === 'start'){
-        return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},10);})();`;
-      }
-      if(act === 'stop'){
-        return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
-      }
+      if(act === 'start') return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci)return;if(t._el==null)t._el=0;t._cs=Date.now()-t._el;t._ci=setInterval(function(){t._el=Date.now()-t._cs;t.textContent=(t._el/1000).toFixed(2);},10);})();`;
+      if(act === 'stop') return `(function(){var t=document.getElementById(${tid});if(t&&t._ci){clearInterval(t._ci);t._ci=null;}})();`;
       return `(function(){var t=document.getElementById(${tid});if(!t)return;if(t._ci){clearInterval(t._ci);t._ci=null;}t._el=0;t._cs=null;t.textContent='0.00';})();`;
     }
     case 'evt-delay': {
       const ms = parseInt(kv.ms, 10) || 1000;
       const msg = JSON.stringify(kv.msg || '実行');
-      return `setTimeout(function(){var t=document.getElementById(${tid});if(t)t.textContent=${msg};},${ms});`;
+      return setOut + `setTimeout(function(){var t=document.getElementById(${tid});S(t,${msg});},${ms});`;
     }
     case 'evt-progress-num': {
       const val = parseFloat(kv.value) || 0;
@@ -1492,21 +1657,28 @@ function eventBody(t, kv, ownerId){
       const step = parseFloat(kv.step) || 10;
       return `var t=document.getElementById(${tid});if(t){var v=(parseFloat(t.value)||0)+(${step});var mn=parseFloat(t.min)||0;var mx=parseFloat(t.max)||100;if(v<mn)v=mn;if(v>mx)v=mx;t.value=v;}`;
     }
-    case 'evt-copy-clipboard': {
+    case 'evt-copy-clipboard':
       return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;if(navigator.clipboard){navigator.clipboard.writeText(txt);}})();`;
+    case 'evt-share': {
+      const tt = JSON.stringify(kv.title || '共有');
+      const tx = JSON.stringify(kv.text || '');
+      const ur = kv.url ? JSON.stringify(kv.url) : 'location.href';
+      return `(function(){if(!navigator.share)return;navigator.share({title:${tt},text:${tx},url:${ur}}).catch(function(){});})();`;
     }
     case 'evt-vibrate': {
       const ms = parseInt(kv.ms, 10) || 200;
       return `if(navigator.vibrate)navigator.vibrate(${ms});`;
     }
-    case 'evt-geolocation': {
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;if(!navigator.geolocation){t.textContent='未対応';return;}t.textContent='取得中...';navigator.geolocation.getCurrentPosition(function(p){t.textContent='緯度:'+p.coords.latitude.toFixed(4)+' 経度:'+p.coords.longitude.toFixed(4);},function(e){t.textContent='取得失敗: '+e.message;});})();`;
-    }
+    case 'evt-geolocation':
+      return setOut + `(function(){var t=document.getElementById(${tid});if(!navigator.geolocation){S(t,'未対応');return;}S(t,'取得中...');navigator.geolocation.getCurrentPosition(function(p){S(t,'緯度:'+p.coords.latitude.toFixed(4)+' 経度:'+p.coords.longitude.toFixed(4));},function(e){S(t,'取得失敗: '+e.message);});})();`;
+    case 'evt-battery':
+      return setOut + `(function(){var t=document.getElementById(${tid});if(!navigator.getBattery&&!navigator.battery){S(t,'未対応');return;}var b=navigator.getBattery?navigator.getBattery():Promise.resolve(navigator.battery);b.then(function(bat){S(t,'残量: '+Math.round(bat.level*100)+'% / '+(bat.charging?'充電中':'充電なし'));}).catch(function(){S(t,'取得失敗');});})();`;
+    case 'evt-online':
+      return setOut + `var t=document.getElementById(${tid});S(t,navigator.onLine?'オンライン':'オフライン');window.addEventListener('online',function(){S(t,'オンライン');});window.addEventListener('offline',function(){S(t,'オフライン');});`;
     case 'evt-fetch': {
       const url = JSON.stringify(kv.url || '');
-      const key = kv.key || '';
-      const keyStr = key ? JSON.stringify(key) : 'null';
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;t.textContent='読込中...';fetch(${url}).then(function(r){return r.json();}).then(function(d){var v=d;var k=${keyStr};if(k&&d&&typeof d==='object')v=d[k];if(typeof v==='object')v=JSON.stringify(v);t.textContent=String(v);}).catch(function(e){t.textContent='エラー: '+e.message;});})();`;
+      const keyStr = kv.key ? JSON.stringify(kv.key) : 'null';
+      return setOut + `(function(){var t=document.getElementById(${tid});S(t,'読込中...');fetch(${url}).then(function(r){return r.text();}).then(function(txt){var out=txt;try{var d=JSON.parse(txt);var k=${keyStr};if(k&&d&&typeof d==='object'&&k in d){out=d[k];}else if(typeof d==='object'&&d!==null){out=txt;}else{out=String(d);}}catch(e){}if(out&&typeof out==='object')out=JSON.stringify(out);S(t,String(out));}).catch(function(e){S(t,'エラー: '+(e&&e.message?e.message:'取得失敗'));});})();`;
     }
     case 'evt-beep': {
       const freq = parseFloat(kv.freq) || 440;
@@ -1517,37 +1689,36 @@ function eventBody(t, kv, ownerId){
       const text = JSON.stringify(kv.text || '');
       return `(function(){try{if(!window.speechSynthesis)return;var u=new SpeechSynthesisUtterance(${text});u.lang='ja-JP';speechSynthesis.speak(u);}catch(e){}})();`;
     }
-    case 'evt-local-save': {
-      const key = JSON.stringify(kv.key || 'mydata');
-      return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;try{localStorage.setItem(${key},txt);}catch(e){}})();`;
-    }
-    case 'evt-local-load': {
-      const key = JSON.stringify(kv.key || 'mydata');
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;try{t.textContent=localStorage.getItem(${key})||'（データなし）';}catch(e){t.textContent='読込失敗';}})();`;
-    }
-    case 'evt-local-delete': {
-      const key = JSON.stringify(kv.key || 'mydata');
-      return `try{localStorage.removeItem(${key});}catch(e){}`;
-    }
+    case 'evt-local-save':
+      return `(function(){var s=document.getElementById(${fid});if(!s)return;var txt=s.value!=null?s.value:s.textContent;try{localStorage.setItem(${JSON.stringify(kv.key||'mydata')},txt);}catch(e){}})();`;
+    case 'evt-local-load':
+      return setOut + `(function(){var t=document.getElementById(${tid});try{S(t,localStorage.getItem(${JSON.stringify(kv.key||'mydata')})||'（データなし）');}catch(e){S(t,'読込失敗');}})();`;
+    case 'evt-local-delete':
+      return `try{localStorage.removeItem(${JSON.stringify(kv.key||'mydata')});}catch(e){}`;
     case 'evt-notification': {
       const title = JSON.stringify(kv.title || 'お知らせ');
       const body = JSON.stringify(kv.body || '');
       return `(function(){if(!('Notification' in window))return;if(Notification.permission==='granted'){new Notification(${title},{body:${body}});}else if(Notification.permission!=='denied'){Notification.requestPermission().then(function(p){if(p==='granted')new Notification(${title},{body:${body}});});}})();`;
     }
+    case 'evt-download-text': {
+      const fn = JSON.stringify(kv.filename || 'memo.txt');
+      return `(function(){var s=document.getElementById(${fid});var txt=s?(s.value!=null?s.value:s.textContent):'';var blob=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=${fn};document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);})();`;
+    }
+    case 'evt-download-canvas': {
+      const fn = JSON.stringify(kv.filename || 'art.png');
+      return `(function(){var c=document.getElementById(${tid});if(!c||!c.toDataURL)return;var a=document.createElement('a');a.href=c.toDataURL('image/png');a.download=${fn};document.body.appendChild(a);a.click();a.remove();})();`;
+    }
     case 'evt-fade-in': {
       const ms = parseInt(kv.ms, 10) || 500;
       return `(function(){var t=document.getElementById(${tid});if(!t)return;t.style.transition='opacity ${ms}ms ease';t.style.opacity='0';setTimeout(function(){t.style.opacity='1';},30);})();`;
     }
-    case 'evt-shake': {
+    case 'evt-shake':
       return `(function(){var t=document.getElementById(${tid});if(!t)return;var s=0;var id=setInterval(function(){s++;var x=(s%2?-1:1)*8;t.style.transform='translateX('+x+'px)';if(s>6){clearInterval(id);t.style.transform='';}},50);})();`;
-    }
-    case 'evt-random-color': {
+    case 'evt-random-color':
       return `(function(){var t=document.getElementById(${tid});if(!t)return;var h=Math.floor(Math.random()*360);t.style.backgroundColor='hsl('+h+',70%,60%)';})();`;
-    }
     case 'evt-random-number': {
-      const min = parseFloat(kv.min) || 0;
-      const max = parseFloat(kv.max) || 100;
-      return `(function(){var t=document.getElementById(${tid});if(!t)return;t.textContent=Math.floor(Math.random()*(${max}-${min}+1))+${min};})();`;
+      const min = parseFloat(kv.min) || 0, max = parseFloat(kv.max) || 100;
+      return setOut + `var t=document.getElementById(${tid});S(t,Math.floor(Math.random()*(${max}-${min}+1))+${min});`;
     }
   }
   return '';
@@ -1559,13 +1730,6 @@ function collectEvents(el, v, events, loadEvents, warnings){
   const kids = childBlocks(slot);
   if(!kids.length) return;
   const owner = v.id || '';
-
-  const intervalBlock = kids.find(k => k.dataset.type === 'evt-interval');
-  if(intervalBlock){
-    const kv = getValues(intervalBlock);
-    kv._inner = 'window.__btick=window.__btick||0;';
-  }
-
   kids.forEach(k => {
     const kv = getValues(k);
     const t = k.dataset.type;
@@ -1574,15 +1738,14 @@ function collectEvents(el, v, events, loadEvents, warnings){
       events.push(`document.getElementById(${JSON.stringify(owner)})?.addEventListener("submit",function(e){e.preventDefault();});`);
       return;
     }
-    if(t === 'evt-interval'){ kv._inner = 'window.__btick=window.__btick||0;'; }
+    if(t === 'evt-interval') kv._inner = 'window.__btick=window.__btick||0;';
     const trigger = kv.trigger || defaultTrigger(t);
     const body = eventBody(t, kv, owner);
     if(!body) return;
     if(trigger === 'load'){ loadEvents.push(body); return; }
     if(!owner && t !== 'evt-show-radio'){
-      if((t === 'evt-count-up' || t === 'evt-count-down' || t === 'evt-stopwatch' || t === 'evt-interval' || t === 'evt-delay' || t === 'evt-fetch' || t === 'evt-geolocation' || t === 'evt-copy-clipboard' || t === 'evt-vibrate' || t === 'evt-beep' || t === 'evt-speech' || t === 'evt-notification' || t === 'evt-local-save' || t === 'evt-random-color' || t === 'evt-shake' || t === 'evt-fade-in' || t === 'evt-random-number')){
-        loadEvents.push(body);
-        return;
+      if(['evt-count-up','evt-count-down','evt-stopwatch','evt-interval','evt-delay','evt-fetch','evt-geolocation','evt-battery','evt-online','evt-copy-clipboard','evt-vibrate','evt-beep','evt-speech','evt-notification','evt-local-save','evt-local-delete','evt-random-color','evt-shake','evt-fade-in','evt-random-number','evt-scroll-top','evt-page-reload','evt-print','evt-share'].indexOf(t) >= 0){
+        loadEvents.push(body); return;
       }
       warnings.push('動作ブロックの対象に ID がありません'); return;
     }
@@ -1622,6 +1785,10 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
     if(type === 'ol' && v.start && v.start !== '1') attrs.push('start="' + escapeHtml(v.start) + '"');
     pushStyle();
     collectEvents(el, v, events, loadEvents, warnings);
+    /* 生HTML挿入 */
+    if(type === 'html-raw'){
+      return pad + '<div' + attrStr(attrs) + '>' + (v.raw || '') + (inner ? '\n' + inner + pad : '') + '</div>\n';
+    }
     return pad + '<' + def.tag + attrStr(attrs) + '>\n' + inner + pad + '</' + def.tag + '>\n';
   }
 
@@ -1636,9 +1803,7 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
     if((type === 'th' || type === 'td') && v.colspan) attrs.push('colspan="' + escapeHtml(v.colspan) + '"');
     pushStyle();
     collectEvents(el, v, events, loadEvents, warnings);
-    if(type === 'ruby'){
-      return pad + '<ruby' + attrStr(attrs) + '>' + escapeHtml(v.text || '') + '<rt>' + escapeHtml(v.ruby || '') + '</rt></ruby>\n';
-    }
+    if(type === 'ruby') return pad + '<ruby' + attrStr(attrs) + '>' + escapeHtml(v.text || '') + '<rt>' + escapeHtml(v.ruby || '') + '</rt></ruby>\n';
     return pad + '<' + def.tag + attrStr(attrs) + '>' + contentOf(el, v) + '</' + def.tag + '>\n';
   }
 
@@ -1650,23 +1815,20 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       const s = resolveSrc(v.src);
       if(s) attrs.push('src="' + escapeHtml(s) + '"');
       if(v.alt) attrs.push('alt="' + escapeHtml(v.alt) + '"');
-      pushStyle();
-      return pad + '<img' + attrStr(attrs) + '>\n';
+      pushStyle(); return pad + '<img' + attrStr(attrs) + '>\n';
     }
     case 'video': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       const s = resolveSrc(v.src);
       if(s) attrs.push('src="' + escapeHtml(s) + '"');
-      attrs.push('controls', 'playsinline');
-      pushStyle();
+      attrs.push('controls', 'playsinline'); pushStyle();
       return pad + '<video' + attrStr(attrs) + '></video>\n';
     }
     case 'audio': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       const s = resolveSrc(v.src);
       if(s) attrs.push('src="' + escapeHtml(s) + '"');
-      attrs.push('controls');
-      pushStyle();
+      attrs.push('controls'); pushStyle();
       return pad + '<audio' + attrStr(attrs) + '></audio>\n';
     }
     case 'iframe': {
@@ -1674,30 +1836,26 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.w) attrs.push('width="' + escapeHtml(v.w) + '"');
       if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
       attrs.push('frameborder="0"', 'allowfullscreen');
-      pushStyle();
-      return pad + '<iframe' + attrStr(attrs) + '></iframe>\n';
+      pushStyle(); return pad + '<iframe' + attrStr(attrs) + '></iframe>\n';
     }
     case 'canvas': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.w) attrs.push('width="' + escapeHtml(v.w) + '"');
       if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
-      pushStyle();
-      return pad + '<canvas' + attrStr(attrs) + '></canvas>\n';
+      pushStyle(); return pad + '<canvas' + attrStr(attrs) + '></canvas>\n';
     }
     case 'svg': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.w) attrs.push('width="' + escapeHtml(v.w) + '"');
       if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
       attrs.push('xmlns="http://www.w3.org/2000/svg"');
-      pushStyle();
-      return pad + '<svg' + attrStr(attrs) + '>' + (v.inner || '') + '</svg>\n';
+      pushStyle(); return pad + '<svg' + attrStr(attrs) + '>' + (v.inner || '') + '</svg>\n';
     }
     case 'progress': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
       if(v.max) attrs.push('max="' + escapeHtml(v.max) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<progress' + attrStr(attrs) + '></progress>\n';
     }
     case 'meter': {
@@ -1705,35 +1863,28 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
       if(v.min) attrs.push('min="' + escapeHtml(v.min) + '"');
       if(v.max) attrs.push('max="' + escapeHtml(v.max) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<meter' + attrStr(attrs) + '></meter>\n';
     }
     case 'heading': {
       const lv = v.level || '2';
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<h' + lv + attrStr(attrs) + '>' + contentOf(el, v) + '</h' + lv + '>\n';
     }
     case 'button': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<button type="button"' + attrStr(attrs) + '>' + contentOf(el, v) + '</button>\n';
     }
     case 'submit': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      attrs.push('type="submit"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      attrs.push('type="submit"'); pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<button' + attrStr(attrs) + '>' + contentOf(el, v) + '</button>\n';
     }
     case 'reset': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      attrs.push('type="reset"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      attrs.push('type="reset"'); pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<button' + attrStr(attrs) + '>' + contentOf(el, v) + '</button>\n';
     }
     case 'input-text': case 'input-password': case 'input-email': case 'input-url': case 'input-tel': case 'input-search': {
@@ -1742,8 +1893,7 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
       if(v.list) attrs.push('list="' + escapeHtml(v.list) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     }
     case 'input-number':
@@ -1752,27 +1902,23 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.min !== '' && v.min != null) attrs.push('min="' + escapeHtml(v.min) + '"');
       if(v.max !== '' && v.max != null) attrs.push('max="' + escapeHtml(v.max) + '"');
       if(v.step) attrs.push('step="' + escapeHtml(v.step) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-date':
       attrs.push('type="date"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-time':
       attrs.push('type="time"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-color':
       attrs.push('type="color"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.value) attrs.push('value="' + escapeHtml(v.value) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-range':
       attrs.push('type="range"');
@@ -1780,15 +1926,13 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.min !== '' && v.min != null) attrs.push('min="' + escapeHtml(v.min) + '"');
       if(v.max !== '' && v.max != null) attrs.push('max="' + escapeHtml(v.max) + '"');
       if(v.value !== '' && v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-file':
       attrs.push('type="file"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.accept) attrs.push('accept="' + escapeHtml(v.accept) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<input' + attrStr(attrs) + '>\n';
     case 'input-hidden':
       attrs.push('type="hidden"');
@@ -1800,15 +1944,13 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.ph) attrs.push('placeholder="' + escapeHtml(v.ph) + '"');
       if(v.rows) attrs.push('rows="' + escapeHtml(v.rows) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<textarea' + attrStr(attrs) + '></textarea>\n';
     }
     case 'checkbox': {
       attrs.push('type="checkbox"');
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
     }
     case 'radio': {
@@ -1816,14 +1958,12 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.name) attrs.push('name="' + escapeHtml(v.name) + '"');
       if(v.value != null) attrs.push('value="' + escapeHtml(v.value) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       return pad + '<label><input' + attrStr(attrs) + '> ' + escapeHtml(v.label || '') + '</label>\n';
     }
     case 'select': {
       if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
-      pushStyle();
-      collectEvents(el, v, events, loadEvents, warnings);
+      pushStyle(); collectEvents(el, v, events, loadEvents, warnings);
       const opts = String(v.options || '').split('\n').map(o => o.trim()).filter(Boolean);
       let inner = '';
       opts.forEach(o => { inner += '\n' + pad + '  <option>' + escapeHtml(o) + '</option>'; });
@@ -1925,7 +2065,7 @@ function renderPalette(cat){
 function renderPresetsTab(list){
   const help = document.createElement('div');
   help.className = 'preset-help';
-  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。<br>SVG図形・タイマー間隔・API URLなども用意しています。';
+  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。';
   list.appendChild(help);
   const groups = {};
   Object.keys(PRESETS).forEach(type => {
@@ -1968,7 +2108,7 @@ function renderDesignTab(list){
 function renderActionTab(list){
   const help = document.createElement('div');
   help.className = 'event-help';
-  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>例：ファイル入力欄に「📷 選んだ画像を表示」→ 画像のIDを指定。';
+  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。';
   list.appendChild(help);
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
@@ -1980,9 +2120,10 @@ function renderActionTab(list){
     list.appendChild(item);
   });
   const groups = [
-    { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-radio','evt-show-text','evt-show-date','evt-format-date','evt-toggle-hidden','evt-copy-to-text'] },
-    { name:'✏️ 文字を加工', types:['evt-set-formatted','evt-append-text','evt-prepend-text'] },
-    { name:'🧮 計算・結合', types:['evt-calc','evt-join-values','evt-sum-values'] },
+    { name:'📺 表示・テキスト', types:['evt-live-value','evt-show-selected-text','evt-show-checked','evt-show-radio','evt-show-text','evt-show-date','evt-today-jp','evt-format-date','evt-toggle-hidden','evt-copy-to-text'] },
+    { name:'✏️ 文字を加工', types:['evt-set-formatted','evt-append-text','evt-prepend-text','evt-uppercase','evt-lowercase','evt-trim','evt-replace-text','evt-slice-text','evt-count-chars','evt-number-format'] },
+    { name:'🧮 計算・結合', types:['evt-calc','evt-math-op','evt-join-values','evt-sum-values'] },
+    { name:'🆔 要素操作', types:['evt-set-value','evt-clear-value','evt-set-html','evt-add-class','evt-remove-class','evt-focus','evt-click-other'] },
     { name:'📁 ファイルの受け渡し', types:['evt-file-to-img','evt-file-to-video','evt-file-to-audio','evt-file-name'] },
     { name:'🎨 色の受け渡し', types:['evt-color-to-bg','evt-color-to-text'] },
     { name:'📏 値の受け渡し', types:['evt-range-to-width','evt-range-to-height','evt-range-to-opacity','evt-range-to-fontsize','evt-progress-set','evt-meter-set'] },
@@ -1991,7 +2132,7 @@ function renderActionTab(list){
     { name:'📂 開閉・ダイアログ', types:['evt-details-toggle','evt-details-open','evt-details-close','evt-open-dialog','evt-close-dialog'] },
     { name:'🖌 キャンバス', types:['evt-canvas-draw','evt-canvas-clear','evt-canvas-color','evt-canvas-shape','evt-canvas-animate'] },
     { name:'🧾 フォーム', types:['evt-form-show','evt-form-reset','evt-prevent-submit'] },
-    { name:'🔧 その他の操作', types:['evt-counter','evt-toggle-text','evt-change-color','evt-change-bg','evt-change-img','evt-toggle-class','evt-scroll-to','evt-open-url','evt-random','evt-alert'] }
+    { name:'🔧 その他の操作', types:['evt-counter','evt-toggle-text','evt-change-color','evt-change-bg','evt-change-img','evt-toggle-class','evt-scroll-to','evt-scroll-top','evt-open-url','evt-page-reload','evt-print','evt-toggle-fs-elem','evt-random','evt-alert'] }
   ];
   groups.forEach(g => {
     const sh = document.createElement('div');
@@ -2013,13 +2154,13 @@ function renderActionTab(list){
 function renderApiTab(list){
   const help = document.createElement('div');
   help.className = 'api-help';
-  help.innerHTML = '🚀 <b>タイマー・API・デバイス</b><br>ボタンなどの動作スロットに入れて使います。<br>タイマーは <b>10ms = 0.01秒</b> 単位。表示は数値のみ（0.01など）。';
+  help.innerHTML = '🚀 <b>タイマー・API・デバイス</b><br>ボタンなどの動作スロットに入れて使います。<br>タイマーは <b>10ms = 0.01秒</b> 単位。';
   list.appendChild(help);
   const groups = [
     { name:'⏱ タイマー・ストップウォッチ', types:['evt-interval','evt-count-up','evt-count-down','evt-stopwatch','evt-delay'] },
     { name:'📊 進捗・メーター操作', types:['evt-progress-num','evt-progress-add','evt-meter-num','evt-meter-add'] },
-    { name:'📱 デバイス機能', types:['evt-vibrate','evt-geolocation','evt-copy-clipboard','evt-notification','evt-speech'] },
-    { name:'🌐 通信・データ', types:['evt-fetch','evt-local-save','evt-local-load','evt-local-delete'] },
+    { name:'📱 デバイス機能', types:['evt-vibrate','evt-geolocation','evt-battery','evt-online','evt-copy-clipboard','evt-share','evt-notification','evt-speech'] },
+    { name:'🌐 通信・データ', types:['evt-fetch','evt-local-save','evt-local-load','evt-local-delete','evt-download-text','evt-download-canvas'] },
     { name:'🎵 音・アニメーション', types:['evt-beep','evt-fade-in','evt-shake','evt-random-color','evt-random-number'] }
   ];
   groups.forEach(g => {
@@ -2040,15 +2181,14 @@ function renderApiTab(list){
 }
 
 function setupPaletteDrag(item, payload){
-  const handle = item.querySelector('.drag-handle');
-  handle.addEventListener('pointerdown', e => {
-    if(e.button && e.button !== 0) return;
-    e.preventDefault(); e.stopPropagation();
-    beginDrag(e, payload, item);
-  });
+  /* ★ ドラッグハンドル・アイコン・ラベルすべてでドラッグ開始できるように */
   item.addEventListener('pointerdown', e => {
     if(e.button && e.button !== 0) return;
-    if(e.pointerType === 'touch') return;
+    /* タッチ時はドラッグハンドル部分だけ（スクロールと区別） */
+    if(e.pointerType === 'touch'){
+      const h = e.target.closest('.drag-handle');
+      if(!h) return;
+    }
     e.preventDefault();
     beginDrag(e, payload, item);
   });
@@ -2087,17 +2227,13 @@ function renderDataTab(list){
       toast('削除しました：' + m.name);
     });
     const payload = { kind:'data', mediaId:m.id, name:m.name, icon:icon, blockType:m.kind, url:m.url, label:m.name };
-    const handle = item.querySelector('.drag-handle');
-    handle.addEventListener('pointerdown', e => {
-      if(e.button && e.button !== 0) return;
-      if(!m.url){ toast('未読み込みデータです。'); return; }
-      e.preventDefault(); e.stopPropagation();
-      beginDrag(e, payload, item);
-    });
     item.addEventListener('pointerdown', e => {
       if(e.button && e.button !== 0) return;
-      if(e.target.closest('.drag-handle') || e.target.closest('.data-del')) return;
-      if(e.pointerType === 'touch') return;
+      if(e.target.closest('.data-del')) return;
+      if(e.pointerType === 'touch'){
+        const h = e.target.closest('.drag-handle');
+        if(!h) return;
+      }
       if(!m.url){ toast('未読み込みデータです。'); return; }
       e.preventDefault();
       beginDrag(e, payload, item);
@@ -2597,7 +2733,6 @@ $('#modal-overlay').addEventListener('click', function(e){
   const btn = e.target.closest('[data-close]');
   if(btn) closeModal();
 });
-
 function openSettingsModal(){
   const fontOpts = FONT_OPTIONS.map(function(o){ const sel = (PROJECT_SETTINGS.baseFont === o.v) ? ' selected' : ''; return '<option value="' + escapeHtml(o.v) + '"' + sel + '>' + escapeHtml(o.l) + '</option>'; }).join('');
   openModal(
@@ -2614,7 +2749,6 @@ function openSettingsModal(){
     afterChange(); closeModal(); toast('設定を適用しました');
   });
 }
-
 function openSaveModal(){
   let rows = '';
   for(let i = 1; i <= 5; i++){
@@ -2645,7 +2779,7 @@ $('#modal').addEventListener('click', function(e){
       currentProjectName = name;
       try{
         localStorage.setItem(LS_SLOT(slot), JSON.stringify({ name, date: new Date().toISOString(), data: projectData() }));
-        toast('スロット ' + slot + ' にセーブしました（画像込み）'); closeModal();
+        toast('スロット ' + slot + ' にセーブしました'); closeModal();
       }catch(err){
         try{
           const d = projectData();
@@ -2679,7 +2813,6 @@ $('#modal').addEventListener('click', function(e){
     });
   }
 });
-
 $('#btn-export').addEventListener('click', exportHTML);
 $('#btn-json').addEventListener('click', exportJSON);
 $('#btn-import').addEventListener('click', () => $('#file-input').click());
@@ -2739,7 +2872,6 @@ function updateFullscreenBtn(){
 }
 document.addEventListener('fullscreenchange', updateFullscreenBtn);
 document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
-
 $('#btn-undo').addEventListener('click', doUndo);
 $('#btn-redo').addEventListener('click', doRedo);
 document.addEventListener('keydown', function(e){
@@ -2749,13 +2881,12 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'z' && !e.shiftKey){ e.preventDefault(); doUndo(); }
   else if((e.key === 'z' && e.shiftKey) || e.key === 'y'){ e.preventDefault(); doRedo(); }
 });
-
 function buildTabs(){
   const bar = $('#tabbar'); bar.innerHTML = '';
-  CATEGORIES.forEach(function(c, idx){
+  CATEGORIES.forEach(function(c){
     const b = document.createElement('button');
-    b.className = 'tab' + (idx === 0 ? ' active' : '');
-    if(c.id === 'presets') b.classList.add('preset-tab');
+    b.className = 'tab';
+    if(c.id === 'presets'){ b.classList.add('active','preset-tab'); }
     if(c.id === 'design') b.classList.add('design-tab');
     if(c.id === 'api') b.classList.add('api-tab');
     b.type = 'button';
