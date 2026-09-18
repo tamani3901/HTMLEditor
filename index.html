@@ -71,7 +71,7 @@
   .mini-fields{flex:1 1 auto;display:flex;gap:5px;align-items:center;min-width:0;flex-wrap:wrap;}
   .mini-fields .fld-row{flex:1 1 auto;min-width:0;}
   .mini-fields .fld-label{display:none;}
-  .mini-fields .fld-hint{display:none;}
+  .mini-fields .fld-hint,.mini-fields .fld-hint-id{display:none;}
   .mini-del{flex:0 0 auto;border:none;background:transparent;color:#b6c0c9;font-size:13px;cursor:pointer;padding:2px 5px;border-radius:5px;}
   .mini-del:hover{background:#ffe9e6;color:#d0442c;}
   .blk-head{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
@@ -85,8 +85,12 @@
   .fld-row{display:flex;align-items:center;gap:4px;padding:1px;border-radius:6px;}
   .fld-label{flex:0 0 auto;font-size:11px;color:#7e8b98;min-width:64px;}
   .fld-hint{flex:0 0 auto;font-size:11px;opacity:.35;padding:0 1px;}
+  .fld-hint-id{flex:0 0 auto;font-size:10px;font-family:ui-monospace,Menlo,monospace;color:#8fa0b3;background:#f0f4f8;border-radius:3px;padding:1px 4px;cursor:help;opacity:.7;letter-spacing:-.5px;}
+  .fld-hint-id:hover{background:#e0eaf4;color:#4a6a8b;opacity:1;}
   .fld{flex:1 1 auto;min-width:0;width:100%;padding:5px 7px;font-size:12px;border:1px solid #dbe2ea;border-radius:6px;background:#fff;color:#232a31;}
   .fld:focus{outline:none;border-color:#2ec4a6;box-shadow:0 0 0 2px rgba(46,196,166,.15);}
+  .fld.fld-ref{background:#e8f4fd;border-color:#4a9eff;color:#0d3e6b;font-weight:600;}
+  .fld.fld-ref:focus{box-shadow:0 0 0 2px rgba(74,158,255,.25);border-color:#4a9eff;}
   input[type="color"].fld{padding:1px;height:26px;cursor:pointer;}
   textarea.fld{resize:vertical;min-height:34px;}
   body.preset-drag .fld-hint{opacity:1;}
@@ -127,9 +131,7 @@
   .act{padding:9px 6px;font-size:11.5px;border-radius:8px;border:1px solid #dfe4ea;background:#f8fafc;color:#3b4652;cursor:pointer;transition:.12s;}
   .act:hover{background:#eef7f5;border-color:#8fd8c8;}
   .act.primary{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
-  .act.primary:hover{background:#26b096;}
   .act.danger{color:#c0392b;border-color:#f0d5d1;}
-  .act.danger:hover{background:#ffecea;}
   #modal-overlay{position:fixed;inset:0;background:rgba(20,30,40,.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;}
   #modal{background:#fff;border-radius:14px;padding:18px;width:min(480px,100%);max-height:82dvh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);}
   #modal h3{margin:0 0 12px;font-size:15px;}
@@ -146,6 +148,15 @@
   .modal-msg{font-size:13px;line-height:1.75;color:#3b4652;white-space:pre-wrap;margin:0 0 16px;}
   #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);background:#232a31;color:#fff;padding:10px 16px;border-radius:10px;font-size:12.5px;opacity:0;pointer-events:none;transition:.22s;z-index:900;max-width:82vw;text-align:center;}
   #toast.show{opacity:.95;transform:translateX(-50%) translateY(0);}
+  /* ID参照サジェスト */
+  #ref-suggest{position:fixed;z-index:600;background:#fff;border:1px solid #b3daff;border-radius:10px;box-shadow:0 8px 24px rgba(20,30,40,.22);padding:9px 11px;font-size:12px;min-width:220px;max-width:320px;}
+  #ref-suggest .rs-label{font-size:11.5px;color:#0d3e6b;margin-bottom:7px;line-height:1.5;}
+  #ref-suggest .rs-label code{background:#e8f4fd;padding:1px 5px;border-radius:3px;font-family:ui-monospace,Menlo,monospace;color:#06305a;font-weight:700;word-break:break-all;}
+  #ref-suggest .rs-actions{display:flex;gap:5px;}
+  #ref-suggest .rs-btn{flex:1;padding:7px 8px;font-size:11.5px;border-radius:7px;border:1px solid #dfe4ea;background:#f8fafc;cursor:pointer;font-family:inherit;color:#3b4652;transition:.12s;line-height:1.3;}
+  #ref-suggest .rs-btn:hover{background:#eef7f5;border-color:#8fd8c8;}
+  #ref-suggest .rs-btn.primary{background:#2ec4a6;color:#fff;border-color:#2ec4a6;font-weight:700;}
+  #ref-suggest .rs-btn.primary:hover{background:#26b096;}
   #preview-frame-wrap:fullscreen{background:#1f2733;padding:0;border-radius:0;align-items:center;}
   #preview-frame-wrap:fullscreen #preview-body{width:100%;height:100%;border-radius:0;max-width:none;}
   @media (max-width:1100px){#main{grid-template-columns:200px minmax(0,1fr) 300px;}.fld-label{min-width:52px;}}
@@ -188,6 +199,13 @@
 </div>
 <input type="file" id="file-input" accept="*/*" multiple class="hidden">
 <div id="modal-overlay" class="hidden"><div id="modal"></div></div>
+<div id="ref-suggest" class="hidden">
+  <div class="rs-label"></div>
+  <div class="rs-actions">
+    <button class="rs-btn" type="button" data-action="text">文字として使う</button>
+    <button class="rs-btn primary" type="button" data-action="ref">ID参照にする</button>
+  </div>
+</div>
 <div id="toast"></div>
 <div id="drop-indicator" class="hidden"></div>
 
@@ -342,7 +360,6 @@ const PRESETS = {
 };
 
 const BLOCKS = {
-  /* デザイン */
   'box': { cat:'design', label:'装飾ボックス', icon:'📦', tag:'div', container:true, slots:['container','css','event'],
     baseStyle:'border:1px solid #d0d7de; border-radius:8px; padding:16px; margin:12px 0; background:#fafbfc;',
     fields:[{k:'id', label:'ID', type:'text'}] },
@@ -381,7 +398,6 @@ const BLOCKS = {
     baseStyle:'display:flex; align-items:center; gap:12px; margin:20px 0; color:#8b97a3;',
     fields:[{k:'id', label:'ID', type:'text'}] },
 
-  /* メディア */
   'img': { cat:'media', label:'画像', icon:'🖼', tag:'img', voidTag:true, slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', ph:'https://…', presetGroup:'url'},{k:'alt', label:'代替テキスト', type:'text'},{k:'media', type:'hidden'}]},
   'video': { cat:'media', label:'動画', icon:'🎬', tag:'video', slots:['css','event'],
@@ -410,7 +426,6 @@ const BLOCKS = {
   'meter': { cat:'media', label:'メーター', icon:'🎛', tag:'meter', slots:['css'],
     fields:[{k:'id', label:'ID', type:'text', def:'meter1'},{k:'value', label:'現在値', type:'number', def:'0'},{k:'min', label:'最小', type:'number', def:'0'},{k:'max', label:'最大', type:'number', def:'100'}]},
 
-  /* テキスト */
   'heading': { cat:'text', label:'見出し', icon:'H', tag:'h', slots:['css','var','event'],
     fields:[{k:'level', label:'レベル', type:'select', options:['1','2','3','4','5','6'], def:'2'},{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'見出しテキスト'}]},
   'p': { cat:'text', label:'段落', icon:'¶', tag:'p', textTag:true, slots:['css','var','event'],
@@ -573,14 +588,12 @@ const BLOCKS = {
     fields:[{k:'targetId', label:'参照ID', type:'text', def:'input1'}]},
 
   'evt-show-value': { cat:'variables', label:'📤 ボタン/入力の値を表示', icon:'📤', slotKind:'event',
-    hint:'ボタンの「値」または入力欄の現在値を出力します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'fromId', label:'値の元ID(空=自分)', type:'text'},
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-store-value': { cat:'variables', label:'💾 値を変数に保存', icon:'💾', slotKind:'event',
-    hint:'ボタン/入力の値を名前付き変数として保存します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'fromId', label:'値の元ID(空=自分)', type:'text'},
@@ -593,7 +606,6 @@ const BLOCKS = {
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-calc-vars': { cat:'variables', label:'🧮 変数同士を計算', icon:'🧮', slotKind:'event',
-    hint:'2つの変数を計算。例：ボタンAの値+ボタンBの値',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'aVar', label:'変数A', type:'text', def:'v1'},
@@ -608,7 +620,6 @@ const BLOCKS = {
       {k:'value', label:'足す値', type:'text', def:'1'},
       {k:'reset', label:'リセットする', type:'select', options:[{v:'',l:'しない'},{v:'1',l:'する'}], def:''}
     ]},
-
   'evt-show-element': { cat:'variables', label:'👁 要素を表示', icon:'👁', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-hide-element': { cat:'variables', label:'🚫 要素を非表示', icon:'🚫', slotKind:'event',
@@ -616,12 +627,11 @@ const BLOCKS = {
   'evt-toggle-hidden': { cat:'variables', label:'🔄 表示/非表示を切替', icon:'🔄', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-random-show': { cat:'variables', label:'🎲 ランダムに1つだけ表示', icon:'🎲', slotKind:'event',
-    hint:'指定したIDの中からランダムで1つだけ表示し、他は隠します。\n例：item1,item2,item3',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'ids', label:'対象ID(カンマ区切り)', type:'text', def:'item1,item2,item3'}
     ]},
-  'evt-random-one': { cat:'variables', label:'🎲 ランダムに1つ表示(他は隠さない)', icon:'🎲', slotKind:'event',
+  'evt-random-one': { cat:'variables', label:'🎲 ランダムに1つ表示', icon:'🎲', slotKind:'event',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'ids', label:'対象ID(カンマ区切り)', type:'text', def:'item1,item2,item3'}
@@ -769,13 +779,11 @@ const BLOCKS = {
   'evt-alert': { cat:'variables', label:'⚠️ アラート表示', icon:'⚠️', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'text', label:'メッセージ', type:'text', def:'こんにちは！'}]},
 
-  /* API */
   'evt-interval': { cat:'api', label:'⏱ 繰り返し実行', icon:'⏱', slotKind:'event',
     fields:[{k:'interval', label:'間隔(ms) 最小10', type:'number', def:'100', presetGroup:'interval'},{k:'timerId', label:'タイマー名', type:'text', def:'t1'},{k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'}], def:'start'}]},
   'evt-count-up': { cat:'api', label:'⏱ カウントアップ(0.01秒)', icon:'⏱', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'表示先ID', type:'text', def:'timer1'},{k:'action', label:'動作', type:'select', options:[{v:'start',l:'開始'},{v:'stop',l:'停止'},{v:'reset',l:'リセット'}], def:'start'},{k:'interval', label:'更新間隔(ms)', type:'number', def:'10', presetGroup:'interval'}]},
   'evt-count-down': { cat:'api', label:'⏳ カウントダウン(0.01秒)', icon:'⏳', slotKind:'event',
-    hint:'進捗バーIDを指定すると同時にバーも動きます。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'toId', label:'数字の表示先ID', type:'text', def:'timer1'},
@@ -906,6 +914,7 @@ function restoreState(state){
   PROJECT_SETTINGS.baseFontSize = (state.settings && state.settings.baseFontSize) || '';
   currentProjectName = state.name || '';
   resolveMediaBlocks();
+  refreshAllRefStyles();
 }
 function updateHistButtons(){
   const undo = $('#btn-undo'), redo = $('#btn-redo'), info = $('#hist-info');
@@ -943,6 +952,74 @@ function doRedo(){
   toast('やり直しました');
 }
 
+/* =========================================================
+   ID参照サジェスト
+   ========================================================= */
+function collectAllIds(){
+  const ids = new Set();
+  function walk(blk){
+    const v = getValues(blk);
+    if(v && v.id){
+      const t = String(v.id).trim();
+      if(t) ids.add(t);
+    }
+    ['container','css','var','event'].forEach(sn => {
+      const slot = getSlot(blk, sn);
+      if(slot) childBlocks(slot).forEach(walk);
+    });
+  }
+  childBlocks($('#root-slot')).forEach(walk);
+  return ids;
+}
+function updateRefStyle(inp){
+  if(/\{\{[^{}]+\}\}/.test(inp.value)) inp.classList.add('fld-ref');
+  else inp.classList.remove('fld-ref');
+}
+function refreshAllRefStyles(){
+  $$('#workspace .fld[data-key="text"]').forEach(updateRefStyle);
+}
+let refSuggestTarget = null;
+function showRefSuggest(inp, id){
+  const box = $('#ref-suggest');
+  if(!box) return;
+  box.querySelector('.rs-label').innerHTML = 'ID <code>' + escapeHtml(id) + '</code> があります';
+  box.classList.remove('hidden');
+  const r = inp.getBoundingClientRect();
+  box.style.left = r.left + 'px';
+  box.style.top = (r.bottom + 4) + 'px';
+  box.style.width = Math.max(r.width, 220) + 'px';
+  setTimeout(() => {
+    const br = box.getBoundingClientRect();
+    if(br.right > window.innerWidth - 8){
+      box.style.left = (window.innerWidth - br.width - 8) + 'px';
+    }
+    if(br.left < 8) box.style.left = '8px';
+    if(br.bottom > window.innerHeight - 8){
+      box.style.top = (r.top - br.height - 4) + 'px';
+    }
+  }, 0);
+  refSuggestTarget = { input: inp, id: id };
+}
+function hideRefSuggest(){
+  const box = $('#ref-suggest');
+  if(box) box.classList.add('hidden');
+  refSuggestTarget = null;
+}
+function evalRefSuggest(inp){
+  if(!inp || !inp.classList || !inp.classList.contains('fld')) return;
+  if(!inp.closest('#workspace')) return;
+  updateRefStyle(inp);
+  if(inp.dataset.key !== 'text'){ hideRefSuggest(); return; }
+  const val = String(inp.value || '').trim();
+  if(!val || val.indexOf('{{') >= 0){ hideRefSuggest(); return; }
+  const ids = collectAllIds();
+  if(ids.has(val) && inp.dataset.dismissedRef !== val){
+    showRefSuggest(inp, val);
+  } else {
+    hideRefSuggest();
+  }
+}
+
 function makeField(f, val, presetGroup){
   if(f.type === 'hidden'){
     const i = document.createElement('input');
@@ -955,6 +1032,13 @@ function makeField(f, val, presetGroup){
   const pg = presetGroup || f.presetGroup;
   if(pg) wrap.dataset.presetGroup = pg;
   if(f.label){const s = document.createElement('span'); s.className = 'fld-label'; s.textContent = f.label; wrap.appendChild(s);}
+  if(f.k === 'text'){
+    const h = document.createElement('span');
+    h.className = 'fld-hint-id';
+    h.textContent = '{{}}';
+    h.title = 'IDを入力すると、そのIDの値を参照できます';
+    wrap.appendChild(h);
+  }
   if(pg){const hint = document.createElement('span'); hint.className = 'fld-hint'; hint.textContent = '🎁'; wrap.appendChild(hint);}
   let inp;
   if(f.type === 'select'){
@@ -976,6 +1060,7 @@ function makeField(f, val, presetGroup){
   let v = (val != null && val !== '') ? val : (f.def != null ? f.def : '');
   if(f.type === 'color' && !/^#[0-9a-fA-F]{6}$/.test(v)) v = '#ffffff';
   inp.value = v;
+  if(f.k === 'text' && /\{\{[^{}]+\}\}/.test(v)) inp.classList.add('fld-ref');
   wrap.appendChild(inp);
   return wrap;
 }
@@ -1088,7 +1173,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 13, name: currentProjectName,
+    version: 14, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
@@ -1110,6 +1195,7 @@ function loadProjectData(data){
   (data.blocks || []).forEach(b => { const el = deserializeBlock(b); if(el) root.appendChild(el); });
   resolveMediaBlocks();
   renderPalette(currentCat);
+  refreshAllRefStyles();
   afterChange();
 }
 function resolveMediaBlocks(){
@@ -1149,7 +1235,13 @@ function contentOf(el, v){
       if(vb.dataset.type === 'var-input') return '<span data-bind-input="' + escapeHtml(vv.targetId || '') + '"></span>';
     }
   }
-  return escapeHtml(v.text || '');
+  const text = String(v.text || '');
+  if(text.indexOf('{{') < 0) return escapeHtml(text);
+  return escapeHtml(text).replace(/\{\{([^{}]+)\}\}/g, function(_, id){
+    const t = String(id).trim();
+    if(!t) return '';
+    return '<span data-bind-input="' + t + '"></span>';
+  });
 }
 
 function defaultTrigger(t){
@@ -1392,7 +1484,6 @@ function eventBody(t, kv, ownerId){
     case 'evt-form-reset':
       return `var f=document.getElementById(${JSON.stringify(kv.formId||'')});if(f)f.reset();`;
 
-    /* API */
     case 'evt-interval': {
       const ms = Math.max(10, parseInt(kv.interval, 10) || 100);
       const tid2 = JSON.stringify(kv.timerId || 't1');
@@ -1800,17 +1891,33 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
 
 function runtimeScript(events, loadEvents){
   const lines = [
-    'document.addEventListener("input", function(e){',
-    '  if(e.target && e.target.id){',
-    '    var nodes = document.querySelectorAll(\'[data-bind-input="\' + e.target.id + \'"]\');',
-    '    for(var i = 0; i < nodes.length; i++){ nodes[i].textContent = e.target.value; }',
-    '  }',
-    '});',
+    'function __updateBindings(){',
+    '  document.querySelectorAll("[data-bind-input]").forEach(function(el){',
+    '    var id = el.getAttribute("data-bind-input");',
+    '    var src = document.getElementById(id);',
+    '    if(!src){ el.textContent = ""; return; }',
+    '    var v; var tag = src.tagName;',
+    '    if(src.type === "checkbox" || src.type === "radio"){',
+    '      v = src.checked ? (src.value || (src.type === "checkbox" ? "ON" : "")) : "";',
+    '    } else if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT"){',
+    '      v = src.value || "";',
+    '    } else {',
+    '      v = src.textContent || "";',
+    '    }',
+    '    el.textContent = v;',
+    '  });',
+    '}',
+    'document.addEventListener("input", __updateBindings);',
+    'document.addEventListener("change", __updateBindings);',
+    'document.addEventListener("click", function(){ setTimeout(__updateBindings, 10); });',
+    'setInterval(__updateBindings, 300);',
     'window.__vars = window.__vars || {};',
-    'function __initBlockEvents(){'
+    'function __initBlockEvents(){',
+    '  __updateBindings();'
   ];
   events.forEach(e => lines.push('  ' + e));
   loadEvents.forEach(e => lines.push('  ' + e));
+  lines.push('  __updateBindings();');
   lines.push('}');
   lines.push('if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", __initBlockEvents); } else { __initBlockEvents(); }');
   return lines.join('\n');
@@ -1920,7 +2027,7 @@ function renderDesignTab(list){
 function renderActionTab(list){
   const help = document.createElement('div');
   help.className = 'event-help';
-  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。';
+  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>💡 テキスト欄にIDを入力すると参照できます（{{}}マークの欄）。';
   list.appendChild(help);
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
@@ -2277,6 +2384,7 @@ function finishDrag(){
   if(t.ref) t.slot.insertBefore(newEl, t.ref);
   else t.slot.appendChild(newEl);
   afterChange();
+  refreshAllRefStyles();
 }
 document.addEventListener('pointermove', function(e){
   if(!drag || e.pointerId !== drag.id) return;
@@ -2306,6 +2414,42 @@ document.addEventListener('pointercancel', function(){
   drag = null;
 });
 
+/* ===== ID参照サジェストのイベント ===== */
+document.addEventListener('input', function(e){
+  if(e.target && e.target.classList && e.target.classList.contains('fld')) evalRefSuggest(e.target);
+}, false);
+document.addEventListener('focusin', function(e){
+  if(e.target && e.target.classList && e.target.classList.contains('fld')) evalRefSuggest(e.target);
+});
+document.addEventListener('pointerdown', function(e){
+  const box = $('#ref-suggest');
+  if(!box || box.classList.contains('hidden')) return;
+  if(e.target.closest('#ref-suggest')) return;
+  if(e.target.classList && e.target.classList.contains('fld')) return;
+  hideRefSuggest();
+});
+$('#ref-suggest').addEventListener('pointerdown', function(e){
+  e.preventDefault();
+  const btn = e.target.closest('.rs-btn');
+  if(!btn || !refSuggestTarget) return;
+  const input = refSuggestTarget.input;
+  const id = refSuggestTarget.id;
+  if(btn.dataset.action === 'ref'){
+    input.value = '{{' + id + '}}';
+    input.dispatchEvent(new Event('input', { bubbles:true }));
+    input.dispatchEvent(new Event('change', { bubbles:true }));
+    updateRefStyle(input);
+    hideRefSuggest();
+    try{ input.focus(); input.setSelectionRange(input.value.length, input.value.length); }catch(err){}
+  } else {
+    input.dataset.dismissedRef = id;
+    hideRefSuggest();
+    try{ input.focus(); }catch(err){}
+  }
+});
+$('#workspace').addEventListener('scroll', hideRefSuggest);
+window.addEventListener('resize', hideRefSuggest);
+
 $('#workspace').addEventListener('click', function(e){
   const btn = e.target.closest('[data-act]');
   if(!btn) return;
@@ -2314,7 +2458,7 @@ $('#workspace').addEventListener('click', function(e){
   if(btn.dataset.act === 'del'){ blk.parentNode.removeChild(blk); afterChange(); }
   else if(btn.dataset.act === 'dup'){
     const copy = deserializeBlock(serializeBlock(blk));
-    if(copy){ blk.parentNode.insertBefore(copy, blk.nextSibling); afterChange(); }
+    if(copy){ blk.parentNode.insertBefore(copy, blk.nextSibling); afterChange(); refreshAllRefStyles(); }
   }
 });
 $('#workspace').addEventListener('input', function(e){
@@ -2554,6 +2698,7 @@ async function importProjectZip(file){
   (data.blocks || []).forEach(b => { const el = deserializeBlock(b); if(el) root.appendChild(el); });
   resolveMediaBlocks();
   renderPalette(currentCat);
+  refreshAllRefStyles();
   afterChange();
   toast('zipからプロジェクトを復元しました');
 }
@@ -2758,6 +2903,7 @@ function init(){
       if(data && data.blocks && data.blocks.length){ loadProjectData(data); restored = true; }
     }
   }catch(e){}
+  refreshAllRefStyles();
   updatePreview();
   historyEnabled = true;
   initHistory();
