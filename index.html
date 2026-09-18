@@ -10,11 +10,14 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;background:#eef1f5;color:#232a31;font-size:14px;user-select:none;-webkit-user-select:none;overflow:hidden;}
   input,select,textarea{user-select:text;-webkit-user-select:text;font-family:inherit;}
   #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
-  #topbar{flex:0 0 auto;display:flex;gap:8px;padding:6px 10px;background:#f4f6f9;border-bottom:1px solid #dfe4ea;align-items:center;}
+  #topbar{flex:0 0 auto;display:flex;gap:8px;padding:6px 10px;background:#f4f6f9;border-bottom:1px solid #dfe4ea;align-items:center;flex-wrap:wrap;}
   .hist-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid #dfe4ea;background:#fff;border-radius:8px;font-size:12.5px;color:#3b4652;cursor:pointer;transition:.12s;font-family:inherit;}
   .hist-btn:hover:not(:disabled){background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
   .hist-btn:disabled{opacity:.4;cursor:not-allowed;}
   .hist-btn .hi{font-size:15px;line-height:1;font-weight:700;}
+  .help-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid #c3dbf5;background:#e8f4fd;border-radius:8px;font-size:12.5px;color:#0d3e6b;cursor:pointer;text-decoration:none;font-family:inherit;transition:.12s;font-weight:600;}
+  .help-btn:hover{background:#d4ebfc;border-color:#4a9eff;color:#06305a;}
+  .help-btn:active{transform:scale(0.97);}
   .hist-info{margin-left:auto;font-size:11px;color:#8b97a3;}
   #tabbar{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:#fff;border-bottom:1px solid #dfe4ea;align-items:flex-start;align-content:flex-start;}
   .tab{flex:0 0 auto;padding:6px 11px;border-radius:999px;border:1px solid #dfe4ea;background:#f8fafc;font-size:11.5px;color:#3b4652;cursor:pointer;white-space:nowrap;transition:.15s;line-height:1.3;}
@@ -27,41 +30,32 @@
   #palette{background:#fff;border-right:1px solid #dfe4ea;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
   #palette-head{flex:0 0 auto;padding:10px 12px;font-size:11.5px;font-weight:700;color:#5b6875;letter-spacing:.04em;border-bottom:1px solid #eef1f5;background:#fbfcfe;}
   #palette-list{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px;display:flex;flex-direction:column;gap:6px;overscroll-behavior:contain;}
-  #palette-list::-webkit-scrollbar{width:6px;}
-  #palette-list::-webkit-scrollbar-thumb{background:#cfd8e0;border-radius:3px;}
   .pal-item{display:flex;align-items:stretch;gap:6px;padding:0;border:1px solid #dfe4ea;border-radius:10px;background:#fbfdff;font-size:12.5px;transition:.12s;flex:0 0 auto;touch-action:pan-y;overflow:hidden;min-height:42px;}
   .pal-item:hover{border-color:#8fd8c8;background:#f2fbf9;}
   .pal-item.preset-item{background:#fffbf2;border-color:#ffe0b2;}
-  .pal-item.preset-item:hover{background:#fff5e0;border-color:#ffb74d;}
   .pal-item.design-item{background:#f8f5ff;border-color:#e1d5f7;}
-  .pal-item.design-item:hover{background:#f0e9ff;border-color:#b39ddb;}
   .pal-item.api-item{background:#fff0f5;border-color:#f8bbd0;}
-  .pal-item.api-item:hover{background:#ffe0ec;border-color:#f06292;}
-  .drag-handle{flex:0 0 auto;width:38px;display:flex;align-items:center;justify-content:center;background:#f1f5f8;color:#96a3b0;font-size:18px;cursor:grab;touch-action:none;user-select:none;line-height:1;font-weight:700;letter-spacing:-2px;padding-left:6px;transition:.12s;}
-  .drag-handle:hover{background:#e0f0eb;color:#1d9e83;}
+  .drag-handle{flex:0 0 auto;width:38px;display:flex;align-items:center;justify-content:center;background:#f1f5f8;color:#96a3b0;font-size:18px;cursor:grab;touch-action:none;user-select:none;line-height:1;font-weight:700;letter-spacing:-2px;padding-left:6px;}
   .drag-handle:active{cursor:grabbing;background:#c8e8e0;color:#0d8c72;}
-  .pal-item.preset-item .drag-handle{background:#fff3e0;color:#c58a3b;}
-  .pal-item.design-item .drag-handle{background:#f0e9ff;color:#9d7ec5;}
-  .pal-item.api-item .drag-handle{background:#ffe0ec;color:#c9527a;}
   .pi-icon{font-size:15px;width:22px;text-align:center;flex:0 0 auto;align-self:center;}
   .pi-body{flex:1 1 auto;min-width:0;display:flex;align-items:center;padding:8px 8px 8px 0;}
   .pi-label{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;}
-  .preset-help{font-size:11px;color:#8b6914;background:#fff8e1;border:1px solid #ffe0b2;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
-  .design-help{font-size:11px;color:#4a2f8b;background:#f0e9ff;border:1px solid #e1d5f7;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
-  .event-help{font-size:11px;color:#0d3e6b;background:#e8f4fd;border:1px solid #b3daff;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
-  .api-help{font-size:11px;color:#880e4f;background:#fff0f5;border:1px solid #f8bbd0;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
-  .preset-group-head{font-size:11px;font-weight:700;color:#e65100;background:#fff3e0;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
-  .api-group-head{font-size:11px;font-weight:700;color:#880e4f;background:#fce4ec;padding:5px 8px;border-radius:6px;margin-top:6px;letter-spacing:.02em;}
-  .data-del{flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;width:26px;height:26px;line-height:1;font-size:13px;cursor:pointer;align-self:center;margin-right:6px;}
+  .preset-help,.design-help,.event-help,.api-help{font-size:11px;border-radius:8px;padding:8px 10px;line-height:1.6;margin-bottom:4px;}
+  .preset-help{color:#8b6914;background:#fff8e1;border:1px solid #ffe0b2;}
+  .design-help{color:#4a2f8b;background:#f0e9ff;border:1px solid #e1d5f7;}
+  .event-help{color:#0d3e6b;background:#e8f4fd;border:1px solid #b3daff;}
+  .api-help{color:#880e4f;background:#fff0f5;border:1px solid #f8bbd0;}
+  .preset-group-head{font-size:11px;font-weight:700;color:#e65100;background:#fff3e0;padding:5px 8px;border-radius:6px;margin-top:6px;}
+  .api-group-head{font-size:11px;font-weight:700;color:#880e4f;background:#fce4ec;padding:5px 8px;border-radius:6px;margin-top:6px;}
+  .data-del{flex:0 0 auto;border:none;background:#f0f3f6;color:#8b97a3;border-radius:6px;width:26px;height:26px;cursor:pointer;align-self:center;margin-right:6px;}
   .data-del:hover{background:#ffe9e6;color:#d0442c;}
   .data-item.missing{opacity:.55;}
-  .data-add{display:flex;gap:6px;margin-bottom:4px;flex:0 0 auto;}
+  .data-add{display:flex;gap:6px;margin-bottom:4px;}
   .data-add .act{flex:1 1 auto;font-size:11.5px;padding:7px 4px;}
   .data-empty{font-size:11.5px;color:#a8b3bd;padding:10px 4px;line-height:1.6;}
   .badge-miss{font-size:10px;color:#d0442c;background:#ffeae6;border-radius:4px;padding:1px 4px;margin-left:4px;align-self:center;}
   #workspace{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;background:#eef1f5;display:flex;flex-direction:column;position:relative;}
-  #workspace.autoscroll-up::before,
-  #workspace.autoscroll-down::after{content:'';position:sticky;left:0;right:0;height:40px;pointer-events:none;z-index:10;}
+  #workspace.autoscroll-up::before,#workspace.autoscroll-down::after{content:'';position:sticky;left:0;right:0;height:40px;pointer-events:none;z-index:10;}
   #workspace.autoscroll-up::before{top:0;background:linear-gradient(to bottom,rgba(46,196,166,.35),transparent);}
   #workspace.autoscroll-down::after{bottom:0;background:linear-gradient(to top,rgba(46,196,166,.35),transparent);margin-top:-40px;}
   #root-slot{flex:1 1 auto;min-height:100%;padding:14px;background:#fff;border-radius:12px;border:2px solid #e3e9ef;}
@@ -71,10 +65,8 @@
   .ws-block.drag-over{outline:2px solid #2ec4a6;outline-offset:1px;}
   .ws-block.mini{display:flex;align-items:center;gap:6px;padding:5px 7px;border-left-color:#9aa7b3;background:#f4f7fa;border-radius:8px;}
   .move-handle{flex:0 0 auto;width:22px;text-align:center;color:#a3b0bc;font-size:14px;cursor:grab;touch-action:none;user-select:none;line-height:1;padding:4px 0;border-radius:5px;font-weight:700;letter-spacing:-2px;padding-left:6px;}
-  .move-handle:hover{color:#2ec4a6;background:#e8f8f4;}
-  .move-handle:active{cursor:grabbing;color:#1d9e83;background:#c8e8e0;}
+  .move-handle:active{cursor:grabbing;background:#c8e8e0;color:#1d9e83;}
   .mini-head{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:11.5px;color:#4a5663;}
-  .mini-icon{font-size:13px;}
   .mini-name{font-weight:600;}
   .mini-fields{flex:1 1 auto;display:flex;gap:5px;align-items:center;min-width:0;flex-wrap:wrap;}
   .mini-fields .fld-row{flex:1 1 auto;min-width:0;}
@@ -83,18 +75,16 @@
   .mini-del{flex:0 0 auto;border:none;background:transparent;color:#b6c0c9;font-size:13px;cursor:pointer;padding:2px 5px;border-radius:5px;}
   .mini-del:hover{background:#ffe9e6;color:#d0442c;}
   .blk-head{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
-  .blk-icon{font-size:14px;}
   .blk-name{font-size:12.5px;font-weight:700;color:#33404d;}
   .blk-tag{font-size:10.5px;color:#7e8b98;background:#eaeff4;border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;}
   .blk-hint{font-size:11px;color:#4a5663;background:#eaf4ff;border-left:3px solid #4a9eff;border-radius:6px;padding:5px 8px;margin-bottom:6px;line-height:1.5;}
   .sp{flex:1 1 auto;}
   .blk-btn{border:none;background:#eef2f6;color:#7a8794;border-radius:6px;width:24px;height:24px;font-size:12px;cursor:pointer;line-height:1;}
-  .blk-btn:hover{background:#e0f5f0;color:#1d9e83;}
   .blk-btn[data-act="del"]:hover{background:#ffe9e6;color:#d0442c;}
   .blk-fields{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;}
-  .fld-row{display:flex;align-items:center;gap:4px;padding:1px;border-radius:6px;transition:background .12s, box-shadow .12s;}
+  .fld-row{display:flex;align-items:center;gap:4px;padding:1px;border-radius:6px;}
   .fld-label{flex:0 0 auto;font-size:11px;color:#7e8b98;min-width:64px;}
-  .fld-hint{flex:0 0 auto;font-size:11px;opacity:.35;cursor:help;padding:0 1px;}
+  .fld-hint{flex:0 0 auto;font-size:11px;opacity:.35;padding:0 1px;}
   .fld{flex:1 1 auto;min-width:0;width:100%;padding:5px 7px;font-size:12px;border:1px solid #dbe2ea;border-radius:6px;background:#fff;color:#232a31;}
   .fld:focus{outline:none;border-color:#2ec4a6;box-shadow:0 0 0 2px rgba(46,196,166,.15);}
   input[type="color"].fld{padding:1px;height:26px;cursor:pointer;}
@@ -105,7 +95,7 @@
   .fld-row.preset-hover{background:#ffe0b2;box-shadow:inset 0 0 0 2px #ff9800;animation:none;}
   .blk-slots{display:flex;flex-direction:column;gap:4px;}
   .slot-row{display:flex;gap:5px;align-items:flex-start;}
-  .slot-tag{flex:0 0 auto;font-size:9.5px;font-weight:700;color:#8b97a3;background:#eaeff4;border-radius:4px;padding:3px 5px;margin-top:2px;letter-spacing:.02em;}
+  .slot-tag{flex:0 0 auto;font-size:9.5px;font-weight:700;color:#8b97a3;background:#eaeff4;border-radius:4px;padding:3px 5px;margin-top:2px;}
   .slot-tag.event-tag{background:#fde8c8;color:#a05a00;}
   .slot{flex:1 1 auto;min-width:0;min-height:30px;padding:5px;border:1.5px dashed #cdd7e0;border-radius:8px;background:#fdfefe;display:flex;flex-direction:column;gap:5px;}
   .slot:empty::after{content:attr(data-empty);font-size:11px;color:#aab5bf;}
@@ -127,14 +117,13 @@
   .seg button{border:none;background:transparent;font-size:11.5px;padding:5px 9px;border-radius:6px;cursor:pointer;color:#5b6875;}
   .seg button.active{background:#fff;color:#1d9e83;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08);}
   .fullscreen-btn{border:1px solid #dfe4ea;background:#fff;border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;color:#5b6875;line-height:1;margin-left:4px;}
-  .fullscreen-btn:hover{background:#eef7f5;border-color:#8fd8c8;color:#1d9e83;}
   #preview-area{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:8px;gap:8px;}
   #preview-frame-wrap{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:#e9edf2;border-radius:9px;padding:6px;overflow:auto;}
   #preview-body{width:100%;height:100%;border:0;background:#fff;border-radius:6px;}
   #preview-body.mobile{width:375px;flex:0 0 auto;border:1px solid #c9d2dc;box-shadow:0 6px 18px rgba(20,30,40,.14);}
-  #preview-code{flex:1 1 auto;min-height:0;margin:0;overflow:auto;background:#1f2733;color:#c9e8df;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.55;padding:10px;border-radius:9px;white-space:pre;user-select:text;-webkit-user-select:text;}
+  #preview-code{flex:1 1 auto;min-height:0;margin:0;overflow:auto;background:#1f2733;color:#c9e8df;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.55;padding:10px;border-radius:9px;white-space:pre;user-select:text;}
   .hidden{display:none !important;}
-  #action-area{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;border-top:1px solid #eef1f5;max-height:42%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  #action-area{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;border-top:1px solid #eef1f5;max-height:42%;overflow-y:auto;}
   .act{padding:9px 6px;font-size:11.5px;border-radius:8px;border:1px solid #dfe4ea;background:#f8fafc;color:#3b4652;cursor:pointer;transition:.12s;}
   .act:hover{background:#eef7f5;border-color:#8fd8c8;}
   .act.primary{background:#2ec4a6;border-color:#2ec4a6;color:#fff;font-weight:700;}
@@ -142,7 +131,7 @@
   .act.danger{color:#c0392b;border-color:#f0d5d1;}
   .act.danger:hover{background:#ffecea;}
   #modal-overlay{position:fixed;inset:0;background:rgba(20,30,40,.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;}
-  #modal{background:#fff;border-radius:14px;padding:18px;width:min(480px,100%);max-height:82dvh;overflow:auto;-webkit-overflow-scrolling:touch;box-shadow:0 20px 50px rgba(0,0,0,.3);}
+  #modal{background:#fff;border-radius:14px;padding:18px;width:min(480px,100%);max-height:82dvh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3);}
   #modal h3{margin:0 0 12px;font-size:15px;}
   .modal-field{display:block;margin-bottom:12px;}
   .modal-field span{display:block;font-size:11.5px;color:#7e8b98;margin-bottom:4px;}
@@ -168,6 +157,7 @@
   <header id="topbar">
     <button class="hist-btn" id="btn-undo" disabled><span class="hi">↶</span><span>戻る</span></button>
     <button class="hist-btn" id="btn-redo" disabled><span class="hi">↷</span><span>やり直す</span></button>
+    <a class="help-btn" id="btn-help" href="https://tamani3901.github.io/HTMLEditorhelp/" target="_blank" rel="noopener">📖 使い方</a>
     <span class="hist-info" id="hist-info"></span>
   </header>
   <header id="tabbar"></header>
@@ -235,8 +225,6 @@ const FONT_OPTIONS = [
   {v:"'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif", l:'丸ゴシック'},
   {v:"'Noto Sans JP', 'Yu Gothic', sans-serif", l:'Noto Sans JP'},
   {v:"'Noto Serif JP', 'Yu Mincho', serif", l:'Noto Serif JP'},
-  {v:"'M PLUS Rounded 1c', sans-serif", l:'M PLUS 丸ゴシック'},
-  {v:"'Zen Maru Gothic', 'Yu Gothic', sans-serif", l:'Zen Maru Gothic'},
   {v:"Georgia, 'Times New Roman', serif", l:'Georgia'},
   {v:"Arial, Helvetica, sans-serif", l:'Arial'},
   {v:"'Courier New', Courier, monospace", l:'Courier New'}
@@ -256,12 +244,8 @@ const PRESET_GROUPS = {
   display:'📺 表示モード', flexdir:'↔ フレックスの方向', justify:'⇔ 横方向の配置',
   alignitems:'⇕ 縦方向の配置', lineheight:'☰ 行の高さ', letterspacing:'⟷ 文字間隔',
   textdecoration:'U 文字装飾', opacity:'💧 透明度', border:'▭ 枠線', shadow:'🌑 影',
-  svg:'🎨 SVG図形サンプル',
-  interval:'⏱ タイマー間隔（ミリ秒）',
-  seconds:'⏳ カウント秒数',
-  api:'🌐 API URLサンプル',
-  freq:'🔊 音の周波数 (Hz)',
-  duration:'⏱ 音の長さ（ミリ秒）',
+  svg:'🎨 SVG図形サンプル', interval:'⏱ タイマー間隔（ミリ秒）', seconds:'⏳ カウント秒数',
+  api:'🌐 API URLサンプル', freq:'🔊 音の周波数 (Hz)', duration:'⏱ 音の長さ（ミリ秒）',
   vibrate:'📳 振動時間（ミリ秒）'
 };
 
@@ -333,7 +317,6 @@ const PRESETS = {
   'pre-svg-rect':{group:'svg',label:'四角',icon:'▭',value:'<rect x="20" y="20" width="160" height="160" fill="#3498db"/>'},
   'pre-svg-star':{group:'svg',label:'星',icon:'⭐',value:'<polygon points="100,20 120,80 185,80 132,120 152,180 100,145 48,180 68,120 15,80 80,80" fill="#f1c40f"/>'},
   'pre-svg-heart':{group:'svg',label:'ハート',icon:'❤️',value:'<path d="M100,180 C40,130 20,90 20,70 C20,40 45,20 70,20 C85,20 95,30 100,40 C105,30 115,20 130,20 C155,20 180,40 180,70 C180,90 160,130 100,180Z" fill="#e74c3c"/>'},
-  'pre-svg-face':{group:'svg',label:'顔文字',icon:'🙂',value:'<circle cx="100" cy="100" r="80" fill="#f1c40f"/><circle cx="75" cy="85" r="8" fill="#333"/><circle cx="125" cy="85" r="8" fill="#333"/><path d="M60,120 Q100,160 140,120" stroke="#333" stroke-width="4" fill="none"/>'},
   'pre-int-10':{group:'interval',label:'0.01秒 (10ms)',icon:'⏱',value:'10'},
   'pre-int-50':{group:'interval',label:'0.05秒 (50ms)',icon:'⏱',value:'50'},
   'pre-int-100':{group:'interval',label:'0.1秒 (100ms)',icon:'⏱',value:'100'},
@@ -407,7 +390,7 @@ const BLOCKS = {
   'audio': { cat:'media', label:'音声', icon:'🔊', tag:'audio', slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'media', type:'hidden'}]},
   'iframe': { cat:'media', label:'埋め込み', icon:'🌐', tag:'iframe', slots:['css'],
-    fields:[{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},{k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'src', label:'URL', type:'url', presetGroup:'url'},{k:'w', label:'幅', type:'text', def:'560', presetGroup:'size'},{k:'h', label:'高さ', type:'text', def:'315', presetGroup:'size'}]},
   'canvas': { cat:'media', label:'キャンバス', icon:'🖌', tag:'canvas', slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'canvas1'},{k:'w', label:'幅', type:'number', def:'400', presetGroup:'size'},{k:'h', label:'高さ', type:'number', def:'300', presetGroup:'size'}]},
   'svg': { cat:'media', label:'SVG図形', icon:'🎨', tag:'svg', slots:['css','event'],
@@ -437,6 +420,9 @@ const BLOCKS = {
   'b': { cat:'text', label:'太字', icon:'B', tag:'b', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'太字'}]},
   'strong': { cat:'text', label:'強調', icon:'💪', tag:'strong', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'強調'}]},
   'i': { cat:'text', label:'斜体', icon:'I', tag:'i', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'斜体'}]},
+  'em': { cat:'text', label:'強調(em)', icon:'❗', tag:'em', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'強調'}]},
+  'u': { cat:'text', label:'下線', icon:'U', tag:'u', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'下線'}]},
+  's': { cat:'text', label:'取消線', icon:'S', tag:'s', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'取消線'}]},
   'mark': { cat:'text', label:'ハイライト', icon:'🖍', tag:'mark', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'マーカー'}]},
   'small': { cat:'text', label:'小さい文字', icon:'ᵃ', tag:'small', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'小さめ'}]},
   'sub': { cat:'text', label:'下付き', icon:'ₓ', tag:'sub', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'2'}]},
@@ -452,8 +438,8 @@ const BLOCKS = {
   'html-raw': { cat:'text', label:'生のHTML挿入', icon:'🔧', tag:'div', container:true, slots:['css'], emptyOk:true,
     fields:[{k:'id', label:'ID', type:'text'},{k:'raw', label:'HTMLコード', type:'textarea', def:'<b>カスタムHTML</b>'}]},
 
-  'a': { cat:'interactive', label:'リンク', icon:'🔗', tag:'a', textTag:true, slots:['css','var'],
-    fields:[{k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},{k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},{k:'text', label:'表示文字', type:'text', def:'リンク'}]},
+  'a': { cat:'interactive', label:'リンク', icon:'🔗', tag:'a', textTag:true, slots:['css','var','event'],
+    fields:[{k:'id', label:'ID', type:'text'},{k:'href', label:'URL', type:'url', def:'#', presetGroup:'url'},{k:'target', label:'target', type:'select', options:[{v:'',l:'同ウィンドウ'},{v:'_blank',l:'新しいタブ'}], def:''},{k:'text', label:'表示文字', type:'text', def:'リンク'}]},
   'button': { cat:'interactive', label:'ボタン', icon:'🔘', tag:'button', slots:['css','var','event'],
     hint:'「値」に数値や文字を入れると、クリック時に「📤 値を表示」や「💾 値を変数に保存」で取り出せます。',
     fields:[
@@ -482,12 +468,14 @@ const BLOCKS = {
   'legend': { cat:'containers', label:'グループ見出し', icon:'🏷', tag:'legend', textTag:true, slots:['css','var','event'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'お問い合わせ'}]},
 
-  'ul': { cat:'lists', label:'箇条書き', icon:'•', tag:'ul', container:true, slots:['container','css'], fields:[] },
-  'ol': { cat:'lists', label:'番号つき', icon:'1.', tag:'ol', container:true, slots:['container','css'],
-    fields:[{k:'start', label:'開始番号', type:'number', def:'1'}]},
+  'ul': { cat:'lists', label:'箇条書き', icon:'•', tag:'ul', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'}]},
+  'ol': { cat:'lists', label:'番号つき', icon:'1.', tag:'ol', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'},{k:'start', label:'開始番号', type:'number', def:'1'}]},
   'li': { cat:'lists', label:'リスト項目', icon:'–', tag:'li', textTag:true, slots:['css','var','event'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'value', label:'番号(ol内のみ)', type:'number'},{k:'text', label:'テキスト', type:'text', def:'項目'}]},
-  'dl': { cat:'lists', label:'定義リスト', icon:'📖', tag:'dl', container:true, slots:['container','css'], fields:[] },
+  'dl': { cat:'lists', label:'定義リスト', icon:'📖', tag:'dl', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'}]},
   'dt': { cat:'lists', label:'用語', icon:'📗', tag:'dt', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'用語', type:'text', def:'用語'}]},
   'dd': { cat:'lists', label:'説明', icon:'📘', tag:'dd', textTag:true, slots:['css','var','event'], fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'説明', type:'text', def:'説明文'}]},
 
@@ -495,9 +483,12 @@ const BLOCKS = {
     fields:[{k:'id', label:'ID', type:'text'}]},
   'caption': { cat:'tables', label:'表のタイトル', icon:'🏷', tag:'caption', textTag:true, slots:['css','var','event'],
     fields:[{k:'id', label:'ID', type:'text'},{k:'text', label:'テキスト', type:'text', def:'表のタイトル'}]},
-  'thead': { cat:'tables', label:'ヘッダ行', icon:'🔝', tag:'thead', container:true, slots:['container','css'], fields:[] },
-  'tbody': { cat:'tables', label:'本体', icon:'📄', tag:'tbody', container:true, slots:['container','css'], fields:[] },
-  'tfoot': { cat:'tables', label:'フッタ行', icon:'🔻', tag:'tfoot', container:true, slots:['container','css'], fields:[] },
+  'thead': { cat:'tables', label:'ヘッダ行', icon:'🔝', tag:'thead', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'}] },
+  'tbody': { cat:'tables', label:'本体', icon:'📄', tag:'tbody', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'}] },
+  'tfoot': { cat:'tables', label:'フッタ行', icon:'🔻', tag:'tfoot', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'}] },
   'tr': { cat:'tables', label:'行 (tr)', icon:'➖', tag:'tr', container:true, slots:['container','css','event'],
     fields:[{k:'id', label:'ID', type:'text'}] },
   'th': { cat:'tables', label:'見出しセル', icon:'🔤', tag:'th', textTag:true, slots:['css','var','event'],
@@ -507,8 +498,8 @@ const BLOCKS = {
 
   'form': { cat:'forms', label:'フォーム (form)', icon:'🧾', tag:'form', container:true, slots:['container','css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'form1'}]},
-  'label': { cat:'forms', label:'ラベル', icon:'🏷', tag:'label', container:true, slots:['container','css'],
-    fields:[{k:'for', label:'for属性', type:'text'}]},
+  'label': { cat:'forms', label:'ラベル', icon:'🏷', tag:'label', container:true, slots:['container','css','event'],
+    fields:[{k:'id', label:'ID', type:'text'},{k:'for', label:'for属性', type:'text'}]},
   'input-text': { cat:'forms', label:'1行入力', icon:'⌨️', tag:'input', voidTag:true, slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'input1'},{k:'ph', label:'プレースホルダー', type:'text', def:'入力してください'},{k:'list', label:'候補リストID', type:'text'}]},
   'input-password': { cat:'forms', label:'パスワード', icon:'🔒', tag:'input', voidTag:true, slots:['css','event'],
@@ -540,7 +531,7 @@ const BLOCKS = {
   'select': { cat:'forms', label:'セレクト', icon:'🔽', tag:'select', slots:['css','event'],
     fields:[{k:'id', label:'ID', type:'text', def:'select1'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'選択肢1\n選択肢2\n選択肢3'}]},
   'optgroup': { cat:'forms', label:'選択グループ', icon:'📂', tag:'optgroup', slots:[],
-    fields:[{k:'label', label:'グループ名', type:'text', def:'グループ1'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'項目1\n項目2'}]},
+    fields:[{k:'id', label:'ID', type:'text'},{k:'label', label:'グループ名', type:'text', def:'グループ1'},{k:'options', label:'選択肢(改行)', type:'textarea', def:'項目1\n項目2'}]},
   'datalist': { cat:'forms', label:'入力候補', icon:'📋', tag:'datalist', slots:[],
     fields:[{k:'id', label:'ID', type:'text', def:'list1'},{k:'options', label:'候補(改行)', type:'textarea', def:'候補1\n候補2\n候補3'}]},
   'output': { cat:'forms', label:'出力欄', icon:'📤', tag:'output', textTag:true, slots:['css','var','event'],
@@ -581,7 +572,6 @@ const BLOCKS = {
   'var-input': { cat:'variables', label:'入力値を挿入', icon:'🔗', slotKind:'var',
     fields:[{k:'targetId', label:'参照ID', type:'text', def:'input1'}]},
 
-  /* ★ 新：値を表示／変数 */
   'evt-show-value': { cat:'variables', label:'📤 ボタン/入力の値を表示', icon:'📤', slotKind:'event',
     hint:'ボタンの「値」または入力欄の現在値を出力します。',
     fields:[
@@ -597,7 +587,6 @@ const BLOCKS = {
       {k:'varName', label:'変数名', type:'text', def:'v1'}
     ]},
   'evt-show-var': { cat:'variables', label:'📺 変数を表示', icon:'📺', slotKind:'event',
-    hint:'「💾 値を変数に保存」で保存した値を表示します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'varName', label:'変数名', type:'text', def:'v1'},
@@ -613,7 +602,6 @@ const BLOCKS = {
       {k:'toId', label:'表示先ID', type:'text'}
     ]},
   'evt-add-var': { cat:'variables', label:'➕ 変数に足し込む（累計）', icon:'➕', slotKind:'event',
-    hint:'ボタンを押すたびに変数に値を加算します。リセットも可能。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'varName', label:'変数名', type:'text', def:'total'},
@@ -621,25 +609,12 @@ const BLOCKS = {
       {k:'reset', label:'リセットする', type:'select', options:[{v:'',l:'しない'},{v:'1',l:'する'}], def:''}
     ]},
 
-  /* ★ 新：表示/非表示 */
   'evt-show-element': { cat:'variables', label:'👁 要素を表示', icon:'👁', slotKind:'event',
-    hint:'隠していた要素を再表示します（元の表示状態を復元）。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-hide-element': { cat:'variables', label:'🚫 要素を非表示', icon:'🚫', slotKind:'event',
-    hint:'対象を隠します。元の表示状態は記憶されます。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-toggle-hidden': { cat:'variables', label:'🔄 表示/非表示を切替', icon:'🔄', slotKind:'event',
-    hint:'クリックするたびに表示↔非表示を交互に切り替えます。',
-    fields:[
-      {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
-      {k:'toId', label:'対象ID', type:'text'}
-    ]},
+    fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},{k:'toId', label:'対象ID', type:'text'}]},
   'evt-random-show': { cat:'variables', label:'🎲 ランダムに1つだけ表示', icon:'🎲', slotKind:'event',
     hint:'指定したIDの中からランダムで1つだけ表示し、他は隠します。\n例：item1,item2,item3',
     fields:[
@@ -647,13 +622,11 @@ const BLOCKS = {
       {k:'ids', label:'対象ID(カンマ区切り)', type:'text', def:'item1,item2,item3'}
     ]},
   'evt-random-one': { cat:'variables', label:'🎲 ランダムに1つ表示(他は隠さない)', icon:'🎲', slotKind:'event',
-    hint:'指定したIDの中からランダムで1つだけ表示し、他は触りません。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'click'},
       {k:'ids', label:'対象ID(カンマ区切り)', type:'text', def:'item1,item2,item3'}
     ]},
 
-  /* 既存動作 */
   'evt-live-value': { cat:'variables', label:'📺 値をリアルタイム表示', icon:'📺', slotKind:'event',
     fields:[{k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'input'},{k:'fromId', label:'入力元ID(空=自分)', type:'text'},{k:'toId', label:'表示先ID', type:'text', def:'out1'}]},
   'evt-show-selected-text': { cat:'variables', label:'📋 選んだ選択肢の文字を表示', icon:'📋', slotKind:'event',
@@ -835,7 +808,6 @@ const BLOCKS = {
       {k:'textId', label:'残り秒数の表示先ID(空=なし)', type:'text'}
     ]},
   'evt-video-progress': { cat:'api', label:'📊 動画と同期するバー', icon:'📊', slotKind:'event',
-    hint:'動画の再生位置を進捗バーにリアルタイム表示します。',
     fields:[
       {k:'trigger', label:'タイミング', type:'select', options:TRIGGER_OPTIONS, def:'load'},
       {k:'videoId', label:'動画のID', type:'text'},
@@ -1116,7 +1088,7 @@ function deserializeBlock(data){
 }
 function projectData(){
   return {
-    version: 12, name: currentProjectName,
+    version: 13, name: currentProjectName,
     settings: { baseFont: PROJECT_SETTINGS.baseFont || '', baseFontSize: PROJECT_SETTINGS.baseFontSize || '' },
     savedAt: new Date().toISOString(),
     blocks: childBlocks($('#root-slot')).map(serializeBlock),
@@ -1204,11 +1176,9 @@ function eventBody(t, kv, ownerId){
   const fid = JSON.stringify(fromId);
   const tid = JSON.stringify(toId);
   const setOut = "var S=function(t,x){if(!t)return;if(t.tagName==='INPUT'||t.tagName==='TEXTAREA'){t.value=x;}else{t.textContent=x;}};";
-  /* 値読み取りヘルパー */
   const readVal = id => `(function(){var e=document.getElementById(${id});if(!e)return '';if(typeof e.value!=='undefined'&&e.value!==null&&e.value!=='')return e.value;if(e.dataset&&e.dataset.value)return e.dataset.value;return e.textContent||'';})()`;
 
   switch(t){
-    /* ★ 新規：値表示・変数 */
     case 'evt-show-value':
       return setOut + `var v=${readVal(fid)};S(document.getElementById(${tid}),v);`;
     case 'evt-store-value':
@@ -1228,8 +1198,6 @@ function eventBody(t, kv, ownerId){
       const safeVal = isNaN(val) ? `parseFloat(${JSON.stringify(kv.value||'0')})||0` : String(val);
       return `(function(){window.__vars=window.__vars||{};var cur=parseFloat(window.__vars[${vn}])||0;window.__vars[${vn}]=cur+(${safeVal});})();`;
     }
-
-    /* ★ 新規：表示/非表示 */
     case 'evt-show-element':
       return `var t=document.getElementById(${tid});if(t){if(t.dataset.origDisp!=null)t.style.display=t.dataset.origDisp;else t.style.display='';}`;
     case 'evt-hide-element':
@@ -1244,8 +1212,6 @@ function eventBody(t, kv, ownerId){
       const ids = String(kv.ids||'').split(',').map(s=>s.trim()).filter(Boolean);
       return `(function(){var ids=${JSON.stringify(ids)};if(!ids.length)return;var ch=ids[Math.floor(Math.random()*ids.length)];var e=document.getElementById(ch);if(!e)return;if(e.dataset.origDisp==null)e.dataset.origDisp=e.style.display||'';e.style.display=e.dataset.origDisp||'';})();`;
     }
-
-    /* 既存 */
     case 'evt-live-value':
       return setOut + `var s=document.getElementById(${fid}),t=document.getElementById(${tid});if(s)S(t,s.value);`;
     case 'evt-show-selected-text':
@@ -1671,6 +1637,7 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       return pad + '<audio' + attrStr(attrs) + '></audio>\n';
     }
     case 'iframe': {
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.src) attrs.push('src="' + escapeHtml(v.src) + '"');
       if(v.w) attrs.push('width="' + escapeHtml(v.w) + '"');
       if(v.h) attrs.push('height="' + escapeHtml(v.h) + '"');
@@ -1813,6 +1780,7 @@ function genNode(el, depth, events, loadEvents, warnings, mediaMap){
       return pad + '<select' + attrStr(attrs) + '>' + inner + '\n' + pad + '</select>\n';
     }
     case 'optgroup': {
+      if(v.id) attrs.push('id="' + escapeHtml(v.id) + '"');
       if(v.label) attrs.push('label="' + escapeHtml(v.label) + '"');
       const opts = String(v.options || '').split('\n').map(o => o.trim()).filter(Boolean);
       let inner = '';
@@ -1909,7 +1877,7 @@ function renderPalette(cat){
 function renderPresetsTab(list){
   const help = document.createElement('div');
   help.className = 'preset-help';
-  help.innerHTML = '💡 <b>使い方</b><br>下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると、自動で入力されます。';
+  help.innerHTML = '💡 下のプリセットを、🎁マークの入力欄や色の欄に<b>ドラッグしてドロップ</b>すると自動で入力されます。';
   list.appendChild(help);
   const groups = {};
   Object.keys(PRESETS).forEach(type => {
@@ -1936,7 +1904,7 @@ function renderPresetsTab(list){
 function renderDesignTab(list){
   const help = document.createElement('div');
   help.className = 'design-help';
-  help.innerHTML = '✨ <b>装飾済みブロック</b><br>IDを付けると、クリック動作も付けられます。';
+  help.innerHTML = '✨ <b>装飾済みブロック</b> — IDを付けると、クリック動作も付けられます。';
   list.appendChild(help);
   Object.keys(BLOCKS).forEach(type => {
     const d = BLOCKS[type];
@@ -1952,7 +1920,7 @@ function renderDesignTab(list){
 function renderActionTab(list){
   const help = document.createElement('div');
   help.className = 'event-help';
-  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。<br>ボタンに「値」を設定して「📤 値を表示」「💾 値を変数に保存」で取り出せます。';
+  help.innerHTML = '🔧 <b>動作ブロック</b><br>各ブロックの「動作」スロットに入れて使います。';
   list.appendChild(help);
   ['var-static','var-input'].forEach(type => {
     const d = BLOCKS[type];
